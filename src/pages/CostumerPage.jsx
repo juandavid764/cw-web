@@ -7,7 +7,7 @@ const CostumerPage = () => {
     <div className="">
       <BannerSlider />
       <div>
-        <h1>JJSAJSJS</h1>
+        AboutUsPage
       </div>
     </div>
   );
