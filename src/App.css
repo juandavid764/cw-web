@@ -5,6 +5,9 @@
   text-align: center;
 }
 
+.no-rezize {
+  resize: none;
+}
 .logo {
   height: 6em;
   padding: 1.5em;
