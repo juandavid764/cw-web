@@ -1,5 +1,6 @@
 import foodImg from "../assets/aboutUsPage/imgAboutUs1.webp";
 import teamImg from "../assets/aboutUsPage/imgAboutUs2.webp";
+import Footer from "../components/web/Footer";
 
 const AboutUsPage = () => {
     const cartoonText = <span className="text-red-600 font-bold">Cartoon</span>
@@ -32,7 +33,10 @@ const AboutUsPage = () => {
             <div className="flex flex-row justify-center px-10">
                 <button className="bg-orange-400 text-black px-4 py-2 rounded-md hover:bg-orange-500 text-3xl">Realizar pedido</button>
             </div>
-            <br /><br /><br /><br />
+            <br />
+            <div>
+                <Footer />
+            </div>
         </div>
     );
 };
