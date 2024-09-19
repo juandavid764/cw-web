@@ -5,7 +5,6 @@ import CostumerPage from "./pages/CostumerPage";
 import AboutUsPage from "./pages/AboutPage";
 import Navbar from "./components/web/Navbar";
 
-
 function App() {
   return (
     <Router>

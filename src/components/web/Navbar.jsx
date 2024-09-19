@@ -1,15 +1,13 @@
 import React, { useState, useEffect } from "react";
-import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
-import SegmentIcon from "@mui/icons-material/Segment";
 import { Link, useLocation } from "react-router-dom";
-import Button from "@mui/material/Button";
-import Drawer from "@mui/material/Drawer";
-import CloseIcon from "@mui/icons-material/Close";
-import Backdrop from "@mui/material/Backdrop";
-import { orange } from "@mui/material/colors";
+import {
+  ShoppingCartIcon,
+  Bars3Icon,
+  XMarkIcon,
+} from "@heroicons/react/24/outline";
 import cwLogo from "../../assets/cwlogo.webp";
 
-// Define a constant for menu items
+// Definir una constante para los elementos del menú
 const menuItems = [
   { name: "Menu", link: "/" },
   { name: "Rastrear Pedido", link: "/rastrearPedido" },
@@ -18,16 +16,18 @@ const menuItems = [
 ];
 
 const Navbar = () => {
-  const location = useLocation(); // Hook that gets route location
+  const location = useLocation(); // Hook que obtiene la ubicación de la ruta
+  const [isMenuOpen, setIsMenuOpen] = useState(false); // Estado para la apertura del menú
 
-  // Function to check if the current route is the same as the link route
+  // Función para verificar si la ruta actual es la misma que la ruta del enlace
   const isActive = (path) => location.pathname === path;
-  const [isMenuOpen, setIsMenuOpen] = useState(false);
 
+  // Función para alternar la apertura del menú
   const toggleMenu = () => {
     setIsMenuOpen(!isMenuOpen);
   };
 
+  // Efecto para añadir o eliminar clases del body al abrir o cerrar el menú
   useEffect(() => {
     if (isMenuOpen) {
       document.body.classList.add("overflow-hidden");
@@ -36,13 +36,15 @@ const Navbar = () => {
     }
   }, [isMenuOpen]);
 
-  // Function to generate menu links
+  // Función para generar enlaces del menú
   const renderMenuLinks = (className, onclick) =>
     menuItems.map((item) => (
       <Link
         key={item.name}
         to={item.link}
-        className={className}
+        className={`${className} ${
+          isActive(item.link) ? "text-orange-500" : "text-gray-300"
+        }`}
         onClick={onclick}
       >
         {item.name}
@@ -53,81 +55,76 @@ const Navbar = () => {
     <nav className="bg-black shadow-md p-4 flex justify-between items-center relative">
       {/* Logo */}
       <div className="text-2xl font-bold text-white">
-        <img
-          className="md:max-h-20 max-w-20"
-          src={cwLogo}
-          alt="Cartoon war"
-        ></img>
+        <img className="md:max-h-20 max-w-20" src={cwLogo} alt="Cartoon war" />
       </div>
 
-      {/* Middle Menu - hidden on small screens */}
+      {/* Menú principal - oculto en pantallas pequeñas */}
       <div className="hidden md:flex space-x-8">
         {renderMenuLinks("text-gray-300 hover:text-orange-500")}
       </div>
 
-      {/* Cart Icon and Mobile Menu Toggle */}
-      <div className="flex items-center space-x-2 md:space-x-4">
-        {/* Mobile Menu Icon - only visible on mobile */}
-        <Button
+      {/* Íconos del alternador del menú móvil */}
+      <div className="flex items-center space-x-2 md:hidden">
+        {/* Ícono de menú móvil - solo visible en dispositivos móviles */}
+        <button
           onClick={toggleMenu}
-          sx={{
-            color: "white",
-            "&:hover .MuiSvgIcon-root": {
-              color: orange[500],
-            },
-            display: { md: "none" },
-          }}
+          className="text-white hover:text-orange-500"
         >
-          <SegmentIcon />
-        </Button>
+          <Bars3Icon className="h-6 w-6" />
+        </button>
+      </div>
 
-        {/* Cart Icon */}
+      {/* Ícono del carrito - solo visible en pantallas grandes */}
+      <div className="hidden md:flex items-center">
         <Link to="/carrito">
-          <Button
-            sx={{
-              color: "white",
-              "&:hover .MuiSvgIcon-root": {
-                color: orange[500],
-              },
-            }}
+          <button
+            className={`hover:text-orange-500 ${
+              isActive("/carrito") ? "text-orange-500" : "text-white"
+            }`}
           >
-            <ShoppingCartIcon
-              sx={{ color: isActive("/carrito") ? orange[500] : "white" }}
-            />
-          </Button>
+            <ShoppingCartIcon className="h-6 w-6" />
+          </button>
         </Link>
       </div>
 
-      {/* Drawer for Mobile Menu */}
-      <Drawer anchor="right" open={isMenuOpen} onClose={toggleMenu}>
-        <div className="w-64 h-full bg-black text-white p-8 flex flex-col">
-          <Button
-            onClick={toggleMenu}
-            sx={{
-              alignSelf: "flex-end",
-              color: "white",
-              "&:hover .MuiSvgIcon-root": {
-                color: orange[500],
-              },
-            }}
-          >
-            <CloseIcon />
-          </Button>
-          <nav className="flex flex-col items-center space-y-8 mt-8">
-            {renderMenuLinks(
-              "text-xl text-gray-300 hover:text-orange-500",
-              toggleMenu
-            )}
-          </nav>
-        </div>
-      </Drawer>
+      {/* Drawer para el menú móvil */}
+      <div
+        className={`fixed top-0 right-0 w-64 h-full bg-black text-white p-8 transform ${
+          isMenuOpen ? "translate-x-0" : "translate-x-full"
+        } transition-transform duration-300 ease-in-out z-50`}
+      >
+        {/* Botón de cierre del menú móvil */}
+        <button
+          onClick={toggleMenu}
+          className="text-white hover:text-orange-500 self-end mb-4"
+        >
+          <XMarkIcon className="h-6 w-6" />
+        </button>
+        <nav className="flex flex-col items-center space-y-8">
+          {renderMenuLinks(
+            "text-xl text-gray-300 hover:text-orange-500",
+            toggleMenu
+          )}
 
-      {/* Backdrop for blocking interaction with the background */}
-      <Backdrop
-        sx={{ color: "#fff", zIndex: 10 }}
-        open={isMenuOpen}
-        onClick={toggleMenu}
-      />
+          {/* Ícono del carrito dentro del menú desplegable en móviles */}
+          <Link
+            to="/carrito"
+            onClick={toggleMenu}
+            className="text-xl text-gray-300 hover:text-orange-500 flex items-center"
+          >
+            <ShoppingCartIcon className="h-6 w-6 mr-2" />
+            Carrito
+          </Link>
+        </nav>
+      </div>
+
+      {/* Backdrop para bloquear la interacción con el fondo */}
+      {isMenuOpen && (
+        <div
+          className="fixed inset-0 bg-black opacity-50 z-40"
+          onClick={toggleMenu}
+        ></div>
+      )}
     </nav>
   );
 };
