@@ -42,9 +42,8 @@ const Navbar = () => {
       <Link
         key={item.name}
         to={item.link}
-        className={`${className} ${
-          isActive(item.link) ? "text-orange-500" : "text-gray-300"
-        }`}
+        className={`${className} ${isActive(item.link) ? "text-orange-500" : "text-gray-300"
+          }`}
         onClick={onclick}
       >
         {item.name}
@@ -78,9 +77,8 @@ const Navbar = () => {
       <div className="hidden md:flex items-center">
         <Link to="/carrito">
           <button
-            className={`hover:text-orange-500 ${
-              isActive("/carrito") ? "text-orange-500" : "text-white"
-            }`}
+            className={`hover:text-orange-500 ${isActive("/carrito") ? "text-orange-500" : "text-white"
+              }`}
           >
             <ShoppingCartIcon className="h-6 w-6" />
           </button>
@@ -89,9 +87,8 @@ const Navbar = () => {
 
       {/* Drawer para el menú móvil */}
       <div
-        className={`fixed top-0 right-0 w-64 h-full bg-black text-white p-8 transform ${
-          isMenuOpen ? "translate-x-0" : "translate-x-full"
-        } transition-transform duration-300 ease-in-out z-50`}
+        className={`fixed top-0 right-0 w-64 h-full bg-black text-white p-8 transform ${isMenuOpen ? "translate-x-0" : "translate-x-full"
+          } transition-transform duration-300 ease-in-out z-50`}
       >
         {/* Botón de cierre del menú móvil */}
         <button

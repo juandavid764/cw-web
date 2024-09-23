@@ -12,8 +12,11 @@ const Footer = () => {
             <div className="size-40 lg:size-72">
                 <img src={cwLogo} alt="Company Logo" className="" />
             </div>
-            <div className="flex flex-col lg:content-center gap-7 ">
-                <h1 className="text-white lg:text-4xl font-bold lg:text-center">Síguenos:</h1>
+            <div className="flex flex-col lg:content-center gap-7 pt-5 lg:pt-0">
+                <div>
+                    <h1 className="text-white lg:text-4xl font-bold lg:text-center">Síguenos:</h1>
+                </div>
+
                 <div className="flex flex-row gap-2 lg:place-content-around">
                     <a href="https://www.instagram.com/cartoon_war_?utm_source=ig_web_button_share_sheet&igsh=ZDNlZDc0MzIxNw==" target="" rel="noopener noreferrer">
                         <button className="">

@@ -3,6 +3,7 @@ import React from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import CostumerPage from "./pages/CostumerPage";
 import AboutUsPage from "./pages/AboutPage";
+import HowAskPage from "./pages/HowAskPage";
 import Navbar from "./components/web/Navbar";
 
 function App() {
@@ -15,6 +16,7 @@ function App() {
       <Routes>
         <Route path="/" element={<CostumerPage />} />
         <Route path="/nosotros" element={<AboutUsPage />} />
+        <Route path="/comoPedir" element={<HowAskPage />} />
         {/* Agrega más rutas según sea necesario */}
       </Routes>
     </Router>
