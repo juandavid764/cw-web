@@ -1,4 +1,4 @@
-// src/App.jsx
+// src/App.jsx no se que está
 import React from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import CostumerPage from "./pages/CostumerPage";

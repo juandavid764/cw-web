@@ -1,13 +1,15 @@
+// Navbar.js
 import React, { useState, useEffect } from "react";
-import { Link, useLocation } from "react-router-dom";
+import { Link } from "react-router-dom";
 import {
   ShoppingCartIcon,
   Bars3Icon,
   XMarkIcon,
 } from "@heroicons/react/24/outline";
 import cwLogo from "../../assets/cwlogo.webp";
+import MenuLinks from "./MenuLinks"; // Importa el nuevo componente
 
-// Definir una constante para los elementos del menú
+// Definir una constante para los elementos del menu
 const menuItems = [
   { name: "Menu", link: "/" },
   { name: "Rastrear Pedido", link: "/rastrearPedido" },
@@ -16,18 +18,12 @@ const menuItems = [
 ];
 
 const Navbar = () => {
-  const location = useLocation(); // Hook que obtiene la ubicación de la ruta
-  const [isMenuOpen, setIsMenuOpen] = useState(false); // Estado para la apertura del menú
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
 
-  // Función para verificar si la ruta actual es la misma que la ruta del enlace
-  const isActive = (path) => location.pathname === path;
-
-  // Función para alternar la apertura del menú
   const toggleMenu = () => {
     setIsMenuOpen(!isMenuOpen);
   };
 
-  // Efecto para añadir o eliminar clases del body al abrir o cerrar el menú
   useEffect(() => {
     if (isMenuOpen) {
       document.body.classList.add("overflow-hidden");
@@ -35,21 +31,6 @@ const Navbar = () => {
       document.body.classList.remove("overflow-hidden");
     }
   }, [isMenuOpen]);
-
-  // Función para generar enlaces del menú
-  const renderMenuLinks = (className, onclick) =>
-    menuItems.map((item) => (
-      <Link
-        key={item.name}
-        to={item.link}
-        className={`${className} ${
-          isActive(item.link) ? "text-orange-500" : "text-gray-300"
-        }`}
-        onClick={onclick}
-      >
-        {item.name}
-      </Link>
-    ));
 
   return (
     <nav className="bg-black shadow-md p-4 flex justify-between items-center relative">
@@ -60,12 +41,14 @@ const Navbar = () => {
 
       {/* Menú principal - oculto en pantallas pequeñas */}
       <div className="hidden md:flex space-x-8">
-        {renderMenuLinks("text-gray-300 hover:text-orange-500")}
+        <MenuLinks
+          menuItems={menuItems}
+          className="text-gray-300 hover:text-orange-500"
+        />
       </div>
 
       {/* Íconos del alternador del menú móvil */}
       <div className="flex items-center space-x-2 md:hidden">
-        {/* Ícono de menú móvil - solo visible en dispositivos móviles */}
         <button
           onClick={toggleMenu}
           className="text-white hover:text-orange-500"
@@ -77,11 +60,7 @@ const Navbar = () => {
       {/* Ícono del carrito - solo visible en pantallas grandes */}
       <div className="hidden md:flex items-center">
         <Link to="/carrito">
-          <button
-            className={`hover:text-orange-500 ${
-              isActive("/carrito") ? "text-orange-500" : "text-white"
-            }`}
-          >
+          <button className="hover:text-orange-500 text-white">
             <ShoppingCartIcon className="h-6 w-6" />
           </button>
         </Link>
@@ -93,7 +72,6 @@ const Navbar = () => {
           isMenuOpen ? "translate-x-0" : "translate-x-full"
         } transition-transform duration-300 ease-in-out z-50`}
       >
-        {/* Botón de cierre del menú móvil */}
         <button
           onClick={toggleMenu}
           className="text-white hover:text-orange-500 self-end mb-4"
@@ -101,12 +79,11 @@ const Navbar = () => {
           <XMarkIcon className="h-6 w-6" />
         </button>
         <nav className="flex flex-col items-center space-y-8">
-          {renderMenuLinks(
-            "text-xl text-gray-300 hover:text-orange-500",
-            toggleMenu
-          )}
-
-          {/* Ícono del carrito dentro del menú desplegable en móviles */}
+          <MenuLinks
+            menuItems={menuItems}
+            className="text-xl text-gray-300 hover:text-orange-500"
+            onClick={toggleMenu}
+          />
           <Link
             to="/carrito"
             onClick={toggleMenu}

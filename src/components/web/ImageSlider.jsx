@@ -1,8 +1,6 @@
 import React, { useState } from "react";
 import { Button } from "@material-tailwind/react"; // Importa el componente de botón de Material Tailwind
 import { ArrowLeftIcon, ArrowRightIcon } from "@heroicons/react/24/outline"; // Íconos para los botones
-import "tailwindcss/tailwind.css"; // Asegúrate de que Tailwind esté importado
-//Imports de las imagenes
 import image1 from "../../assets/slide1.webp";
 import image2 from "../../assets/slide2.webp";
 import image3 from "../../assets/slide3.webp";
@@ -31,15 +29,15 @@ const ImageSlider = () => {
         {images.map((image, index) => (
           <div
             key={index}
-            className={`transition-transform duration-500 ease-in-out transform ${
-              index === currentIndex ? "translate-x-0" : "translate-x-full"
+            className={`object-cover transition-opacity duration-200 ease-in-out ${
+              index === currentIndex ? "opacity-100" : "opacity-90"
             }`}
           >
             {index === currentIndex && (
               <img
                 src={image}
                 alt={`Slide ${index}`}
-                className="w-full h-96 object-cover"
+                className="w-full h-[300px] sm:h-[300px] md:h-[500px] object-cover"
               />
             )}
           </div>
@@ -49,13 +47,13 @@ const ImageSlider = () => {
       {/* Botones de Navegación */}
       <div className="absolute inset-0 flex items-center justify-between p-4">
         <Button
-          className="bg-white p-2 rounded-full shadow-md hover:bg-gray-100 focus:outline-none"
+          className="p-2 rounded-full shadow-md hover:bg-orange-400 focus:outline-none"
           onClick={prevSlide}
         >
           <ArrowLeftIcon className="h-5 w-5 text-black" />
         </Button>
         <Button
-          className="bg-white p-2 rounded-full shadow-md hover:bg-gray-100 focus:outline-none"
+          className=" p-2 rounded-full shadow-md hover:bg-orange-400 focus:outline-none"
           onClick={nextSlide}
         >
           <ArrowRightIcon className="h-5 w-5 text-black" />
@@ -68,7 +66,7 @@ const ImageSlider = () => {
           <button
             key={index}
             className={`w-3 h-3 rounded-full ${
-              index === currentIndex ? "bg-white" : "bg-gray-400"
+              index === currentIndex ? "bg-black" : "bg-gray-400"
             }`}
             onClick={() => setCurrentIndex(index)}
           />
