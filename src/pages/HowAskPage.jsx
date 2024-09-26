@@ -1,5 +1,4 @@
 import Footer from "../components/web/Footer";
-import React from "react";
 
 const HowAskPage = () => {
     return (

@@ -3,6 +3,7 @@ import cwLogo from "../../assets/cwlogo.webp";
 import fbIcon from "../../assets/socialMediaIcons/fb.svg"
 import igIcon from "../../assets/socialMediaIcons/igicon.svg"
 import wpIcon from "../../assets/socialMediaIcons/wpicon.svg"
+import GitHubIcon from '@mui/icons-material/GitHub';
 
 const Footer = () => {
     return (
@@ -14,7 +15,7 @@ const Footer = () => {
             </div>
             <div className="flex flex-col lg:content-center gap-7 pt-5 lg:pt-0">
                 <div>
-                    <h1 className="text-white lg:text-4xl font-bold lg:text-center">Síguenos:</h1>
+                    <h1 className="text-white lg:text-2xl font-bold lg:text-center">Síguenos:</h1>
                 </div>
 
                 <div className="flex flex-row gap-2 lg:place-content-around">
@@ -36,22 +37,25 @@ const Footer = () => {
                         </button>
                     </a>
                 </div>
-                <h2 className="text-white lg:text-2xl font-semibold lg:text-center">Desarrolladores:</h2>
+                <h2 className="text-white lg:text-xl font-semibold lg:text-center">Desarrolladores:</h2>
                 <div className='flex flex-col lg:place-content-around'>
                     <a href="https://github.com/juandavid764" className='animate-pulse'>
-                        <h2 className="text-white lg:text-2xl  lg:text-center">Juan David Trujillo</h2>
+                        <h2 className="text-white lg:text-xl  lg:text-center">Juan David Trujillo</h2>
                     </a>
+                    <GitHubIcon color="primary" />
                     <a href="https://github.com/SebastianM1206" className='animate-pulse'>
-                        <h2 className="text-white lg:text-2xl  lg:text-center">Sebastian Medina Garcia</h2>
+                        <h2 className="text-white lg:text-xl  lg:text-center">Sebastian Medina Garcia</h2>
+
+                        <h2 className="text-white lg:text-xl  lg:text-center">Sebastian Medina Garcia</h2>
 
                     </a>
                 </div>
             </div>
             <div className="row-start-2 lg:row-start-1 lg:col-start-3 lg:align-top">
-                <h2 className="text-white lg:text-4xl font-bold lg:text-center">Horarios:</h2>
+                <h2 className="text-white lg:text-2xl font-bold lg:text-center">Horarios:</h2>
                 <br></br>
-                <h2 className="text-white lg:text-2xl  lg:text-center">Todos los días</h2>
-                <h2 className="text-white lg:text-2xl  lg:text-center">6:00pm - 12am</h2>
+                <h2 className="text-white lg:text-xl  lg:text-center">Todos los días</h2>
+                <h2 className="text-white lg:text-xl  lg:text-center">6:00pm - 12am</h2>
             </div>
             <br></br>
 

@@ -3,8 +3,8 @@ import teamImg from "../assets/aboutUsPage/imgAboutUs2.webp";
 import Footer from "../components/web/Footer";
 
 const AboutUsPage = () => {
-    const cartoonText = <span className="text-red-600 font-bold">Cartoon</span>
-    const warText = <span className="text-orange-300 font-bold">War</span>
+    const warText = <span className="text-red-600 font-bold">War</span>
+    const cartoonText = <span className="text-orange-300 font-bold">Cartoon</span>
     return (
         <div className="flex flex-col lg:mt-10 bg-neutral-50">
             <div className="flex flex-col-reverse lg:flex-row justify-center lg:mx-24">

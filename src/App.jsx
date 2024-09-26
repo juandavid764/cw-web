@@ -4,6 +4,7 @@ import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import CostumerPage from "./pages/CostumerPage";
 import AboutUsPage from "./pages/AboutPage";
 import HowAskPage from "./pages/HowAskPage";
+import InfoDeliveryPage from "./pages/InfoDeliveryPage";
 import Navbar from "./components/web/Navbar";
 
 function App() {
@@ -17,6 +18,8 @@ function App() {
         <Route path="/" element={<CostumerPage />} />
         <Route path="/nosotros" element={<AboutUsPage />} />
         <Route path="/comoPedir" element={<HowAskPage />} />
+        <Route path="/rastrearPedido" element={<InfoDeliveryPage />} />
+
         {/* Agrega más rutas según sea necesario */}
       </Routes>
     </Router>
