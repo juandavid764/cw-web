@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Button } from "@material-tailwind/react"; // Importa el componente de botón de Material Tailwind
 import { ArrowLeftIcon, ArrowRightIcon } from "@heroicons/react/24/outline"; // Íconos para los botones
 import image1 from "../../assets/slide1.webp";
@@ -22,6 +22,12 @@ const ImageSlider = () => {
     );
   };
 
+  useEffect(() => {
+    const interval = setInterval(nextSlide, 7000);
+
+    return () => clearInterval(interval);
+  }, []);
+
   return (
     <div className="relative w-full">
       {/* Imagenes */}
@@ -29,7 +35,7 @@ const ImageSlider = () => {
         {images.map((image, index) => (
           <div
             key={index}
-            className={`object-cover transition-opacity duration-200 ease-in-out ${
+            className={`object-cover transition-opacity duration-500 ease-in-out ${
               index === currentIndex ? "opacity-100" : "opacity-90"
             }`}
           >

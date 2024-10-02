@@ -6,23 +6,26 @@ import AboutUsPage from "./pages/AboutPage";
 import HowAskPage from "./pages/HowAskPage";
 import InfoDeliveryPage from "./pages/InfoDeliveryPage";
 import Navbar from "./components/web/Navbar";
+import { ProductsProvider } from "./context/ProductsContext";
 
 function App() {
   return (
-    <Router>
-      {/* Componente de navegacion principal */}
-      <Navbar />
+    <ProductsProvider>
+      <Router>
+        {/* Componente de navegacion principal */}
+        <Navbar />
 
-      {/* Rutas de la aplicación */}
-      <Routes>
-        <Route path="/" element={<CostumerPage />} />
-        <Route path="/nosotros" element={<AboutUsPage />} />
-        <Route path="/comoPedir" element={<HowAskPage />} />
-        <Route path="/rastrearPedido" element={<InfoDeliveryPage />} />
+        {/* Rutas de la aplicación */}
+        <Routes>
+          <Route path="/" element={<CostumerPage />} />
+          <Route path="/nosotros" element={<AboutUsPage />} />
+          <Route path="/comoPedir" element={<HowAskPage />} />
+          <Route path="/rastrearPedido" element={<InfoDeliveryPage />} />
 
-        {/* Agrega más rutas según sea necesario */}
-      </Routes>
-    </Router>
+          {/* Agrega más rutas según sea necesario */}
+        </Routes>
+      </Router>
+    </ProductsProvider>
   );
 }
 
