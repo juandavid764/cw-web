@@ -1,4 +1,3 @@
-// src/App.jsx no se que está
 import React from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import CostumerPage from "./pages_costumer/CostumerPage";
@@ -7,7 +6,7 @@ import HowAskPage from "./pages_costumer/HowAskPage";
 import InfoDeliveryPage from "./pages_costumer/InfoDeliveryPage";
 import Navbar from "./components/web/Navbar";
 import { ProductsProvider } from "./context/ProductsContext";
-import LoginPage from "./LoginPage";
+import LoginPage from "./pages_admind/LoginPage";
 
 function App() {
   return (
