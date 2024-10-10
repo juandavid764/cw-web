@@ -1,8 +1,8 @@
 import foodImg from "../assets/aboutUsPage/imgAboutUs1.webp";
 import teamImg from "../assets/aboutUsPage/imgAboutUs2.webp";
 import Footer from "../components/web/Footer";
-import Button from "@mui/material/Button";
-import { blueGrey, orange } from "@mui/material/colors";
+import LoginPage from "../pages_admind/LoginPage";
+import ButtonComponent from "../components/web/ButtonComponent"
 
 const AboutUsPage = () => {
   const warText = <span className="text-red-600 font-bold">War</span>;
@@ -57,13 +57,7 @@ const AboutUsPage = () => {
       </div>
       <br />
       <div className="flex flex-row justify-center lg:px-24">
-        <Button
-          size="large"
-          sx={{ background: orange[300] }}
-          variant="contained"
-        >
-          Realizar pedido
-        </Button>
+        <ButtonComponent title={"Realizar pedido"} />
       </div>
       <br />
       <div>
@@ -72,5 +66,12 @@ const AboutUsPage = () => {
     </div>
   );
 };
+
+
+
+
+//no entiendo la parte de 
+
+
 
 export default AboutUsPage;
