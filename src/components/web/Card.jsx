@@ -1,9 +1,7 @@
-import React, { useState } from "react";
+import React from "react";
 import { PlusIcon } from "@heroicons/react/24/solid";
 
 const Card = ({ product, onClick }) => {
-  const [showModal, setShowModal] = useState(false); // Estado para manejar el modal
-
   return (
     <>
       <div

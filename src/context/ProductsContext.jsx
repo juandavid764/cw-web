@@ -60,17 +60,26 @@ export const ProductsProvider = ({ children }) => {
       price: 18000,
       image: "https://via.placeholder.com/150",
     },
-    // Agrega más productos si lo deseas
   ]);
 
   const [additions] = useState([
-    { name: "Queso Fundido", price: 12000 },
-    { name: "Pepinillos", price: 4000 },
-    { name: "Pollo desmechado", price: 7300 },
+    { id: 1, name: "Queso Fundido", price: 4000 },
+    { id: 2, name: "Pepinillos", price: 7300 },
+    { id: 3, name: "Pollo desmechado", price: 8200 },
+  ]);
+
+  const [sauces] = useState([
+    "Ajo",
+    "Tomate",
+    "Mostaza",
+    "Mayonesa",
+    "Tartara",
+    "BBQ",
+    "Ranch",
   ]);
 
   return (
-    <ProductsContext.Provider value={{ products, additions }}>
+    <ProductsContext.Provider value={{ products, additions, sauces }}>
       {children}
     </ProductsContext.Provider>
   );

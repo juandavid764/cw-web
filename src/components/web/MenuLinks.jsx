@@ -14,8 +14,9 @@ const MenuLinks = ({ menuItems, className, onClick }) => {
         <Link
           key={item.name}
           to={item.link}
-          className={`${className} ${isActive(item.link) ? "text-orange-300" : "text-gray-300"
-            }`}
+          className={`${className} ${
+            isActive(item.link) ? "text-orange-300" : "text-gray-300"
+          }`}
           onClick={onClick}
         >
           {item.name}
