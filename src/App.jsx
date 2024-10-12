@@ -10,6 +10,7 @@ import { ProductsProvider } from "./context/ProductsContext";
 import LoginPage from "./pages_admind/LoginPage";
 import ShoppingCartPage from "./pages_costumer/shopping_cart/ShoppingCartPage";
 import DataCostumerPage from "./pages_costumer/shopping_cart/DataCostumerPage";
+import DataDeliveryPage from "./pages_costumer/shopping_cart/DataDeliveryPage";
 
 function App() {
   return (
