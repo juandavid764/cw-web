@@ -84,7 +84,7 @@ const Additions = ({ updateTotal }) => {
         className="flex justify-between items-center cursor-pointer"
         onClick={toggleOpen}
       >
-        <h3 className="text-lg font-semibold">Adiciones</h3>
+        <h3 className="text-lg font-semibold mb-2">Adiciones</h3>
         {isOpen ? (
           <ChevronUpIcon className="h-6 w-6 text-gray-600" />
         ) : (
@@ -101,10 +101,10 @@ const Additions = ({ updateTotal }) => {
               <div className="flex justify-between w-full">
                 <div className="flex items-center">
                   <input
+                    className="mr-2"
                     type="checkbox"
                     checked={!!selected[addition.id]}
                     onChange={() => handleCheckbox(addition)}
-                    style={{ marginRight: "10px" }}
                   />
                   <span>{addition.name}</span>
                 </div>

@@ -1,10 +1,22 @@
 import { ChevronDownIcon, ChevronUpIcon } from "@heroicons/react/24/solid";
-import React, { useContext, useState } from "react";
+import React, { useContext, useState, useEffect } from "react";
 import { ProductsContext } from "../../context/ProductsContext";
 
-const Sauces = () => {
+const Sauces = ({ updateSauces }) => {
   const { sauces } = useContext(ProductsContext);
   const [isOpen, setIsOpen] = useState(false);
+  const [selectedSauces, setSelectedSauces] = useState([]);
+
+  const handleSauceSelection = (sauce) => {
+    setSelectedSauces((prev) =>
+      prev.includes(sauce) ? prev.filter((s) => s !== sauce) : [...prev, sauce]
+    );
+  };
+
+  useEffect(() => {
+    updateSauces(selectedSauces);
+  }, [selectedSauces, updateSauces]);
+
   const toggleOpen = () => {
     setIsOpen(!isOpen);
   };
@@ -27,7 +39,12 @@ const Sauces = () => {
           {sauces.map((sauce) => (
             <div key={sauce} className="flex justify-between items-center">
               <div className="flex items-center">
-                <input type="checkbox" className="mr-2" />
+                <input
+                  type="checkbox"
+                  className="mr-2"
+                  checked={selectedSauces.includes(sauce)}
+                  onChange={() => handleSauceSelection(sauce)}
+                />
                 <label className="text-sm">{sauce}</label>
               </div>
             </div>

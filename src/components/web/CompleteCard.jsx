@@ -1,13 +1,22 @@
-import React, { useState } from "react";
-import { XMarkIcon } from "@heroicons/react/24/solid";
+import React, { useState, useContext } from "react";
 import Additions from "./Additions";
 import Sauces from "./Sauces";
 import CardHeader from "./CardHeader";
+import { ProductsContext } from "../../context/ProductsContext";
 
 const CompleteCard = ({ product, onClose }) => {
   const [total, setTotal] = useState(product.price);
   const [selectedAdditions, setSelectedAdditions] = useState([]);
+  const [selectedSauces, setSelectedSauces] = useState([]);
+  const { addToCart } = useContext(ProductsContext); // Importo el contexto con la funcion addToCart
 
+  //Funcion que me permite agregar el producto al carrito
+  const handleAddToCart = () => {
+    addToCart(product, selectedAdditions, selectedSauces); // Llamo la funcion addToCart del contexto
+    onClose(); // Cierro el modal de este producto
+  };
+
+  //Funcion que me permite actualizar el total del producto
   const updateTotal = (additions) => {
     const additionsTotal = additions.reduce(
       (acc, addition) => acc + addition.price * addition.quantity,
@@ -19,7 +28,7 @@ const CompleteCard = ({ product, onClose }) => {
 
   return (
     <div className="fixed inset-0 bg-gray-800 bg-opacity-75 flex items-center justify-center z-50">
-      <div className="bg-white max-w-lg w-full max-h-[600px] relative overflow-hidden rounded-lg">
+      <div className="bg-white max-w-lg w-full  max-h-[600px] relative overflow-hidden rounded-lg">
         <div className="sticky top-0 bg-white z-10 px-3 pt-2 ">
           <CardHeader total={total} onClose={onClose} />
         </div>
@@ -41,9 +50,12 @@ const CompleteCard = ({ product, onClose }) => {
             <p className="text-gray-600 mt-2">{product.description}</p>
 
             <Additions updateTotal={updateTotal} />
-            <Sauces />
+            <Sauces updateSauces={setSelectedSauces} />
 
-            <button className="mt-4 w-full bg-orange-400 hover:bg-orange-500 text-white font-bold py-2 px-4 rounded-lg">
+            <button
+              onClick={handleAddToCart}
+              className="mt-4 w-full bg-orange-400 hover:bg-orange-300 text-white font-bold py-2 px-4 rounded-lg"
+            >
               Agregar al carrito
             </button>
           </div>

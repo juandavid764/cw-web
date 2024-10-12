@@ -22,7 +22,7 @@ const Card = ({ product, onClick }) => {
             <span className="text-lg font-bold text-gray-900">
               ${product.price.toLocaleString()}
             </span>
-            <button className="bg-orange-400 hover:bg-orange-500 text-white font-bold py-2 px-3 rounded-full flex items-center">
+            <button className="bg-orange-400 hover:bg-orange-300 text-white font-bold py-2 px-3 rounded-full flex items-center">
               <PlusIcon className="h-5 w-5" />
             </button>
           </div>
