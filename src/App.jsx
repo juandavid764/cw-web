@@ -7,6 +7,7 @@ import InfoDeliveryPage from "./pages_costumer/InfoDeliveryPage";
 import Navbar from "./components/web/Navbar";
 import { ProductsProvider } from "./context/ProductsContext";
 import LoginPage from "./pages_admind/LoginPage";
+import Routespage from "./pages_admind/RoutesPage"
 
 function App() {
   return (
@@ -21,7 +22,7 @@ function App() {
           <Route path="/nosotros" element={<AboutUsPage />} />
           <Route path="/comoPedir" element={<HowAskPage />} />
           <Route path="/rastrearPedido" element={<InfoDeliveryPage />} />
-          <Route path="/login" element={<LoginPage />} />
+          <Route path="/login" element={<Routespage />} />
 
           {/* Agrega más rutas según sea necesario */}
         </Routes>
