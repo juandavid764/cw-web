@@ -1,9 +1,10 @@
 import React, { useContext } from "react";
 import DetailsData from "./DetailsData";
 import { ProductsContext } from "../../context/ProductsContext";
+import { Link } from "react-router-dom";
 
 const PurchaseDetails = () => {
-  const { cart } = useContext(ProductsContext);
+  const { cart, setTotal } = useContext(ProductsContext);
 
   const calculateSubtotal = () => {
     return cart.reduce((total, order) => {
@@ -13,12 +14,12 @@ const PurchaseDetails = () => {
           sum + addition.price * addition.quantity * order.quantity,
         0
       );
-
       return total + productPrice + additionsTotal; // Suma total
     }, 0);
   };
 
   const subtotal = calculateSubtotal();
+  const setTotalPrice = () => setTotal(subtotal);
 
   return (
     <div className="mt-5 mb-5 w-[448px] h-max-[600px]  bg-white rounded-lg border border-gray-200 shadow-md p-6">
@@ -39,12 +40,19 @@ const PurchaseDetails = () => {
         </div>
       </div>
       <div className="flex justify-around">
-        <button className="bg-orange-400 text-white px-6 py-2 rounded-md hover:bg-orange-300">
-          Domicilio
-        </button>
-        <button className="bg-orange-400 text-white px-6 py-2 rounded-md hover:bg-orange-300">
-          Recoger
-        </button>
+        <Link to="/carrito/infoPedido">
+          <button
+            onClick={setTotalPrice}
+            className="bg-orange-400 text-white px-6 py-2 rounded-md hover:bg-orange-300"
+          >
+            Domicilio
+          </button>
+        </Link>
+        <Link to="/carrito/infoUsuario">
+          <button className="bg-orange-400 text-white px-6 py-2 rounded-md hover:bg-orange-300">
+            Recoger
+          </button>
+        </Link>
       </div>
     </div>
   );

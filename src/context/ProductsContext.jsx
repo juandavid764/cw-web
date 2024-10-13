@@ -80,7 +80,7 @@ export const ProductsProvider = ({ children }) => {
 
   //
   const [cart, setCart] = useState([]);
-
+  const [total, setTotal] = useState(0);
   // Función para agregar un pedido al carrito
   const addToCart = (product, selectedAdditions, selectedSauces) => {
     const newOrder = {
@@ -106,7 +106,16 @@ export const ProductsProvider = ({ children }) => {
 
   return (
     <ProductsContext.Provider
-      value={{ products, additions, sauces, addToCart, cart, setCart }}
+      value={{
+        products,
+        additions,
+        sauces,
+        addToCart,
+        cart,
+        setCart,
+        total,
+        setTotal,
+      }}
     >
       {children}
     </ProductsContext.Provider>

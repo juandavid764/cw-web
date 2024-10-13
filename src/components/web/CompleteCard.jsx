@@ -16,7 +16,7 @@ const CompleteCard = ({ product, onClose }) => {
     onClose(); // Cierro el modal de este producto
   };
 
-  //Funcion que me permite actualizar el total del producto
+  //Funcion que me permite actualizar el total del producto en especifico
   const updateTotal = (additions) => {
     const additionsTotal = additions.reduce(
       (acc, addition) => acc + addition.price * addition.quantity,
