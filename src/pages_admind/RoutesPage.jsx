@@ -7,7 +7,7 @@ const LoginPage = () => {
 
     return (
         <div className="min-h-screen flex items-center justify-center bg-gray-100">
-            <DropdownButton estados={[{ "En camino": "yellow" }, { "Completado": "green" }, { "Cancelado": "red" }]} />
+            <DropdownButton estados={["En camino", "Completado", "Cancelado"]} />
         </div>
     );
 };
