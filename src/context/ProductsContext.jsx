@@ -78,8 +78,45 @@ export const ProductsProvider = ({ children }) => {
     "Ranch",
   ]);
 
+  //
+  const [cart, setCart] = useState([]);
+  const [total, setTotal] = useState(0);
+  // Función para agregar un pedido al carrito
+  const addToCart = (product, selectedAdditions, selectedSauces) => {
+    const newOrder = {
+      //id unico para el pedido con la fecha porque no voy a descargar nada mas
+      id: Date.now(),
+      quantity: 1,
+      product: {
+        name: product.name,
+        price: product.price,
+        image: product.image,
+      },
+      additions: selectedAdditions.map((addition) => ({
+        name: addition.name,
+        price: addition.price,
+        quantity: addition.quantity,
+      })),
+      sauces: selectedSauces,
+    };
+
+    console.log(newOrder);
+    setCart((prevCart) => [...prevCart, newOrder]);
+  };
+
   return (
-    <ProductsContext.Provider value={{ products, additions, sauces }}>
+    <ProductsContext.Provider
+      value={{
+        products,
+        additions,
+        sauces,
+        addToCart,
+        cart,
+        setCart,
+        total,
+        setTotal,
+      }}
+    >
       {children}
     </ProductsContext.Provider>
   );

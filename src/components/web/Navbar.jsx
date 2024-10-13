@@ -68,8 +68,9 @@ const Navbar = () => {
 
       {/* Drawer para el menú móvil */}
       <div
-        className={`fixed top-0 right-0 w-64 h-full bg-black text-white p-8 transform ${isMenuOpen ? "translate-x-0" : "translate-x-full"
-          } transition-transform duration-300 ease-in-out z-50`}
+        className={`fixed top-0 right-0 w-64 h-full bg-black text-white p-8 transform ${
+          isMenuOpen ? "translate-x-0" : "translate-x-full"
+        } transition-transform duration-300 ease-in-out z-50`}
       >
         <button
           onClick={toggleMenu}
