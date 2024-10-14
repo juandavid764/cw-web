@@ -4,9 +4,7 @@ const DetailsData = ({ order }) => {
   return (
     <div className="mb-4 border-t border-gray-300 pt-4">
       <div className="flex justify-between">
-        <p>
-          {order.quantity} {order.product.name}
-        </p>
+        <p>1 {order.product.name}</p>
         <p className="font-bold">
           ${order.product.price * order.quantity.toLocaleString()}
         </p>
@@ -18,14 +16,11 @@ const DetailsData = ({ order }) => {
             <div className="flex justify-between w-full" key={index}>
               <div className="flex items-center">
                 <span>
-                  {addition.quantity * order.quantity} {addition.name}
+                  {addition.quantity} {addition.name}
                 </span>
               </div>
               <span>
-                $
-                {addition.price *
-                  addition.quantity *
-                  order.quantity.toLocaleString()}
+                ${addition.price * addition.quantity.toLocaleString()}
               </span>
             </div>
           ))

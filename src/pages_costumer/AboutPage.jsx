@@ -1,13 +1,14 @@
 import foodImg from "../assets/aboutUsPage/imgAboutUs1.webp";
 import teamImg from "../assets/aboutUsPage/imgAboutUs2.webp";
 import Footer from "../components/web/Footer";
-import LoginPage from "../pages_admind/LoginPage";
-import ButtonComponent from "../components/web/ButtonComponent"
-import React, { useState } from 'react';
+import LoginPage from "../pages_admin/LoginPage";
+import ButtonComponent from "../components/web/ButtonComponent";
 
 const AboutUsPage = () => {
   const warText = <span className="text-red-600 font-bold">War</span>;
-  const cartoonText = <span className="text-orange-300 font-bold">Cartoon</span>;
+  const cartoonText = (
+    <span className="text-orange-300 font-bold">Cartoon</span>
+  );
 
   return (
     <div className="flex flex-col lg:mt-10 bg-neutral-50">
@@ -67,11 +68,6 @@ const AboutUsPage = () => {
   );
 };
 
-
-
-
-//no entiendo la parte de 
-
-
+//no entiendo la parte de
 
 export default AboutUsPage;

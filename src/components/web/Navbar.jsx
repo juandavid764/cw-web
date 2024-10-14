@@ -7,7 +7,7 @@ import {
   XMarkIcon,
 } from "@heroicons/react/24/outline";
 import cwLogo from "../../assets/cwlogo.webp";
-import MenuLinks from "./MenuLinks"; // Importa el nuevo componente
+import MenuLinks from "./MenuLinks";
 
 // Definir una constante para los elementos del menu
 const menuItems = [
