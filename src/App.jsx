@@ -31,6 +31,7 @@ function App() {
           <Route path="/carrito/infoUsuario" element={<DataCostumerPage />} />
           <Route path="/carrito/infoPedido" element={<DataDeliveryPage />} />
           <Route path="/login" element={<LoginPage />} />
+          <Route path="/login/routes" element={<Routespage />} />
 
           {/* Agrega más rutas según sea necesario */}
         </Routes>

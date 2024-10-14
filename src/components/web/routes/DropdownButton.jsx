@@ -1,47 +1,125 @@
-import {
-    Menu,
-    MenuHandler,
-    MenuList,
-    MenuItem,
-    Button
+import * as React from 'react';
+import Button from '@mui/material/Button';
+import ButtonGroup from '@mui/material/ButtonGroup';
+import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
+import ClickAwayListener from '@mui/material/ClickAwayListener';
+import Grow from '@mui/material/Grow';
+import Paper from '@mui/material/Paper';
+import Popper from '@mui/material/Popper';
+import MenuItem from '@mui/material/MenuItem';
+import MenuList from '@mui/material/MenuList';
+import { orange } from "@mui/material/colors";
 
-} from "@material-tailwind/react";
-import { useState } from "react";
+const options = ['Pendiente', 'En proceso', 'En camino', 'Completado', 'Cancelado'];
 
-export function DropdownButton({ estados }) {
-    const [buttonTitle, setButtonTitle] = useState(estados[0]);
-    const [colorStatus, setColorStatus] = useState("yellow");
+export function DropdownButton({ avalibleOptions }) {
+    const [open, setOpen] = React.useState(false);
+    const [colorStatus, setColorStatus] = React.useState('warning');
+    const anchorRef = React.useRef(null);
+    const [selectedIndex, setSelectedIndex] = React.useState(2);
 
-    const pulseButton = (estado) => {
-        switch (estado) {
-            case "En camino":
-                setColorStatus("yellow")
+    //Se oprimio botonTitulo
+    const handleClick = () => {
+        console.log(`You clicked ${options[selectedIndex]}`);
+    };
+
+
+    // Se oprimio un item
+    const handleMenuItemClick = (event, index) => {
+        setSelectedIndex(index);
+        setOpen(false);
+
+        switch (index) {
+            // Pendiente
+            case 0:
+                setColorStatus('white');
                 break;
-            case "Completado":
-                setColorStatus("orange")
+            // En proceso
+            case 1:
+                setColorStatus('primary');
                 break;
-            case "Cancelado":
-                setColorStatus("yellow")
+            //En camino 
+            case 2:
+                setColorStatus('warning');
+                break;
+            //Completado
+            case 3:
+                setColorStatus('success');
+                break;
+            //Cancelado
+            case 4:
+                setColorStatus('error');
                 break;
         }
+    };
 
-        setButtonTitle(estado)
+    const handleToggle = () => {
+        setOpen((prevOpen) => !prevOpen);
+    };
 
+    const handleClose = (event) => {
+        if (anchorRef.current && anchorRef.current.contains(event.target)) {
+            return;
+        }
+
+        setOpen(false);
     };
 
     return (
-        <Menu>
-            <MenuHandler>
-
-                <Button className={`bg-${colorStatus}-300 hover:bg-${colorStatus}-400 text-white font-bold py-2 px-4 rounded`}>
-                    {buttonTitle}
+        <React.Fragment>
+            <ButtonGroup
+                variant="contained"
+                ref={anchorRef}
+                aria-label="Button group with a nested menu"
+            >
+                <Button color={colorStatus} onClick={handleClick}>{options[selectedIndex]}</Button>
+                <Button
+                    color={colorStatus}
+                    size="small"
+                    aria-controls={open ? 'split-button-menu' : undefined}
+                    aria-expanded={open ? 'true' : undefined}
+                    aria-label="select merge strategy"
+                    aria-haspopup="menu"
+                    onClick={handleToggle}
+                >
+                    <ArrowDropDownIcon />
                 </Button>
-            </MenuHandler>
-            <MenuList>
-                {estados.map((estado, index) => (
-                    <MenuItem onClick={() => pulseButton(estado)} key={index}>{estado}</MenuItem>
-                ))}
-            </MenuList>
-        </Menu>
+            </ButtonGroup>
+            <Popper
+                sx={{ zIndex: 1 }}
+                open={open}
+                anchorEl={anchorRef.current}
+                role={undefined}
+                transition
+                disablePortal
+            >
+                {({ TransitionProps, placement }) => (
+                    <Grow
+                        {...TransitionProps}
+                        style={{
+                            transformOrigin:
+                                placement === 'bottom' ? 'center top' : 'center bottom',
+                        }}
+                    >
+                        <Paper>
+                            <ClickAwayListener onClickAway={handleClose}>
+                                <MenuList id="split-button-menu" autoFocusItem>
+                                    {options.map((option, index) => (
+                                        <MenuItem
+                                            key={option}
+                                            disabled={index <= avalibleOptions}
+                                            selected={index === selectedIndex}
+                                            onClick={(event) => handleMenuItemClick(event, index)}
+                                        >
+                                            {option}
+                                        </MenuItem>
+                                    ))}
+                                </MenuList>
+                            </ClickAwayListener>
+                        </Paper>
+                    </Grow>
+                )}
+            </Popper>
+        </React.Fragment>
     );
 }
