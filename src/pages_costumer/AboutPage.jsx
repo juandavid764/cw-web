@@ -1,8 +1,8 @@
 import foodImg from "../assets/aboutUsPage/imgAboutUs1.webp";
 import teamImg from "../assets/aboutUsPage/imgAboutUs2.webp";
 import Footer from "../components/web/Footer";
-import LoginPage from "../pages_admind/LoginPage";
-import ButtonComponent from "../components/web/ButtonComponent"
+import LoginPage from "../pages_admin/LoginPage";
+import ButtonComponent from "../components/web/ButtonComponent";
 
 const AboutUsPage = () => {
   const warText = <span className="text-red-600 font-bold">War</span>;
@@ -67,11 +67,6 @@ const AboutUsPage = () => {
   );
 };
 
-
-
-
-//no entiendo la parte de 
-
-
+//no entiendo la parte de
 
 export default AboutUsPage;

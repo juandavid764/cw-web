@@ -28,9 +28,11 @@ const PurchaseDetails = () => {
         {" "}
         <div className="flex flex-col space-y-2">
           {" "}
-          {cart.map((order, index) => (
-            <DetailsData key={index} order={order} />
-          ))}
+          {cart.map((order, index) =>
+            Array.from({ length: order.quantity }, (_, i) => (
+              <DetailsData key={`${index}-${i}`} order={order} />
+            ))
+          )}
         </div>
       </div>
       <div className="border-t border-gray-300 pt-4 mb-4">
