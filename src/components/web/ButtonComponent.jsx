@@ -1,11 +1,15 @@
 import Button from "@mui/material/Button";
-import { orange } from "@mui/material/colors";
 
-const ButtonComponent = ({ title }) => {
+//Pasamos el titulo del boton y la funcion a ejecutar cuando se oprima
+const ButtonComponent = ({ title, onClickButton }) => {
+  const handleClick = () => {
+    onClickButton();
+  };
+
   return (
-    <button className="mt-4 bg-orange-300 hover:bg-orange-500 text-white font-bold py-2 px-4 rounded-lg">
+    <Button sx={{ textTransform: 'none' }} variant="contained" color="warning" onClick={handleClick} className="mt-4 bg-orange-300 hover:bg-orange-500 text-white font-bold py-2 px-4 rounded-lg">
       {title}
-    </button>
+    </Button>
   );
 };
 

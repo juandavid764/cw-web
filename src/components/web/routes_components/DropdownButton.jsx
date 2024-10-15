@@ -8,48 +8,60 @@ import Paper from '@mui/material/Paper';
 import Popper from '@mui/material/Popper';
 import MenuItem from '@mui/material/MenuItem';
 import MenuList from '@mui/material/MenuList';
-import { orange } from "@mui/material/colors";
 
-const options = ['Pendiente', 'En proceso', 'En camino', 'Completado', 'Cancelado'];
+const estados = ['Pendiente', 'En proceso', 'En camino', 'Completado', 'Cancelado'];
 
-export function DropdownButton({ avalibleOptions }) {
+export function DropdownButton({ avalibleOptions, options = estados, obtenerIndex = () => { } }) {
+    let colorIncial = ''
+    let estadoInicial = 0
+    let color = false
+    if (options[0] === 'Pendiente') {
+        colorIncial = 'warning'
+        estadoInicial = 2
+        color = true
+    }
     const [open, setOpen] = React.useState(false);
-    const [colorStatus, setColorStatus] = React.useState('warning');
+    const [colorStatus, setColorStatus] = React.useState(colorIncial);
     const anchorRef = React.useRef(null);
-    const [selectedIndex, setSelectedIndex] = React.useState(2);
+    const [selectedIndex, setSelectedIndex] = React.useState(estadoInicial);
 
     //Se oprimio botonTitulo
     const handleClick = () => {
         console.log(`You clicked ${options[selectedIndex]}`);
     };
 
-
     // Se oprimio un item
-    const handleMenuItemClick = (event, index) => {
+    const handleMenuItemClick = (index) => {
         setSelectedIndex(index);
         setOpen(false);
 
-        switch (index) {
-            // Pendiente
-            case 0:
-                setColorStatus('white');
-                break;
-            // En proceso
-            case 1:
-                setColorStatus('primary');
-                break;
-            //En camino 
-            case 2:
-                setColorStatus('warning');
-                break;
-            //Completado
-            case 3:
-                setColorStatus('success');
-                break;
-            //Cancelado
-            case 4:
-                setColorStatus('error');
-                break;
+        obtenerIndex(index)
+
+        //verifica que se esta usando el array estados
+        if (color) {
+            switch (index) {
+                // Pendiente
+                case 0:
+                    setColorStatus('white');
+                    break;
+                // En proceso
+                case 1:
+                    setColorStatus('primary');
+                    break;
+                //En camino 
+                case 2:
+                    setColorStatus('warning');
+                    break;
+                //Completado
+                case 3:
+                    setColorStatus('success');
+                    break;
+                //Cancelado
+                case 4:
+                    setColorStatus('error');
+                    break;
+            }
+
         }
     };
 
@@ -72,7 +84,7 @@ export function DropdownButton({ avalibleOptions }) {
                 ref={anchorRef}
                 aria-label="Button group with a nested menu"
             >
-                <Button color={colorStatus} onClick={handleClick}>{options[selectedIndex]}</Button>
+                <Button color={colorStatus} onClick={handleClick} sx={{ textTransform: 'none' }}>{options[selectedIndex]}</Button>
                 <Button
                     color={colorStatus}
                     size="small"
@@ -103,13 +115,14 @@ export function DropdownButton({ avalibleOptions }) {
                     >
                         <Paper>
                             <ClickAwayListener onClickAway={handleClose}>
-                                <MenuList id="split-button-menu" autoFocusItem>
+                                <MenuList id="split-button-menu" autoFocusItem sx={{ textTransform: 'none' }}>
                                     {options.map((option, index) => (
                                         <MenuItem
+
                                             key={option}
                                             disabled={index <= avalibleOptions}
                                             selected={index === selectedIndex}
-                                            onClick={(event) => handleMenuItemClick(event, index)}
+                                            onClick={() => handleMenuItemClick(index)}
                                         >
                                             {option}
                                         </MenuItem>

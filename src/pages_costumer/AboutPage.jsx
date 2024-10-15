@@ -58,7 +58,9 @@ const AboutUsPage = () => {
       </div>
       <br />
       <div className="flex flex-row justify-center lg:px-24">
-        <ButtonComponent title={"Realizar pedido"} />
+
+        <ButtonComponent title={"Realizar pedido"} onClickButton={() => { }} />
+
       </div>
       <br />
       <div>
