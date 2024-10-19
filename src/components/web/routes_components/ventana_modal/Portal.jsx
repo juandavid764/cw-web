@@ -3,7 +3,7 @@ import { createPortal } from 'react-dom';
 import ModalContent from './ModalContent';
 import ButtonComponent from '../../ButtonComponent';
 
-export default function PortalExample({ domiciliarios, idPedidos }) {
+export default function Portal({ domiciliarios, idPedidos }) {
 
     const [showModal, setShowModal] = useState(false);
     return (
