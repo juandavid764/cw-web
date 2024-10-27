@@ -4,6 +4,12 @@ import { ProductsContext } from "../../context/ProductsContext";
 
 const DataCostumerPage = () => {
   const { total } = useContext(ProductsContext);
+  const [paymentMethod, setPaymentMethod] = useState("Efectivo");
+
+  const handlePaymentChange = (event) => {
+    setPaymentMethod(event.target.value); // Obtiene el valor actual del select
+    console.log("Forma de pago seleccionada:", event.target.value);
+  };
 
   return (
     <div className="flex items-center justify-center bg-gray-100">
@@ -51,25 +57,25 @@ const DataCostumerPage = () => {
           </div>
           <div className="mb-4">
             <label htmlFor="payment" className="block text-gray-700 font-semibold mb-2">Forma de pago:</label>
-            <select id="payment" name="cars" className="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-orange-300 focus:border-orange-500 sm:text-sm rounded-md">
+            <select id="payment" name="payment" onChange={handlePaymentChange} className="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-orange-300 focus:border-orange-500 sm:text-sm rounded-md">
               <option value="Efectivo">Efectivo</option>
               <option value="Transferencia">Transferencia</option>
             </select>
           </div>
-          <div className="mb-4">
-            <label className="block text-gray-700 font-semibold mb-2" htmlFor="username">
-              Con cuanto pago
-            </label>
-            <input
-              type="number"
-              id="cashs"
-              // value={username}
-              // onChange={(e) => setUsername(e.target.value)}
 
-              className="w-full px-3 py-2 border rounded-lg focus:outline-none  focus:border-orange-300"
-              placeholder="$"
-            />
-          </div>
+          {paymentMethod === 'Efectivo' && (
+            <div className="mb-4">
+              <label className="block text-gray-700 font-semibold mb-2" htmlFor="cashs">
+                Con cuanto pago
+              </label>
+              <input
+                type="number"
+                id="cashs"
+                className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:border-orange-300"
+                placeholder="$"
+              />
+            </div>
+          )}
           <div className="mb-4">
             <label className="block text-gray-700 font-semibold mb-2" htmlFor="username">
               Comentarios
