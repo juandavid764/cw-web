@@ -17,6 +17,7 @@ const RoutesPage = () => {
         <div id="modal" className="min-h-screen flex flex-col justify-start p-10 bg-gray-100">
             <div className='flex flex-row justify-between'>
                 <ButtonGroupComponent titles={titles} onClickButton={miFuncion} />
+                {/* PortalRutas Boton de crear rutas */}
                 <PortalRutas domiciliarios={titles} idPedidos={pedidos} />
             </div>
             <div>
