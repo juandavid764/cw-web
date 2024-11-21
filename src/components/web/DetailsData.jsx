@@ -5,9 +5,7 @@ const DetailsData = ({ order }) => {
     <div className="mb-4 border-t border-gray-300 pt-4">
       <div className="flex justify-between">
         <p>1 {order.product.name}</p>
-        <p className="font-bold">
-          ${order.product.price * order.quantity.toLocaleString()}
-        </p>
+        <p className="font-bold">${order.product.price.toLocaleString()}</p>
       </div>
       <div className="ml-4">
         <p className="font-semibold">Adiciones:</p>
