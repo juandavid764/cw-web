@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
-import { ButtonGroupComponent } from '../components/web/routes_components/ButtonGroupComponent';
-import PortalRutas from '../components/web/routes_components/ventana_modal/Portal';
-import CardRoute from '../components/web/routes_components/CardRoute';
-import ProductList from "../components/web/routes_components/ProductList"
+import { ButtonGroupComponent } from '../../components/admin/routesComponents/ButtonGroupComponent';
+import PortalRutas from '../../components/admin/routesComponents/ventana_modal/Portal';
+import CardRoute from '../../components/admin/routesComponents/CardRoute';
+import ProductList from "../../components/admin/routesComponents/ProductList"
 
 
 const RoutesPage = () => {

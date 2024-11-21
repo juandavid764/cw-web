@@ -1,4 +1,4 @@
-import Footer from "../components/web/Footer";
+import Footer from "../../components/web/Footer";
 
 const HowAskPage = () => {
     return (

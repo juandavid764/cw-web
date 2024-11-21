@@ -1,6 +1,6 @@
 import React, { useState, useContext } from "react";
-import ButtonComponent from "../../components/web/ButtonComponent";
-import { ProductsContext } from "../../context/ProductsContext";
+import ButtonComponent from "../../../components/web/ButtonComponent";
+import { ProductsContext } from "../../../context/ProductsContext";
 
 const DataDeliveryPage = () => {
   const { total } = useContext(ProductsContext);

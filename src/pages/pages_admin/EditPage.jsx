@@ -1,6 +1,6 @@
 import React, { useState } from "react";
-import ProductForm from "../components/admin/editComponents/ProductForm";
-import SimpleInfo from "../components/admin/editComponents/SimpleInfo";
+import ProductForm from "../../components/admin/editComponents/ProductForm";
+import SimpleInfo from "../../components/admin/editComponents/SimpleInfo";
 
 const EditPage = () => {
   const [formData, setFormData] = useState({

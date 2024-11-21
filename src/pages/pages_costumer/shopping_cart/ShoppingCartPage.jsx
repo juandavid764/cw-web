@@ -1,8 +1,8 @@
 import React, { useContext } from "react";
-import PurchaseDetails from "../../components/web/PurchaseDetails";
-import QuantityContainer from "../../components/web/QuantityContainer";
-import Footer from "../../components/web/Footer";
-import { ProductsContext } from "../../context/ProductsContext";
+import PurchaseDetails from "../../../components/web/PurchaseDetails";
+import QuantityContainer from "../../../components/web/QuantityContainer";
+import Footer from "../../../components/web/Footer";
+import { ProductsContext } from "../../../context/ProductsContext";
 const ShoppingCartPage = () => {
   const { cart } = useContext(ProductsContext);
   return (

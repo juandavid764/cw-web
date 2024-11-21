@@ -1,8 +1,8 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import cwLogo from "../assets/cwlogo.webp";
-import ButtonComponent from "../components/web/ButtonComponent";
-import { useAuth } from "../context/AuthContext";
+import cwLogo from "../../assets/cwlogo.webp";
+import ButtonComponent from "../../components/web/ButtonComponent";
+import { useAuth } from "../../context/AuthContext";
 
 const LoginPage = () => {
   const [username, setUsername] = useState("");

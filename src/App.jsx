@@ -9,7 +9,7 @@ import { ProductsProvider } from "./context/ProductsContext";
 import { useAuth } from "./context/AuthContext";
 import CustomerRoutes from "./routes/CustomerRoutes";
 import AdminRoutes from "./routes/AdminRoutes";
-import Routespage from "./pages_admin/RoutesPage";
+import Routespage from "./pages/pages_admin/RoutesPage";
 
 function App() {
   const { isAdmin } = useAuth(); //Gepeto me dice que me ayuda con el rol del usuario
