@@ -81,6 +81,8 @@ export const ProductsProvider = ({ children }) => {
   //
   const [cart, setCart] = useState([]);
   const [total, setTotal] = useState(0);
+  const [orderCount, setOrderCount] = useState(0);
+
   // Función para agregar un pedido al carrito
   const addToCart = (product, selectedAdditions, selectedSauces) => {
     const newOrder = {
@@ -100,8 +102,11 @@ export const ProductsProvider = ({ children }) => {
       sauces: selectedSauces,
     };
 
-    console.log(newOrder);
-    setCart((prevCart) => [...prevCart, newOrder]);
+    setCart((prevCart) => {
+      const updatedCart = [...prevCart, newOrder];
+      setOrderCount(updatedCart.length);
+      return updatedCart;
+    });
   };
 
   return (
@@ -115,6 +120,8 @@ export const ProductsProvider = ({ children }) => {
         setCart,
         total,
         setTotal,
+        orderCount,
+        setOrderCount,
       }}
     >
       {children}

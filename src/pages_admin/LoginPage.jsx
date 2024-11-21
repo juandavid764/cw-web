@@ -68,7 +68,12 @@ const LoginPage = () => {
             />
           </div>
           <div className="flex flex-row justify-center">
-            <ButtonComponent title={"Iniciar Sesión"} type="submit" />
+            <button
+              type="submit"
+              className="bg-orange-400 text-white px-6 py-2 rounded-md hover:bg-orange-300"
+            >
+              Iniciar sesión
+            </button>
           </div>
         </form>
       </div>

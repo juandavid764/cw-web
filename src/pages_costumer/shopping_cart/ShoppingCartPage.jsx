@@ -12,7 +12,9 @@ const ShoppingCartPage = () => {
           <div className="flex w-full justify-center">
             <div className="flex bg-white w-[75%] items-center justify-between">
               <QuantityContainer />
-              <PurchaseDetails />
+              <div className="flex flex-col h-full space-y-2">
+                <PurchaseDetails />
+              </div>
             </div>
           </div>
         ) : (

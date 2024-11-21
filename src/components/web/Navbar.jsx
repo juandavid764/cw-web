@@ -1,5 +1,6 @@
 // Navbar.js
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
+import { ProductsContext } from "../../context/ProductsContext";
 import { Link } from "react-router-dom";
 import {
   ShoppingCartIcon,
@@ -19,6 +20,7 @@ const menuItems = [
 
 const Navbar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const { orderCount } = useContext(ProductsContext);
 
   const toggleMenu = () => {
     setIsMenuOpen(!isMenuOpen);
@@ -33,7 +35,7 @@ const Navbar = () => {
   }, [isMenuOpen]);
 
   return (
-    <nav className="bg-black shadow-md p-4 flex justify-between items-center relative">
+    <nav className="bg-black shadow-md p-4 flex justify-between items-center sticky top-0 z-50">
       {/* Logo */}
       <div className="text-2xl font-bold text-white">
         <img className="md:max-h-20 max-w-20" src={cwLogo} alt="Cartoon war" />
@@ -62,6 +64,9 @@ const Navbar = () => {
         <Link to="/carrito">
           <button className="hover:text-orange-300 text-white">
             <ShoppingCartIcon className="h-6 w-6" />
+            <span className="absolute top-3 right-2 bg-orange-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">
+              {orderCount}
+            </span>
           </button>
         </Link>
       </div>

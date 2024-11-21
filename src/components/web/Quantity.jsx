@@ -4,7 +4,7 @@ import { MinusIcon, PlusIcon } from "@heroicons/react/20/solid";
 import { TrashIcon } from "@heroicons/react/24/solid";
 
 const Quantity = ({ order }) => {
-  const { cart, setCart } = useContext(ProductsContext);
+  const { cart, setCart, setOrderCount } = useContext(ProductsContext);
 
   // Función para manejar el cambio de cantidad
   const updateQuantity = (id, newQuantity) => {
@@ -29,6 +29,7 @@ const Quantity = ({ order }) => {
   }
   const removeItem = () => {
     setCart(cart.filter((item) => item.id !== order.id));
+    setOrderCount(cart.length - 1);
   };
 
   return (
