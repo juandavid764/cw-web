@@ -17,11 +17,10 @@ const LoginPage = () => {
     // Simulación de autenticación con un usuario administrador
     const adminUser = { name: "Admin", role: "admin" };
 
-
     // Si el usuario es administrador, redirigimos a la página de edición
     if (adminUser.role === "admin") {
       navigate("/admin/editar");
-      console.log("Es amind")
+      console.log("Es amind");
     } else {
       alert("Acceso denegado: No tienes permisos de administrador.");
     }
@@ -68,7 +67,12 @@ const LoginPage = () => {
             />
           </div>
           <div className="flex flex-row justify-center">
-            <ButtonComponent title={"Iniciar Sesión"} onClickButton={handleSubmit} />
+            <button
+              type="submit"
+              className="bg-orange-400 text-white px-6 py-2 rounded-md hover:bg-orange-300"
+            >
+              Iniciar sesión
+            </button>
           </div>
         </form>
       </div>
