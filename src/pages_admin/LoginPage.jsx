@@ -10,18 +10,17 @@ const LoginPage = () => {
   const { login, isAdmin } = useAuth();
   const navigate = useNavigate();
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
+  const handleSubmit = () => {
     // Aquí puedes manejar la lógica de inicio de sesión.
     console.log("Usuario:", username, "Contraseña:", password);
 
     // Simulación de autenticación con un usuario administrador
     const adminUser = { name: "Admin", role: "admin" };
-    login(adminUser);
 
     // Si el usuario es administrador, redirigimos a la página de edición
     if (adminUser.role === "admin") {
       navigate("/admin/editar");
+      console.log("Es amind");
     } else {
       alert("Acceso denegado: No tienes permisos de administrador.");
     }

@@ -1,6 +1,5 @@
 import ButtonComponent from "../../ButtonComponent";
-import { ButtonGroupComponent } from "../ButtonGroupComponent";
-import { DropdownButton } from "../DropdownButton";
+import DropdownButton from "../DropdownButton";
 import FormGroup from '@mui/material/FormGroup';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import Checkbox from '@mui/material/Checkbox';
@@ -12,12 +11,13 @@ export default function ModalContent({ onClose, domiciliarios, pedidos }) {
                 <DropdownButton options={domiciliarios} onClickButton={() => { }} />
 
                 <FormGroup>
-                    <FormControlLabel control={<Checkbox />} label="option" />
-                    <FormControlLabel control={<Checkbox />} label="option" />
-                    <FormControlLabel control={<Checkbox />} label="option" />
-                    <FormControlLabel control={<Checkbox />} label="option" />
-                    <FormControlLabel control={<Checkbox />} label="option" />
-
+                    {pedidos.map((pedido, index) => (
+                        <FormControlLabel
+                            key={index}
+                            control={<Checkbox />}
+                            label={pedido}
+                        />
+                    ))}
                 </FormGroup>
                 <ButtonComponent title={'Guardar'} onClickButton={onClose} />
             </div>

@@ -11,7 +11,7 @@ import MenuList from '@mui/material/MenuList';
 
 const estados = ['Pendiente', 'En proceso', 'En camino', 'Completado', 'Cancelado'];
 
-export function DropdownButton({ avalibleOptions, options = estados, obtenerIndex = () => { } }) {
+export default function DropdownButton({ avalibleOptions, options = estados, obtenerIndex = () => { } }) {
     let colorIncial = ''
     let estadoInicial = 0
     let color = false
