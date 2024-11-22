@@ -20,6 +20,7 @@ const RoutesPage = () => {
     }
 
     return (
+        /// Todo: Aliear botones y agrandar el button group
         <div id="modal" className="min-h-screen flex flex-col justify-start p-10 bg-gray-100">
             <div className='flex flex-row justify-between px-11 py-3'>
                 <ButtonGroupComponent titles={titles} onClickButton={miFuncion} />

@@ -10,6 +10,7 @@ import Box from '@mui/material/Box';
 
 export default function CardRoute({ route}) {
     return (
+        
                
         <Card sx={{ maxWidth: 400, width: 350,
         maxHeight:400 }}>
