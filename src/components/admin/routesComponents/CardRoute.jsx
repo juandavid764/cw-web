@@ -5,23 +5,34 @@ import Typography from '@mui/material/Typography';
 import CardActionArea from '@mui/material/CardActionArea';
 import CardActions from '@mui/material/CardActions';
 import DropdownButton from "./DropdownButton"
+import Box from '@mui/material/Box';
 
-export default function CardRoute() {
+
+export default function CardRoute({ route}) {
     return (
-        <Card sx={{ maxWidth: 345 }}>
+               
+        <Card sx={{ maxWidth: 400, width: 350,
+        maxHeight:400 }}>
             <CardActionArea>
                 {/* Donde creo las clases */}
                 <CardContent>
+                <Box display="flex" justifyContent="space-between">
                     <Typography gutterBottom variant="h5" component="div">
-                        Lizard
+                        {route.Domiciliario}
                     </Typography>
-                    <Typography variant="body2" sx={{ color: 'text.secondary' }}>
-                        Lizards are a widespread group of squamate reptiles, with over 6,000
-                        species, ranging across all continents except Antarctica
+                    <Typography gutterBottom variant="h5" component="div">
+                        {"#"+route.idRuta}
+                    </Typography>
+                </Box>
+                    <Typography variant="body1" sx={{ color: 'black' }}>
+                        {route.pedidos.join(", ")}
                     </Typography>
                 </CardContent>
             </CardActionArea>
-            <CardActions>
+            <CardActions className='justify-between'>
+                <Typography variant="body1" sx={{ color: 'black' }}>
+                    Total: ${route.pedidos.length+100000}
+                </Typography>
                 <DropdownButton avalibleOptions={1} color={true} />
             </CardActions>
         </Card>
