@@ -33,3 +33,6 @@ export async function insertAddition(someValue, otherValue) {
 
 
 
+function sayHello() {
+  return "Hello, World!";
+}
