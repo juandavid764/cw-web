@@ -1,4 +1,5 @@
 import { supabase } from "./client";
+import { deleteImage, insertImage, getCurrentImageUrl } from "./bucketFunctions";
 
 //!Product
 //!----------------------------------------------------------------------------------------------------------------------------
@@ -14,9 +15,8 @@ export async function getProducts() {
     return Products
 }
 
-// *TODO: bucket de las imagenes
 // insert data into the table Product
-export async function insertProduct(name, price, withAddition, description, category) {
+export async function insertProduct({name, price, withAddition, description, category, file}) {
     const { data, error } = await supabase
         .from('Product')
         .insert([
@@ -27,6 +27,10 @@ export async function insertProduct(name, price, withAddition, description, cate
         console.log(error)
         return null
     }
+
+    // Subir la imagen al bucket
+    await insertImage(file, data.product_id);
+
     /* {
       "status": 201,
        "statusText": "Created"
@@ -34,52 +38,65 @@ export async function insertProduct(name, price, withAddition, description, cate
     return data
 }
 
-async function uploadImage(file, productoId) {
-    const filePath = `platos/${productoId}/${file.name}`; // Ej: platos/123/tacos.jpg
-  
-    // Subir la imagen al bucket
-    const { data, error } = await supabase.storage
-      .from('imagenesPlatos')
-      .upload(filePath, file);
-  
-    if (error) {
-      console.error('Error al subir imagen:', error);
-      return null;
-    }
-  
-    // Generar la URL pública o privada
-    const { publicUrl } = supabase.storage.from('imagenesPlatos').getPublicUrl(filePath);
-  
-    // Guardar la URL en la tabla Productos
-    const { error: dbError } = await supabase
-      .from('Productos')
-      .update({ imagen_url: publicUrl })
-      .eq('id', productoId);
-  
-    if (dbError) {
-      console.error('Error al guardar URL en Productos:', dbError);
-    }
-  
-    return publicUrl;
-  }
+// Función para actualizar el producto con un parámetro opcional para la imagen
+export async function updateProduct({ id, name, price, withAddition, text, category, file = null }) {
+    let imagen_url = null;
 
-// *TODO: bucket de las imagenes
-// update data in the table Product
-export async function updateProduct(id, name, price, withAddition, text, category) {
+    // Si se envió una imagen, actualizarla
+    if (file) {
+        imgUrl = await getCurrentImageUrl(id);
+
+        //TODO: Revisar deleteImage
+        // Eliminar la imagen anterior del bucket
+        if (imgUrl) {
+            const deleteError = await deleteImage(currentUrl.imagen_url);
+            if (deleteError) {
+                console.error('Error al eliminar la imagen anterior:', deleteError);
+                return null;
+            }
+        }
+
+        imagen_url = await insertImage(file, id);
+        if (!imagen_url) {
+            console.error('Error al subir la imagen');
+            return null;
+        }
+    }
+
+    const updateData = { name, price, withAddition, text, category };
+
+    // Si se subió una imagen, agregarla a los datos a actualizar
+    if (imagen_url) {
+        updateData.imagen_url = imagen_url;
+    }
+
     const { data, error } = await supabase
         .from('Product')
-        .update({ name: name, price: price, withAddition: withAddition, text: text, category: category })
+        .update(updateData)
         .eq('id', id)
-        .select()
+        .select();
+
     if (error) {
-        console.log(error)
-        return null
+        console.error('Error al actualizar el producto:', error);
+        return null;
     }
-    return data
+
+    return data;
 }
 
 // delete data from the table Product
 export async function deleteProduct(id) {
+    //Elimar la imagen del bucket
+    const imgUrl = await getCurrentImageUrl(id);
+    if (imgUrl) {
+        const deleteError = await deleteImage(imgUrl);
+        if (deleteError) {
+            console.error('Error al eliminar la imagen:', deleteError);
+            return null;
+        }
+    }
+
+    //Eliminar el producto de la base de datos
     const { data, error } = await supabase
         .from('Product')
         .delete()
