@@ -1,38 +1,33 @@
-// src/context/AuthContext.jsx
-import React, { createContext, useContext, useState, useEffect } from "react";
+import React, { createContext, useContext, useEffect, useState } from "react";
+import { getSession, logout } from "../supabase/functions";
 
-// Creamos el contexto
 const AuthContext = createContext();
 
-// Hook personalizado para acceder al contexto de autenticación
-export const useAuth = () => {
-  return useContext(AuthContext);
-};
-
 export const AuthProvider = ({ children }) => {
-  // Estado para almacenar la información del usuario
   const [user, setUser] = useState(null);
+  const [loading, setLoading] = useState(true);
 
-  // Simulación de inicio de sesión (puede ser sustituido por una llamada real a una API)
-  const login = (userData) => {
-    setUser(userData);
-  };
+  useEffect(() => {
+    const fetchSession = async () => {
+      const session = await getSession();
+      setUser(session?.user || null);
+      setLoading(false);
+    };
 
-  // Simulación de cierre de sesión
-  const logout = () => {
+    fetchSession();
+  }, []);
+
+  const signOut = async () => {
+    await logout();
     setUser(null);
   };
 
-  // Determinamos si el usuario es administrador
-  const isAdmin = user?.role === "admin";
-
-  // Valores proporcionados por el contexto
-  const value = {
-    user,
-    isAdmin,
-    login,
-    logout,
-  };
-
-  return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
+  return (
+    <AuthContext.Provider value={{ user, setUser, signOut, loading }}>
+      {children}
+    </AuthContext.Provider>
+  );
 };
+
+// Hook personalizado para usar el contexto de autenticación
+export const useAuth = () => useContext(AuthContext);

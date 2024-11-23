@@ -1,38 +1,34 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import cwLogo from "../../assets/cwlogo.webp";
-import ButtonComponent from "../../components/web/ButtonComponent";
 import { useAuth } from "../../context/AuthContext";
+import { login } from "../../supabase/functions";
 
 const LoginPage = () => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
-  const { login, isAdmin } = useAuth();
+  const [error, setError] = useState(null);
+  const { setUser } = useAuth();
   const navigate = useNavigate();
 
-  const handleSubmit = () => {
-    // Aquí puedes manejar la lógica de inicio de sesión.
-    console.log("Usuario:", username, "Contraseña:", password);
-
-    // Simulación de autenticación con un usuario administrador
-    const adminUser = { name: "Admin", role: "admin" };
-
-    // Si el usuario es administrador, redirigimos a la página de edición
-    if (adminUser.role === "admin") {
-      navigate("/admin/editar");
-      console.log("Es amind");
-    } else {
-      alert("Acceso denegado: No tienes permisos de administrador.");
+  const handleLogin = async (e) => {
+    e.preventDefault();
+    try {
+      const { user } = await login(email, password); // login function from functions.js
+      setUser(user); // updating the user in the context
+      navigate("/admin/editar"); // redirecting to the editPage
+    } catch (err) {
+      setError(err.message);
     }
   };
-
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-100">
       <div className="bg-slate-50 p-8 rounded-lg shadow-lg w-full max-w-md border-2 border-orange-300">
         <div className="flex justify-center mb-6">
           <img src={cwLogo} alt="Logo" className="w-2/5 h-1/5" />
         </div>
-        <form onSubmit={handleSubmit}>
+        <form onSubmit={handleLogin}>
+          {error && <p className="text-red-500 mb-4">{error}</p>}
           <div className="mb-4">
             <label
               className="block text-gray-700 font-semibold mb-2"
