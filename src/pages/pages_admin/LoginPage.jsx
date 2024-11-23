@@ -14,7 +14,7 @@ const LoginPage = () => {
   const handleLogin = async (e) => {
     e.preventDefault();
     try {
-      const { user } = await login(email, password); // login function from functions.js
+      const { user } = await login(username, password); // login function from functions.js
       setUser(user); // updating the user in the context
       navigate("/admin/editar"); // redirecting to the editPage
     } catch (err) {
