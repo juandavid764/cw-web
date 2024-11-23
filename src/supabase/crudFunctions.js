@@ -1,5 +1,4 @@
-import { getCardActionAreaUtilityClass } from '@mui/material';
-import { supabase } from './client'
+import { supabase } from "./client";
 
 //!Product
 //!----------------------------------------------------------------------------------------------------------------------------

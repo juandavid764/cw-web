@@ -1,5 +1,5 @@
 import React, { createContext, useState } from "react";
-import { getProducts } from "../supabase/functions";
+import { getProducts } from "../supabase/crudFunctions";
 
 
 export const ProductsContext = createContext();
