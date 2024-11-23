@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import cwLogo from "../../assets/cwlogo.webp";
 import { useAuth } from "../../context/AuthContext";
-import { login } from "../../supabase/crudFunctions";
+import { login } from "../../supabase/authFuntions";
 
 const LoginPage = () => {
   const [username, setUsername] = useState("");

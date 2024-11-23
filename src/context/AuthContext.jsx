@@ -1,5 +1,5 @@
 import React, { createContext, useContext, useEffect, useState } from "react";
-import { getSession, logout } from "../supabase/crudFunctions";
+import { getSession, logout } from "../supabase/authFuntions";
 
 const AuthContext = createContext();
 
