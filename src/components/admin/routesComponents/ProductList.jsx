@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { createClient } from "@supabase/supabase-js";
 
-const supabase = createClient("https://dclxxyjisswjmtyyovaf.supabase.co", "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImRjbHh4eWppc3N3am10eXlvdmFmIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MTk0Mzk5MDMsImV4cCI6MjAzNTAxNTkwM30.zIEZ1B9ZXR38pQDKxeaLPQ9a_9OhRgyCs-2EGzhbFaY"); // Asegúrate de tener tu cliente supabase configurado
+//const supabase = createClient("https://dclxxyjisswjmtyyovaf.supabase.co", "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImRjbHh4eWppc3N3am10eXlvdmFmIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MTk0Mzk5MDMsImV4cCI6MjAzNTAxNTkwM30.zIEZ1B9ZXR38pQDKxeaLPQ9a_9OhRgyCs-2EGzhbFaY"); // Asegúrate de tener tu cliente supabase configurado
 
 export default function ProductList() {
     const [adiciones, setAdiciones] = useState([]);
