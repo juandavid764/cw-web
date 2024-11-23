@@ -34,6 +34,35 @@ export async function insertProduct(name, price, withAddition, description, cate
     return data
 }
 
+async function uploadImage(file, productoId) {
+    const filePath = `platos/${productoId}/${file.name}`; // Ej: platos/123/tacos.jpg
+  
+    // Subir la imagen al bucket
+    const { data, error } = await supabase.storage
+      .from('imagenesPlatos')
+      .upload(filePath, file);
+  
+    if (error) {
+      console.error('Error al subir imagen:', error);
+      return null;
+    }
+  
+    // Generar la URL pública o privada
+    const { publicUrl } = supabase.storage.from('imagenesPlatos').getPublicUrl(filePath);
+  
+    // Guardar la URL en la tabla Productos
+    const { error: dbError } = await supabase
+      .from('Productos')
+      .update({ imagen_url: publicUrl })
+      .eq('id', productoId);
+  
+    if (dbError) {
+      console.error('Error al guardar URL en Productos:', dbError);
+    }
+  
+    return publicUrl;
+  }
+
 // *TODO: bucket de las imagenes
 // update data in the table Product
 export async function updateProduct(id, name, price, withAddition, text, category) {
