@@ -16,7 +16,7 @@ export async function getProducts() {
 }
 
 // insert data into the table Product
-export async function insertProduct({name, price, withAddition, description, category, file}) {
+export async function insertProduct({ name, price, withAddition, description, category, file }) {
     const { data, error } = await supabase
         .from('Product')
         .insert([
@@ -173,14 +173,16 @@ export async function deleteCategory(id) {
 // get all data from the table Addition
 export async function getAdditions() {
     let { data: Addition, error } = await supabase
-        .from('Addition')
-        .select('*')
+        .from("Addition")
+        .select("*")
     if (error) {
         console.log(error)
         return null
     }
+    console.log(Addition)
     return Addition
 }
+
 
 // insert data into the table Addition
 export async function insertAddition(name, price) {

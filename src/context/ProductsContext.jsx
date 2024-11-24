@@ -1,27 +1,19 @@
 import React, { createContext, useState } from "react";
-import { getProducts } from "../supabase/crudFunctions";
+import { getProducts, getAdditions } from "../supabase/crudFunctions";
 
 
 export const ProductsContext = createContext();
 
-let variableProducts = await getProducts()
-export const ProductsProvider = ({ children }) => {
-  const [products] = useState(variableProducts);
+let additionsData = await getAdditions();
+let productsData = await getProducts();
 
-  const [additions] = useState([
-    { id: 1, name: "Queso Fundido", price: 4000 },
-    { id: 2, name: "Pepinillos", price: 7300 },
-    { id: 3, name: "Pollo desmechado", price: 8200 },
-  ]);
+export const ProductsProvider = ({ children }) => {
+  const [products] = useState(productsData);
+
+  const [additions] = useState(additionsData);
 
   const [sauces] = useState([
-    "Ajo",
-    "Tomate",
-    "Mostaza",
-    "Mayonesa",
-    "Tartara",
-    "BBQ",
-    "Ranch",
+    "Roja","Verde","BBQ","Piña","Rosada","Showy"
   ]);
 
   //
