@@ -18,26 +18,28 @@ const Additions = ({ updateTotal }) => {
 
   const handleCheckbox = (addition) => {
     setSelected((prevSelected) => {
-      const newSelected = !prevSelected[addition.id];
+      const newSelected = !prevSelected[addition.addition_id];
       if (newSelected) {
         addAddition(addition);
       } else {
         setSelectedAdditions((prevAdditions) =>
-          prevAdditions.filter((item) => item.id !== addition.id)
+          prevAdditions.filter(
+            (item) => item.addition_id !== addition.addition_id
+          )
         );
       }
-      return { ...prevSelected, [addition.id]: newSelected };
+      return { ...prevSelected, [addition.addition_id]: newSelected };
     });
   };
 
   const addAddition = (addition) => {
     setSelectedAdditions((prevAdditions) => {
       const existingAddition = prevAdditions.find(
-        (item) => item.id === addition.id
+        (item) => item.addition_id === addition.addition_id
       );
       if (existingAddition) {
         return prevAdditions.map((item) =>
-          item.id === addition.id
+          item.addition_id === addition.addition_id
             ? { ...item, quantity: item.quantity + 1 }
             : item
         );
@@ -47,25 +49,29 @@ const Additions = ({ updateTotal }) => {
     });
   };
 
-  const increaseQuantity = (id) => {
+  const increaseQuantity = (addition_id) => {
     setSelectedAdditions((prevAdditions) =>
       prevAdditions.map((item) =>
-        item.id === id ? { ...item, quantity: item.quantity + 1 } : item
+        item.addition_id === addition_id
+          ? { ...item, quantity: item.quantity + 1 }
+          : item
       )
     );
   };
 
-  const decreaseQuantity = (id) => {
+  const decreaseQuantity = (addition_id) => {
     setSelectedAdditions((prevAdditions) => {
       const newAdditions = prevAdditions
         .map((item) =>
-          item.id === id ? { ...item, quantity: item.quantity - 1 } : item
+          item.addition_id === addition_id
+            ? { ...item, quantity: item.quantity - 1 }
+            : item
         )
         .filter((item) => item.quantity > 0);
 
       if (newAdditions.length < prevAdditions.length) {
         setSelected((prevSelected) => {
-          const { [id]: _, ...rest } = prevSelected;
+          const { [addition_id]: _, ...rest } = prevSelected;
           return rest;
         });
       }
@@ -95,7 +101,7 @@ const Additions = ({ updateTotal }) => {
         <ul>
           {additions.map((addition) => (
             <li
-              key={addition.id}
+              key={addition.addition_id}
               className="flex justify-between items-center mb-2"
             >
               <div className="flex justify-between w-full">
@@ -103,28 +109,29 @@ const Additions = ({ updateTotal }) => {
                   <input
                     className="mr-2"
                     type="checkbox"
-                    checked={!!selected[addition.id]}
+                    checked={!!selected[addition.addition_id]}
                     onChange={() => handleCheckbox(addition)}
                   />
                   <span>{addition.name}</span>
                 </div>
                 <span>${addition.price.toLocaleString()}</span>
               </div>
-              {selected[addition.id] && (
+              {selected[addition.addition_id] && (
                 <div className="flex flex-row justify-center">
                   <button
                     className="bg-orange-300"
-                    onClick={() => decreaseQuantity(addition.id)}
+                    onClick={() => decreaseQuantity(addition.addition_id)}
                   >
                     <MinusIcon className="h-4 w-4" />
                   </button>
                   <span className="mx-2">
-                    {selectedAdditions.find((item) => item.id === addition.id)
-                      ?.quantity || 0}
+                    {selectedAdditions.find(
+                      (item) => item.addition_id === addition.addition_id
+                    )?.quantity || 0}
                   </span>
                   <button
                     className="bg-orange-300"
-                    onClick={() => increaseQuantity(addition.id)}
+                    onClick={() => increaseQuantity(addition.addition_id)}
                   >
                     <PlusIcon className="h-4 w-4" />
                   </button>
