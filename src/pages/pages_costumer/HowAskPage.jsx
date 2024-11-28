@@ -12,8 +12,7 @@ const HowAskPage = () => {
           <iframe
             className="w-9/12 h-96"
             src="https://www.youtube.com/embed/ZYWX1DjCvl0?si=kTi9hI82_HfiWhHE"
-            title="YouTube video player"
-            frameBorder="0"
+            title="YouTube video player" 
             allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
             referrerPolicy="strict-origin-when-cross-origin"
             allowFullScreen

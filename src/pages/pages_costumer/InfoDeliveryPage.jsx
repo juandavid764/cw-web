@@ -3,7 +3,6 @@ import Footer from "../../components/web/Footer";
 import CustomizedInputBase from "../../components/web/TextFieldWithIcon"
 
 const InfoDeliveryPage = () => {
-    const idText = <span className="text-orange-300 font-bold">412341</span>
 
     return (
         <div className="">

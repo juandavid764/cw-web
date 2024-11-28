@@ -1,9 +1,15 @@
-import React, { useContext } from "react";
+import React, { useContext, useEffect } from "react";
 import PurchaseDetails from "../../../components/web/PurchaseDetails";
 import QuantityContainer from "../../../components/web/QuantityContainer";
 import Footer from "../../../components/web/Footer";
 import { ProductsContext } from "../../../context/ProductsContext";
+
 const ShoppingCartPage = () => {
+
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
+
   const { cart } = useContext(ProductsContext);
   return (
     <div className="bg-white w-full flex justify-center  ">

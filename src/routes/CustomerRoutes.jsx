@@ -10,6 +10,7 @@ import DataCostumerPage from "../pages/pages_costumer/shopping_cart/DataCostumer
 import DataDeliveryPage from "../pages/pages_costumer/shopping_cart/DataDeliveryPage";
 import LoginPage from "../pages/pages_admin/LoginPage";
 import RoutesPage from "../pages/pages_admin/RoutesPage";
+import ConfirmPage from "../pages/pages_costumer/ConfirmPage";
 
 const CustomerRoutes = () => {
   return (
@@ -21,8 +22,8 @@ const CustomerRoutes = () => {
       <Route path="/carrito" element={<ShoppingCartPage />} />
       <Route path="/carrito/infoUsuario" element={<DataCostumerPage />} />
       <Route path="/carrito/infoPedido" element={<DataDeliveryPage />} />
+      <Route path="/carrito/confirmPage" element={<ConfirmPage />} />
       <Route path="/Login" element={<LoginPage />} />
-      <Route path="/Login/rutas" element={<RoutesPage />} />
     </Routes>
   );
 };
