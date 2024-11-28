@@ -1,8 +1,10 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import ProductForm from "../../components/admin/editComponents/ProductForm";
 import SimpleInfo from "../../components/admin/editComponents/SimpleInfo";
+import { ProductsContext } from "../../context/ProductsContext";
 
 const EditPage = () => {
+  const { products } = useContext(ProductsContext);
   const [formData, setFormData] = useState({
     name: "",
     price: "",
