@@ -2,44 +2,38 @@ import React, { useState, useContext } from "react";
 import ProductForm from "../../components/admin/editComponents/ProductForm";
 import SimpleInfo from "../../components/admin/editComponents/SimpleInfo";
 import { ProductsContext } from "../../context/ProductsContext";
+import ButtonGroup from "../../components/admin/editComponents/ButtonGroup";
 
 const EditPage = () => {
   const { products } = useContext(ProductsContext);
-  const [formData, setFormData] = useState({
-    name: "",
-    price: "",
-    hasAdditions: false,
-    type: "",
-    description: "",
-    image: null,
-  });
 
-  const handleInputChange = (e) => {
-    const { name, value } = e.target;
-    setFormData({ ...formData, [name]: value });
-  };
+  const [selectedTable, setSelectedTable] = useState("Productos");
 
-  const handleCheckboxChange = (e) => {
-    setFormData({ ...formData, hasAdditions: e.target.checked });
-  };
-
-  const handleFileChange = (e) => {
-    setFormData({ ...formData, image: e.target.files[0] });
-  };
-
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    // Lógica para manejar la edición/guardar el formulario
-    console.log(formData);
+  const handleTableChange = (table) => {
+    setSelectedTable(table);
   };
 
   return (
     <div className="flex justify-between">
       <div className="w-2/5 p-4">
-        <h2 className="font-bold mb-4 text-xl">Productos</h2>
+        <ButtonGroup
+          options={[
+            "Productos",
+            "Categorías",
+            "Adiciones",
+            "Barrios",
+            "Domiciliarios",
+          ]}
+          selected={selectedTable}
+          onSelect={handleTableChange}
+        />
         {/* Lista de productos */}
-        {[1, 2, 3, 4].map((item, index) => (
-          <SimpleInfo key={index} title="onichan" info={"onichan"}></SimpleInfo>
+        {products.map((item, index) => (
+          <SimpleInfo
+            key={index}
+            title={item.name}
+            info={selectedTable}
+          ></SimpleInfo>
         ))}
       </div>
       <div className="w-3/5 p-4 flex flex-col items-center">
