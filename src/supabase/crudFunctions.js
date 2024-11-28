@@ -319,10 +319,6 @@ export async function insertNeighborhood(name, delivery_price) {
         console.log(error)
         return null
     }
-    /* {
-      "status": 201,
-       "statusText": "Created"
-    }*/
     return data
 }
 
