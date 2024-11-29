@@ -1,35 +1,37 @@
-import React from "react";
-import Button from "@mui/material/Button";
-import Box from "@mui/material/Box";
-import Chip from "@mui/material/Chip";
-import WhatsAppIcon from "@mui/icons-material/WhatsApp";
+import React, { useEffect, useState, useContext } from "react";
 import Footer from "../../components/web/Footer";
-import { useEffect, useState, useContext } from "react";
 import { ProductsContext } from "../../context/ProductsContext";
 import { insertRequest, insertOrder } from "../../supabase/crudFunctions";
 
 const ConfirmPage = () => {
   const { cart, total } = useContext(ProductsContext);
   const [client, setClient] = useState(null);
+  const [comanda, setComanda] = useState("");
 
   useEffect(() => {
-    window.scrollTo(0, 0);
     const storedClient = localStorage.getItem("client");
     if (storedClient) {
-      setClient(JSON.parse(storedClient));
+      const clientFormatted = JSON.parse(storedClient);
+      setClient(formatClient(clientFormatted));
     }
-  }, []);
 
-  if (!client) {
-    return <p>Error: No hay datos del cliente.</p>;
-  }
+    setComanda(formatComanda());
+    window.scrollTo(0, 0);
+  }, [cart]);
 
-  let telefono = client.telefono;
-  let formattedComanda = "";
+  const formatAdditions = (orderNow) => {
+    let formattedAdditions = "";
+    if (orderNow.additions && orderNow.additions.length > 0) {
+      formattedAdditions = "Adics:\n ";
+      formattedAdditions += orderNow.additions
+        .map((addition) => `-${addition.quantity} ${addition.name} \n `)
+        .join("");
+    }
+    return formattedAdditions;
+  };
 
   const formatClient = (client) => {
     const { nombre, telefono, comentarios, conCuantoPago, formaPago } = client;
-
     return `
   - - - - - - - - - - - - -
   ${nombre}
@@ -39,113 +41,72 @@ const ConfirmPage = () => {
   `.trim();
   };
 
-  const formattedClient = formatClient(client);
+  const formatSauces = (orderNow) => {
+    if (orderNow.sauces && orderNow.sauces.length > 0) {
+      return `[${orderNow.sauces.join(", ")}]`;
+    }
+    return "[Sin salsas]";
+  };
 
-  console.log(formattedClient);
-  console.log("Carrito:", cart);
+  const formatComanda = () => {
+    return cart
+      .map((order) => {
+        const formattedSauces = formatSauces(order);
+        const formattedAdditions = formatAdditions(order);
+        return `*${order.quantity} ${order.product.name} \n\n ${formattedSauces} \n ${formattedAdditions} \n\n ${client}`;
+      })
+      .join("");
+  };
 
-  const handleClick = async () => {
-    const insertedRequest = await insertRequest(formattedClient, total);
-    console.log("Request response:", insertedRequest);
-
+  const confirmButtonClicked = async () => {
+    const insertedRequest = await insertRequest(client, total);
     if (insertedRequest.error) {
       alert("Error al insertar la solicitud");
       return;
     }
 
     const orderPromises = cart.map(async (order) => {
-      //les doy el formato de la comanda a las adiciones
-      let formattedAdditions = "";
-      if (order.additions && order.additions.length > 0) {
-        formattedAdditions = "Adics:\n ";
-        formattedAdditions += order.additions
-          .map((addition) => {
-            return `-${addition.quantity} ${addition.name} \n `;
-          })
-          .join(""); // Unir los elementos del array en una sola cadena sin comas
-      }
-
-      let formattedSauces = "";
-      if (order.sauces && order.sauces.length > 0) {
-        formattedSauces += `[${order.sauces.join(", ")}]`;
-      } else {
-        formattedSauces = "[Sin salsas]";
-      }
-
-      formattedComanda += `*${order.quantity} ${order.product.name} \n \n ${formattedSauces} \n ${formattedAdditions} \n \n`;
-
-      console.log(formattedComanda);
-      const orderResponse = await insertOrder(
+      const formattedSauces = formatSauces(order);
+      const formattedAdditions = formatAdditions(order);
+      return await insertOrder(
         order.product.id,
         formattedAdditions,
         formattedSauces,
         insertedRequest[0].request_id,
         order.quantity
       );
-      return orderResponse;
     });
 
     const ordersResponse = await Promise.all(orderPromises);
-    console.log("Orders response:", ordersResponse);
-
     if (ordersResponse.some((order) => order.error)) {
       alert("Error al insertar los pedidos");
-      return;
     }
-    formattedComanda += `${formattedClient}`;
-    console.log(formattedComanda);
   };
 
   return (
-    <div className="flex flex-col min-h-screen bg-neutral-50">
-      <div className="flex-grow flex flex-col justify-center items-center lg:mt-10">
-        <Box
-          sx={{
-            border: "1px solid #ccc",
-            borderRadius: "8px",
-            padding: { xs: "8px", sm: "16px" },
-            maxWidth: "600px",
-            width: "100%",
-            margin: "0 auto",
-            textAlign: "center",
-            backgroundColor: "white",
-          }}
-        >
-          <div className="flex flex-col justify-center">
-            <h2 className="text-2xl lg:text-4xl font-bold">
-              Información de mi pedido
-            </h2>
-            <div className="flex flex-row justify-center items-center gap-5">
-              <h2 className="text-lg lg:text-2xl font-bold">#123232</h2>
-              <Chip
-                label={"Pendiente"}
-                variant="filled"
-                size="medium"
-                color="error"
-                className="my-4"
-              />
-            </div>
-            <div className="flex flex-col justify-center items-center gap-5">
-              <p className="text-lg lg:text-2xl"></p>
-            </div>
-
-            <div>
-              <Button
-                onClick={handleClick}
-                startIcon={<WhatsAppIcon />}
-                variant="contained"
-                //sx={{ textTransform: 'none', backgroundColor: '#BF9000', '&:hover': { backgroundColor: '#A67C00' } }}
-                color="warning"
-                className="mt-4 bg-orange-300 hover:bg-orange-500 text-white font-bold py-2 px-4 rounded-lg"
-                fullWidth
-              >
-                Confirmar pedido
-              </Button>
-            </div>
+    <div className="flex flex-col min-h-screen bg-neutral-100">
+      <main className="flex-grow flex flex-col items-center p-6">
+        <div className="bg-white border border-gray-300 rounded-lg shadow-lg max-w-lg w-full p-6">
+          <h2 className="text-center text-xl font-semibold text-gray-700 mb-4">
+            Resumen de tu pedido
+          </h2>
+          <div className="bg-neutral-50 border border-gray-200 p-4 rounded-lg font-mono text-sm text-gray-700 whitespace-pre-wrap">
+            {comanda}
           </div>
-        </Box>
-      </div>
-      <footer className="">
+          <div className="mt-4 text-center">
+            <p className="text-gray-600 font-medium">
+              Total: <span className="text-xl font-bold text-orange-500">${total}</span>
+            </p>
+          </div>
+          <button
+            onClick={confirmButtonClicked}
+            className="mt-6 w-full py-2 bg-orange-400 hover:bg-orange-500 text-white font-semibold rounded-lg shadow-md transition-colors"
+          >
+            Confirmar pedido
+          </button>
+        </div>
+      </main>
+      <footer className="bg-gray-200 text-center py-4">
         <Footer />
       </footer>
     </div>
