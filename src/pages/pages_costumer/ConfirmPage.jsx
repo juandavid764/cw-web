@@ -7,19 +7,40 @@ const ConfirmPage = () => {
   const { cart, total } = useContext(ProductsContext);
   const [client, setClient] = useState(null);
   const [comanda, setComanda] = useState("");
+  let nombreCliente = "";
 
   useEffect(() => {
     const storedClient = localStorage.getItem("client");
     if (storedClient) {
       const clientFormatted = JSON.parse(storedClient);
+      nombreCliente = clientFormatted.nombre;
+
       setClient(formatClient(clientFormatted));
     }
 
-    const texto =  formatComanda()+client
+    const texto = formatComanda() + client;
     setComanda(texto);
-    
+
     window.scrollTo(0, 0);
   }, [cart]);
+
+  const sendWhatsappMessage = (name, request_id, comanda) => {
+    let textWpp = `Hola, soy ${name}.\n
+    id de pedido #${request_id}\n\n
+    ${comanda}\n 
+    `;
+
+    let cellphone = "573006999492";
+
+    // encoding the message text to be sent
+    const textoCodificado = encodeURIComponent(textWpp);
+
+    // creating the link
+    const link = `https://wa.me/${cellphone}?text=${textoCodificado}`;
+
+    // opening the link in a new tab
+    window.open(link, "_blank");
+  };
 
   const formatAdditions = (orderNow) => {
     let formattedAdditions = "";
@@ -83,6 +104,8 @@ const ConfirmPage = () => {
     if (ordersResponse.some((order) => order.error)) {
       alert("Error al insertar los pedidos");
     }
+
+    sendWhatsappMessage(nombreCliente, insertedRequest[0].request_id, comanda);
   };
 
   return (
@@ -97,7 +120,10 @@ const ConfirmPage = () => {
           </div>
           <div className="mt-4 text-center">
             <p className="text-gray-600 font-medium">
-              Total: <span className="text-xl font-bold text-orange-500">${total}</span>
+              Total:{" "}
+              <span className="text-xl font-bold text-orange-500">
+                ${total}
+              </span>
             </p>
           </div>
           <button
