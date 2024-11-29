@@ -114,9 +114,12 @@ const DataDeliveryPage = () => {
               <option value="Transferencia">Transferencia</option>
             </select>
           </div>
-          {paymentMethod === 'Efectivo' && (
+          {paymentMethod === "Efectivo" && (
             <div className="mb-4">
-              <label className="block text-gray-700 font-semibold mb-2" htmlFor="cashs">
+              <label
+                className="block text-gray-700 font-semibold mb-2"
+                htmlFor="cashs"
+              >
                 Con cuanto pago
               </label>
               <input
@@ -153,7 +156,11 @@ const DataDeliveryPage = () => {
 
           <div className="flex flex-row justify-center">
             <Link to="/carrito/confirmPage">
-              <ButtonComponent title={"Realizar pedido"} onClickButton={()=>{}} type="submit" />
+              <ButtonComponent
+                title={"Realizar pedido"}
+                onClickButton={() => {}}
+                type="submit"
+              />
             </Link>
           </div>
         </form>

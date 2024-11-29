@@ -51,7 +51,10 @@ const PurchaseDetails = () => {
           </button>
         </Link>
         <Link to="/carrito/infoUsuario">
-          <button className="bg-orange-400 text-white px-6 py-2 rounded-md hover:bg-orange-300">
+          <button
+            onClick={setTotalPrice}
+            className="bg-orange-400 text-white px-6 py-2 rounded-md hover:bg-orange-300"
+          >
             Recoger
           </button>
         </Link>

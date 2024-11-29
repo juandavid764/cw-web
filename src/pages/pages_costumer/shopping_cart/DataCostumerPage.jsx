@@ -1,63 +1,97 @@
 import React, { useState, useContext } from "react";
 import ButtonComponent from "../../../components/web/ButtonComponent";
 import { ProductsContext } from "../../../context/ProductsContext";
+import { Link } from "react-router-dom";
 
 const DataCostumerPage = () => {
   const { total } = useContext(ProductsContext);
   const [paymentMethod, setPaymentMethod] = useState("Efectivo");
 
+  // Estado para capturar los valores del formulario
+  const [formData, setFormData] = useState({
+    nombre: "",
+    telefono: "",
+    formaPago: "Efectivo",
+    conCuantoPago: "",
+    comentarios: "",
+  });
+
+  const handleInputChange = (event) => {
+    const { name, value } = event.target;
+    setFormData({
+      ...formData,
+      [name]: value,
+    });
+  };
+
   const handlePaymentChange = (event) => {
-    setPaymentMethod(event.target.value); // Obtiene el valor actual del select
-    console.log("Forma de pago seleccionada:", event.target.value);
+    const value = event.target.value;
+    setPaymentMethod(value);
+    setFormData({
+      ...formData,
+      formaPago: value,
+    });
+  };
+
+  const handleSubmit = () => {
+    const client = {
+      nombre: formData.nombre,
+      telefono: formData.telefono,
+      formaPago: formData.formaPago,
+      conCuantoPago:
+        formData.formaPago === "Efectivo" ? formData.conCuantoPago : 0,
+      comentarios: formData.comentarios,
+    };
+
+    console.log("Datos del cliente:", client);
+    localStorage.setItem("client", JSON.stringify(client));
   };
 
   return (
     <div className="flex items-center justify-center bg-gray-100">
-      {/* Shopping cart client info Delivery*/}
       <div className="bg-slate-50 p-8 rounded-lg shadow-lg w-full max-w-md border-2 border-orange-300">
         <h2 className="text-center text-2xl font-bold mb-6 text-gray-700">
           Datos Cliente
         </h2>
         <div className="flex flex-row justify-between">
-          <h3 className="text-left font-semibold  text-gray-700">Subtotal:</h3>
+          <h3 className="text-left font-semibold text-gray-700">Subtotal:</h3>
           <h3 className="text-right font-semibold mb-6 text-gray-700">
             ${total.toLocaleString()}
           </h3>
         </div>
 
-        {/*  */}
-        <form>
+        <form onSubmit={handleSubmit}>
           <div className="mb-4">
             <label
               className="block text-gray-700 font-semibold mb-2"
-              htmlFor="username"
+              htmlFor="nombre"
             >
               Nombre
             </label>
             <input
               type="text"
               id="nombre"
-              // value={username}
-              // onChange={(e) => setUsername(e.target.value)}
-
-              className="w-full px-3 py-2 border rounded-lg focus:outline-none  focus:border-orange-300"
+              name="nombre"
+              value={formData.nombre}
+              onChange={handleInputChange}
+              className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:border-orange-300"
               placeholder="¿Quién recibe el pedido?"
             />
           </div>
           <div className="mb-4">
             <label
               className="block text-gray-700 font-semibold mb-2"
-              htmlFor="username"
+              htmlFor="telefono"
             >
               Teléfono
             </label>
             <input
               type="tel"
-              id="phone"
-              // value={username}
-              // onChange={(e) => setUsername(e.target.value)}
-
-              className="w-full px-3 py-2 border rounded-lg focus:outline-none  focus:border-orange-300"
+              id="telefono"
+              name="telefono"
+              value={formData.telefono}
+              onChange={handleInputChange}
+              className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:border-orange-300"
               placeholder="3165684544"
             />
           </div>
@@ -70,7 +104,8 @@ const DataCostumerPage = () => {
             </label>
             <select
               id="payment"
-              name="payment"
+              name="formaPago"
+              value={formData.formaPago}
               onChange={handlePaymentChange}
               className="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-orange-300 focus:border-orange-500 sm:text-sm rounded-md"
             >
@@ -83,13 +118,16 @@ const DataCostumerPage = () => {
             <div className="mb-4">
               <label
                 className="block text-gray-700 font-semibold mb-2"
-                htmlFor="cashs"
+                htmlFor="conCuantoPago"
               >
-                Con cuanto pago
+                Con cuánto pago
               </label>
               <input
                 type="number"
-                id="cashs"
+                id="conCuantoPago"
+                name="conCuantoPago"
+                value={formData.conCuantoPago}
+                onChange={handleInputChange}
                 className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:border-orange-300"
                 placeholder="$"
               />
@@ -98,29 +136,33 @@ const DataCostumerPage = () => {
           <div className="mb-4">
             <label
               className="block text-gray-700 font-semibold mb-2"
-              htmlFor="username"
+              htmlFor="comentarios"
             >
               Comentarios
             </label>
             <textarea
-              type="text"
-              id="cashs"
-              // value={username}
-              // onChange={(e) => setUsername(e.target.value)}
-
-              className="w-full px-3 py-2 border rounded-lg focus:outline-none  focus:border-orange-300"
-              placeholder="¿Alguna especificacion?"
+              id="comentarios"
+              name="comentarios"
+              value={formData.comentarios}
+              onChange={handleInputChange}
+              className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:border-orange-300"
+              placeholder="¿Alguna especificación?"
             />
           </div>
           <div className="flex flex-row justify-between">
-            <h3 className="text-left font-bold  text-gray-700">Total:</h3>
+            <h3 className="text-left font-bold text-gray-700">Total:</h3>
             <h3 className="text-right font-bold mb-6 text-gray-700">
               ${total.toLocaleString()}
             </h3>
           </div>
 
           <div className="flex flex-row justify-center">
-            <ButtonComponent title={"Realizar pedido"} type="submit" />
+            <Link to={"/carrito/confirmPage"}>
+              <ButtonComponent
+                title={"Realizar pedido"}
+                onClickButton={handleSubmit}
+              />
+            </Link>
           </div>
         </form>
       </div>

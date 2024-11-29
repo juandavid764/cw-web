@@ -1,7 +1,6 @@
 import React, { createContext, useState } from "react";
 import { getProducts, getAdditions } from "../supabase/crudFunctions";
 
-
 export const ProductsContext = createContext();
 
 let additionsData = await getAdditions();
@@ -13,7 +12,12 @@ export const ProductsProvider = ({ children }) => {
   const [additions] = useState(additionsData);
 
   const [sauces] = useState([
-    "Roja","Verde","BBQ","Piña","Rosada","Showy"
+    "Roja",
+    "Verde",
+    "BBQ",
+    "Piña",
+    "Rosada",
+    "Showy",
   ]);
 
   //
@@ -28,6 +32,7 @@ export const ProductsProvider = ({ children }) => {
       id: Date.now(),
       quantity: 1,
       product: {
+        id: product.product_id,
         name: product.name,
         price: product.price,
         image: product.image,
