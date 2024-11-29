@@ -149,9 +149,12 @@ delivery_price}>{neighborhood.name}</option>
               <option value="Transferencia">Transferencia</option>
             </select>
           </div>
-          {paymentMethod === 'Efectivo' && (
+          {paymentMethod === "Efectivo" && (
             <div className="mb-4">
-              <label className="block text-gray-700 font-semibold mb-2" htmlFor="cashs">
+              <label
+                className="block text-gray-700 font-semibold mb-2"
+                htmlFor="cashs"
+              >
                 Con cuanto pago
               </label>
               <input
