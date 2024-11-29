@@ -4,7 +4,7 @@ import { ProductsContext } from "../../context/ProductsContext";
 
 const Sauces = ({ updateSauces }) => {
   const { sauces } = useContext(ProductsContext);
-  const [isOpen, setIsOpen] = useState(false);
+  const [isOpen, setIsOpen] = useState(true);
   const [selectedSauces, setSelectedSauces] = useState([]);
 
   const handleSauceSelection = (sauce) => {
