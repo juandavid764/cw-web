@@ -1,18 +1,19 @@
 import React, { useState, useContext, useEffect } from "react";
 import ButtonComponent from "../../../components/web/ButtonComponent";
 import { ProductsContext } from "../../../context/ProductsContext";
-import { Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { getNeighborhoods } from "../../../supabase/crudFunctions";
 
 const DataDeliveryPage = () => {
   const { total, setTotal } = useContext(ProductsContext);
-
+  const navigate = useNavigate();
   const [paymentMethod, setPaymentMethod] = useState("Efectivo");
   const [neighborhoods, setNeighborhoods] = useState();
   const [deliveryValue, setDeliveryValue] = useState(0);
   const [phone, setPhone] = useState(0);
   const [subTotal, setSubTotal] = useState(total - deliveryValue);
   
+
   const handlePaymentChange = (event) => {
     setPaymentMethod(event.target.value); // Obtiene el valor actual del select
   };
@@ -25,23 +26,24 @@ const DataDeliveryPage = () => {
     console.log(total);
   };
 
-  useEffect(() => {
+  const handleSubmit = (event) => {
+    event.preventDefault(); // Previene el comportamiento predeterminado del formulario
+    navigate("/carrito/confirmPage");
+  };
 
+  useEffect(() => {
     getNeighborhoods().then(result => {
       setNeighborhoods(result);
-
+      setDeliveryValue(result[0].delivery_price);
     });
-  }, [total, deliveryValue]);
+  }, [total]);
+
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-r from-gray-100 to-gray-300">
-    
-    {/* </div><div className="min-h-screen flex items-center justify-center bg-gray-100"> */}
-      {/* Shopping cart client info Delivery*/}
-      
       <div className="bg-slate-50 p-8 rounded-lg shadow-lg w-full max-w-md border-2">
         <h2 className="text-center text-2xl font-bold mb-6 text-gray-700">
-          Datos domicilio
+          Datos Domicilio
         </h2>
         <div className="flex flex-row justify-between">
           <h3 className="text-left font-semibold  text-gray-700">Subtotal:</h3>
@@ -83,8 +85,9 @@ const DataDeliveryPage = () => {
               name="cars"
               className="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-gray-300 focus:border-gray-500 sm:text-sm rounded-md"
             >
-            <option key={0} value={0}>{"Selecciona tu barrio"}</option>
+            {/* <option key={0} value={0}>{"Selecciona tu barrio"}</option> */}
             {neighborhoods && neighborhoods.map((neighborhood) => (
+              
               <option key={neighborhood.neighborhood_id} value={neighborhood.
 delivery_price}>{neighborhood.name}</option>
             ))}
@@ -188,7 +191,7 @@ delivery_price}>{neighborhood.name}</option>
             </h3>
           </div>
           <div className="flex flex-row justify-center">
-              <ButtonComponent title={"Realizar pedido"} onClickButton={()=>{}} type="submit" />
+              <ButtonComponent title={"Realizar pedido"} onClickButton={handleSubmit} type="submit" />
           </div>
           
         </form>
