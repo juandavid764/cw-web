@@ -2,6 +2,7 @@ import React, { useEffect, useState, useContext } from "react";
 import Footer from "../../components/web/Footer";
 import { ProductsContext } from "../../context/ProductsContext";
 import { insertRequest, insertOrder } from "../../supabase/crudFunctions";
+import Comanda from "../../components/web/Comanda";
 
 const ConfirmPage = () => {
   const { cart, total } = useContext(ProductsContext);
@@ -10,6 +11,7 @@ const ConfirmPage = () => {
 
   useEffect(() => {
     const storedClient = localStorage.getItem("client");
+    console.log("Stored client:", storedClient);
     if (storedClient) {
       const clientFormatted = JSON.parse(storedClient);
       setClient(formatClient(clientFormatted));
