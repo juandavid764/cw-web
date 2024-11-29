@@ -7,6 +7,7 @@ import Footer from "../../components/web/Footer";
 import { useEffect, useState, useContext } from "react";
 import { ProductsContext } from "../../context/ProductsContext";
 import { insertRequest, insertOrder } from "../../supabase/crudFunctions";
+import Comanda from "../../components/web/Comanda";
 
 const ConfirmPage = () => {
   const { cart, total } = useContext(ProductsContext);
@@ -15,6 +16,7 @@ const ConfirmPage = () => {
   useEffect(() => {
     window.scrollTo(0, 0);
     const storedClient = localStorage.getItem("client");
+    console.log("Stored client:", storedClient);
     if (storedClient) {
       setClient(JSON.parse(storedClient));
     }
@@ -127,6 +129,7 @@ const ConfirmPage = () => {
             </div>
             <div className="flex flex-col justify-center items-center gap-5">
               <p className="text-lg lg:text-2xl"></p>
+              <Comanda></Comanda>
             </div>
 
             <div>

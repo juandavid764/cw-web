@@ -43,7 +43,6 @@ const DataCostumerPage = () => {
       comentarios: formData.comentarios,
     };
 
-    console.log("Datos del cliente:", client);
     localStorage.setItem("client", JSON.stringify(client));
   };
 
