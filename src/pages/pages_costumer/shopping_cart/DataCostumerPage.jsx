@@ -1,11 +1,13 @@
 import React, { useState, useContext } from "react";
 import ButtonComponent from "../../../components/web/ButtonComponent";
 import { ProductsContext } from "../../../context/ProductsContext";
-import { Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
+
 
 const DataCostumerPage = () => {
   const { total } = useContext(ProductsContext);
   const [paymentMethod, setPaymentMethod] = useState("Efectivo");
+  const navigate = useNavigate();
 
   // Estado para capturar los valores del formulario
   const [formData, setFormData] = useState({
@@ -16,8 +18,11 @@ const DataCostumerPage = () => {
     comentarios: "",
   });
 
+
   const handleInputChange = (event) => {
-    const { name, value } = event.target;
+      const { name, value } = event.target;
+
+
     setFormData({
       ...formData,
       [name]: value,
@@ -33,7 +38,8 @@ const DataCostumerPage = () => {
     });
   };
 
-  const handleSubmit = () => {
+  const handleSubmit = (event) => {
+    event.preventDefault(); 
     const client = {
       nombre: formData.nombre,
       telefono: formData.telefono,
@@ -44,11 +50,14 @@ const DataCostumerPage = () => {
     };
 
     localStorage.setItem("client", JSON.stringify(client));
+
+
+    navigate("/carrito/confirmPage");
   };
 
   return (
-    <div className="flex items-center justify-center bg-gray-100">
-      <div className="bg-slate-50 p-8 rounded-lg shadow-lg w-full max-w-md border-2 border-orange-300">
+    <div className="min-h-screen flex items-center justify-center bg-gradient-to-r from-gray-100 to-gray-300">
+      <div className="bg-slate-50 p-8 rounded-lg shadow-lg w-full max-w-md border-2">
         <h2 className="text-center text-2xl font-bold mb-6 text-gray-700">
           Datos Cliente
         </h2>
@@ -68,12 +77,13 @@ const DataCostumerPage = () => {
               Nombre
             </label>
             <input
+              required
               type="text"
               id="nombre"
               name="nombre"
               value={formData.nombre}
               onChange={handleInputChange}
-              className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:border-orange-300"
+              className="w-full px-3 py-2 border rounded-lg focus:outline-none  focus:border-gray-400"
               placeholder="¿Quién recibe el pedido?"
             />
           </div>
@@ -85,12 +95,18 @@ const DataCostumerPage = () => {
               Teléfono
             </label>
             <input
-              type="tel"
-              id="telefono"
-              name="telefono"
-              value={formData.telefono}
-              onChange={handleInputChange}
-              className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:border-orange-300"
+required
+              type="number"
+              id="phone"
+              minLength={10}
+              maxLength={10}
+              onChange={telefono => {
+              if (telefono.target.value.length > 10) {
+                telefono.target.value = telefono.target.value.slice(0, 10)
+
+              };
+              handleInputChange(telefono);}}
+              className="w-full px-3 py-2 border rounded-lg focus:outline-none  focus:border-gray-400"
               placeholder="3165684544"
             />
           </div>
@@ -106,7 +122,7 @@ const DataCostumerPage = () => {
               name="formaPago"
               value={formData.formaPago}
               onChange={handlePaymentChange}
-              className="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-orange-300 focus:border-orange-500 sm:text-sm rounded-md"
+              className="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-gray-300 focus:border-gray-500 sm:text-sm rounded-md"
             >
               <option value="Efectivo">Efectivo</option>
               <option value="Transferencia">Transferencia</option>
@@ -122,12 +138,14 @@ const DataCostumerPage = () => {
                 Con cuánto pago
               </label>
               <input
+              required
                 type="number"
+                min={total}
                 id="conCuantoPago"
                 name="conCuantoPago"
                 value={formData.conCuantoPago}
                 onChange={handleInputChange}
-                className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:border-orange-300"
+                className="w-full px-3 py-2 border rounded-lg focus:outline-none  focus:border-gray-400"
                 placeholder="$"
               />
             </div>
@@ -144,7 +162,7 @@ const DataCostumerPage = () => {
               name="comentarios"
               value={formData.comentarios}
               onChange={handleInputChange}
-              className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:border-orange-300"
+              className="w-full px-3 py-2 border rounded-lg focus:outline-none  focus:border-gray-400"
               placeholder="¿Alguna especificación?"
             />
           </div>
@@ -156,12 +174,13 @@ const DataCostumerPage = () => {
           </div>
 
           <div className="flex flex-row justify-center">
-            <Link to={"/carrito/confirmPage"}>
+            
               <ButtonComponent
+              type="submit"
                 title={"Realizar pedido"}
-                onClickButton={handleSubmit}
+                onClickButton={()=>{
+                }}
               />
-            </Link>
           </div>
         </form>
       </div>

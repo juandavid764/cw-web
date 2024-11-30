@@ -2,6 +2,7 @@ import React, { useEffect, useState, useContext } from "react";
 import Footer from "../../components/web/Footer";
 import { ProductsContext } from "../../context/ProductsContext";
 import { insertRequest, insertOrder } from "../../supabase/crudFunctions";
+import WhatsAppIcon from "@mui/icons-material/WhatsApp";
 import { Link } from "react-router-dom";
 
 const ConfirmPage = () => {
@@ -26,9 +27,7 @@ const ConfirmPage = () => {
   }, [cart]);
 
   const sendWhatsappMessage = (name, request_id, comanda) => {
-    let textWpp = `Hola, soy ${name}.\n
-    id de pedido #${request_id}\n\n
-    ${comanda}\n 
+    let textWpp = `Hola, soy ${name}.\n\n#${request_id}\n\n${comanda}\n 
     `;
 
     let cellphone = "573006999492";
@@ -127,14 +126,15 @@ const ConfirmPage = () => {
               </span>
             </p>
           </div>
-          <Link to={"/rastrearPedido"}>
+          <div className="flex justify-center mt-6">
             <button
               onClick={confirmButtonClicked}
-              className="mt-6 w-full py-2 bg-orange-400 hover:bg-orange-500 text-white font-semibold rounded-lg shadow-md transition-colors"
+              className="w-full py-2 bg-orange-400 hover:bg-orange-500 text-white font-semibold rounded-lg shadow-md transition-colors flex items-center justify-center"
             >
+              <WhatsAppIcon className="mr-2" />
               Confirmar pedido
             </button>
-          </Link>
+          </div>
         </div>
       </main>
       <footer className="bg-gray-200 text-center py-4">
