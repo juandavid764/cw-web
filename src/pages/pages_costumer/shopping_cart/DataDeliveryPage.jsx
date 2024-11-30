@@ -53,7 +53,7 @@ const DataDeliveryPage = () => {
         </div>
 
         {/*  */}
-        <form onSubmit={null}>
+        <form onSubmit={handleSubmit}>
           <div className="mb-4">
             <label
               className="block text-gray-700 font-semibold mb-2"
@@ -190,8 +190,8 @@ delivery_price}>{neighborhood.name}</option>
               {total}
             </h3>
           </div>
-          <div className="flex flex-row justify-center">
-              <ButtonComponent title={"Realizar pedido"} onClickButton={handleSubmit} type="submit" />
+          <div className="flex flex-row justify-center">  
+              <ButtonComponent title={"Realizar pedido"} onClickButton={()=>{}} type="submit" />
           </div>
           
         </form>

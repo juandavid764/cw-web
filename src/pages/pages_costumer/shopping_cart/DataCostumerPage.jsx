@@ -178,7 +178,8 @@ required
               <ButtonComponent
               type="submit"
                 title={"Realizar pedido"}
-                onClickButton={handleSubmit}
+                onClickButton={()=>{
+                }}
               />
           </div>
         </form>
