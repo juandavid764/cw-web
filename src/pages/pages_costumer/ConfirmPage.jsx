@@ -2,6 +2,7 @@ import React, { useEffect, useState, useContext } from "react";
 import Footer from "../../components/web/Footer";
 import { ProductsContext } from "../../context/ProductsContext";
 import { insertRequest, insertOrder } from "../../supabase/crudFunctions";
+import { Link } from "react-router-dom";
 
 const ConfirmPage = () => {
   const { cart, total } = useContext(ProductsContext);
@@ -126,12 +127,14 @@ const ConfirmPage = () => {
               </span>
             </p>
           </div>
-          <button
-            onClick={confirmButtonClicked}
-            className="mt-6 w-full py-2 bg-orange-400 hover:bg-orange-500 text-white font-semibold rounded-lg shadow-md transition-colors"
-          >
-            Confirmar pedido
-          </button>
+          <Link to={"/rastrearPedido"}>
+            <button
+              onClick={confirmButtonClicked}
+              className="mt-6 w-full py-2 bg-orange-400 hover:bg-orange-500 text-white font-semibold rounded-lg shadow-md transition-colors"
+            >
+              Confirmar pedido
+            </button>
+          </Link>
         </div>
       </main>
       <footer className="bg-gray-200 text-center py-4">
