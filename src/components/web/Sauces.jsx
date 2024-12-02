@@ -4,7 +4,7 @@ import { ProductsContext } from "../../context/ProductsContext";
 
 const Sauces = ({ updateSauces }) => {
   const { sauces } = useContext(ProductsContext);
-  const [isOpen, setIsOpen] = useState(true);
+  const [isOpen, setIsOpen] = useState(false);
   const [selectedSauces, setSelectedSauces] = useState([]);
 
   const handleSauceSelection = (sauce) => {
@@ -31,7 +31,7 @@ const Sauces = ({ updateSauces }) => {
         {isOpen ? (
           <ChevronUpIcon className="h-6 w-6 text-gray-600" />
         ) : (
-          <ChevronDownIcon className="h-6 w-6 text-gray-600" />
+          <ChevronDownIcon className="h-6 w-6 text-gray-600 animate-bounce" />
         )}
       </div>
       {isOpen && (

@@ -1,15 +1,13 @@
-import React, { createContext, useState } from "react";
+import React, { createContext, useState, useEffect } from "react";
 import { getProducts, getAdditions } from "../supabase/crudFunctions";
 
 export const ProductsContext = createContext();
 
-let additionsData = await getAdditions();
-let productsData = await getProducts();
-
 export const ProductsProvider = ({ children }) => {
-  const [products] = useState(productsData);
-
-  const [additions] = useState(additionsData);
+  const [products, setProducts] = useState([]);
+  const [additions, setAdditions] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [filteredProducts, setFilteredProducts] = useState(products);
 
   const [sauces] = useState([
     "Roja",
@@ -20,16 +18,36 @@ export const ProductsProvider = ({ children }) => {
     "Showy",
   ]);
 
-  //
   const [cart, setCart] = useState([]);
   const [total, setTotal] = useState(0);
   const [client, setClient] = useState({});
   const [orderCount, setOrderCount] = useState(0);
 
-  // Función para agregar un pedido al carrito
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        setLoading(true);
+
+        await getAdditions().then((data) => {
+          setAdditions(data);
+        });
+
+        await getProducts().then((data) => {
+          setFilteredProducts(data);
+          setProducts(data);
+        });
+      } catch (error) {
+        console.error("Error al cargar los datos:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchData();
+  }, []);
+
   const addToCart = (product, selectedAdditions, selectedSauces) => {
     const newOrder = {
-      //id unico para el pedido con la fecha porque no voy a descargar nada mas
       id: Date.now(),
       quantity: 1,
       product: {
@@ -68,6 +86,9 @@ export const ProductsProvider = ({ children }) => {
         setOrderCount,
         client,
         setClient,
+        loading,
+        filteredProducts,
+        setFilteredProducts,
       }}
     >
       {children}

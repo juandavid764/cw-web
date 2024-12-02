@@ -45,7 +45,7 @@ const Navbar = () => {
       <div className="hidden md:flex space-x-8">
         <MenuLinks
           menuItems={menuItems}
-          className="text-gray-300 hover:text-orange-300"
+          className="text-gray-300 font-bold hover:text-orange-300"
         />
       </div>
 
