@@ -1,10 +1,15 @@
+import { useEffect } from "react";
 import foodImg from "../../assets/aboutUsPage/imgAboutUs1.webp";
 import teamImg from "../../assets/aboutUsPage/imgAboutUs2.webp";
 import Footer from "../../components/web/Footer";
-import LoginPage from "../../pages/pages_admin/LoginPage";
-import ButtonComponent from "../../components/web/ButtonComponent";
+import { Link } from "react-router-dom";
+
 
 const AboutUsPage = () => {
+    useEffect(() => {
+      window.scrollTo(0, 0);
+    }, []);
+
   const warText = <span className="text-red-600 font-bold">War</span>;
   const cartoonText = (
     <span className="text-orange-300 font-bold">Cartoon</span>
@@ -58,8 +63,13 @@ const AboutUsPage = () => {
       </div>
       <br />
       <div className="flex flex-row justify-center lg:px-24">
-
-        <ButtonComponent title={"Realizar pedido"} onClickButton={() => { }} />
+        <Link to="/">
+          <button
+            className="bg-orange-400 text-white px-6 py-2 rounded-md hover:bg-orange-300"
+          >
+            Realizar pedido
+          </button>
+        </Link>
 
       </div>
       <br />
@@ -70,6 +80,6 @@ const AboutUsPage = () => {
   );
 };
 
-//no entiendo la parte de
+
 
 export default AboutUsPage;

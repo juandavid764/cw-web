@@ -2,9 +2,10 @@ import React, { useState, useContext } from "react";
 import { ProductsContext } from "../../context/ProductsContext";
 import Card from "./Card";
 import CompleteCard from "./CompleteCard";
+import CardSkeleton from "./CardSkeleton";
 
 const CardsContainer = () => {
-  const { products } = useContext(ProductsContext);
+  const { loading, filteredProducts } = useContext(ProductsContext);
   const [selectedProduct, setSelectedProduct] = useState(null);
 
   const handleCardClick = (product) => {
@@ -19,13 +20,17 @@ const CardsContainer = () => {
     <>
       <div className="min-h-screen flex items-center justify-center bg-slate-50">
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8 p-4">
-          {products.map((product) => (
-            <Card
-              key={product.product_id}
-              product={product}
-              onClick={handleCardClick}
-            />
-          ))}
+          {loading || !filteredProducts.length
+            ? Array.from({ length: 8 }).map((_, index) => (
+                <CardSkeleton key={index} />
+              )) // Renderiza 8 skeletons
+            : filteredProducts.map((product) => (
+                <Card
+                  key={product.product_id}
+                  product={product}
+                  onClick={handleCardClick}
+                />
+              ))}
         </div>
       </div>
       {selectedProduct && (

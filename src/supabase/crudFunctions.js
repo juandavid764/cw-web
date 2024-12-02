@@ -10,6 +10,7 @@ import {
 
 // get all data from the table Product
 export async function getProducts() {
+  //await new Promise((resolve) => setTimeout(resolve, 5000));
   let { data: Products, error } = await supabase.from("Product").select("*");
   if (error) {
     console.log(error);

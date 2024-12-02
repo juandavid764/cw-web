@@ -111,7 +111,7 @@ const ConfirmPage = () => {
     <div className="flex flex-col min-h-screen bg-neutral-100">
       <main className="flex-grow flex flex-col items-center p-6">
         <div className="bg-white border border-gray-300 rounded-lg shadow-lg max-w-lg w-full p-6">
-          <h2 className="text-center text-xl font-semibold text-gray-700 mb-4">
+          <h2 className="text-center text-xl font-bold text-gray-700 mb-4">
             Resumen de tu pedido
           </h2>
           <div className="bg-neutral-50 border border-gray-200 p-4 rounded-lg font-mono text-sm text-gray-700 whitespace-pre-wrap">
