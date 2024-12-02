@@ -3,9 +3,8 @@ import ButtonComponent from "../../../components/web/ButtonComponent";
 import { ProductsContext } from "../../../context/ProductsContext";
 import { useNavigate } from "react-router-dom";
 
-
 const DataCostumerPage = () => {
-  const { total } = useContext(ProductsContext);
+  const { total, setClient } = useContext(ProductsContext);
   const [paymentMethod, setPaymentMethod] = useState("Efectivo");
   const navigate = useNavigate();
 
@@ -18,10 +17,8 @@ const DataCostumerPage = () => {
     comentarios: "",
   });
 
-
   const handleInputChange = (event) => {
-      const { name, value } = event.target;
-
+    const { name, value } = event.target;
 
     setFormData({
       ...formData,
@@ -39,7 +36,7 @@ const DataCostumerPage = () => {
   };
 
   const handleSubmit = (event) => {
-    event.preventDefault(); 
+    event.preventDefault();
     const client = {
       nombre: formData.nombre,
       telefono: formData.telefono,
@@ -49,8 +46,7 @@ const DataCostumerPage = () => {
       comentarios: formData.comentarios,
     };
 
-    localStorage.setItem("client", JSON.stringify(client));
-
+    setClient(client);
 
     navigate("/carrito/confirmPage");
   };
@@ -95,17 +91,17 @@ const DataCostumerPage = () => {
               Teléfono
             </label>
             <input
-required
+              required
               type="number"
               id="phone"
               minLength={10}
               maxLength={10}
-              onChange={telefono => {
-              if (telefono.target.value.length > 10) {
-                telefono.target.value = telefono.target.value.slice(0, 10)
-
-              };
-              handleInputChange(telefono);}}
+              onChange={(telefono) => {
+                if (telefono.target.value.length > 10) {
+                  telefono.target.value = telefono.target.value.slice(0, 10);
+                }
+                handleInputChange(telefono);
+              }}
               className="w-full px-3 py-2 border rounded-lg focus:outline-none  focus:border-gray-400"
               placeholder="3165684544"
             />
@@ -138,7 +134,7 @@ required
                 Con cuánto pago
               </label>
               <input
-              required
+                required
                 type="number"
                 min={total}
                 id="conCuantoPago"
@@ -174,13 +170,11 @@ required
           </div>
 
           <div className="flex flex-row justify-center">
-            
-              <ButtonComponent
+            <ButtonComponent
               type="submit"
-                title={"Realizar pedido"}
-                onClickButton={()=>{
-                }}
-              />
+              title={"Realizar pedido"}
+              onClickButton={() => {}}
+            />
           </div>
         </form>
       </div>

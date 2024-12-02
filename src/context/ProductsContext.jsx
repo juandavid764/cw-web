@@ -23,6 +23,7 @@ export const ProductsProvider = ({ children }) => {
   //
   const [cart, setCart] = useState([]);
   const [total, setTotal] = useState(0);
+  const [client, setClient] = useState({});
   const [orderCount, setOrderCount] = useState(0);
 
   // Función para agregar un pedido al carrito
@@ -65,6 +66,8 @@ export const ProductsProvider = ({ children }) => {
         setTotal,
         orderCount,
         setOrderCount,
+        client,
+        setClient,
       }}
     >
       {children}

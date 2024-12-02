@@ -5,39 +5,79 @@ import { useNavigate } from "react-router-dom";
 import { getNeighborhoods } from "../../../supabase/crudFunctions";
 
 const DataDeliveryPage = () => {
-  const { total, setTotal } = useContext(ProductsContext);
+  const { total, setTotal, setClient } = useContext(ProductsContext);
   const navigate = useNavigate();
-  const [paymentMethod, setPaymentMethod] = useState("Efectivo");
-  const [neighborhoods, setNeighborhoods] = useState();
-  const [deliveryValue, setDeliveryValue] = useState(0);
-  const [phone, setPhone] = useState(0);
-  const [subTotal, setSubTotal] = useState(total - deliveryValue);
-  
+  const [neighborhoods, setNeighborhoods] = useState([]);
+  const [subtotal, setSubtotal] = useState(total); // Nuevo estado para manejar el subtotal
+  const [formData, setFormData] = useState({
+    nombre: "",
+    telefono: "",
+    direccion: "",
+    barrio: "",
+    formaPago: "Efectivo",
+    conCuantoPago: "",
+    comentarios: "",
+    deliveryValue: 0,
+  });
 
-  const handlePaymentChange = (event) => {
-    setPaymentMethod(event.target.value); // Obtiene el valor actual del select
+  // Maneja los cambios en los inputs
+  const handleInputChange = (event) => {
+    const { name, value } = event.target;
+    setFormData({
+      ...formData,
+      [name]: value,
+    });
   };
 
-  const handleTotalChange = (event) => {
-    //Convierte el valor del select a un 
-    setDeliveryValue(parseInt(event.target.value));
+  // Maneja el cambio de barrio y actualiza el total con base en el subtotal
+  const handleNeighborhoodChange = (event) => {
+    const deliveryPrice = parseInt(event.target.value);
+    const selectedNeighborhood = neighborhoods.find(
+      (n) => n.delivery_price === deliveryPrice
+    );
 
-    setTotal(deliveryValue+subTotal); // Obtiene el valor actual del select
-    console.log(total);
+    setFormData({
+      ...formData,
+      barrio: selectedNeighborhood?.name || "",
+      deliveryValue: deliveryPrice,
+    });
+
+    // Actualiza el total basado en el subtotal y el nuevo costo de envío
+    setTotal(subtotal + deliveryPrice);
   };
 
   const handleSubmit = (event) => {
-    event.preventDefault(); // Previene el comportamiento predeterminado del formulario
+    event.preventDefault();
+    const clientData = {
+      nombre: formData.nombre,
+      telefono: formData.telefono,
+      direccion: formData.direccion,
+      barrio: formData.barrio,
+      formaPago: formData.formaPago,
+      conCuantoPago:
+        formData.formaPago === "Efectivo" ? formData.conCuantoPago : "",
+      comentarios: formData.comentarios,
+      total: total,
+    };
+
+    setClient(clientData);
     navigate("/carrito/confirmPage");
   };
 
   useEffect(() => {
-    getNeighborhoods().then(result => {
+    getNeighborhoods().then((result) => {
       setNeighborhoods(result);
-      setDeliveryValue(result[0].delivery_price);
-    });
-  }, [total]);
+      const initialDeliveryPrice = result[0]?.delivery_price || 0;
 
+      // Inicializa el barrio y actualiza el total
+      setFormData((prev) => ({
+        ...prev,
+        deliveryValue: initialDeliveryPrice,
+        barrio: result[0]?.name || "",
+      }));
+      setTotal(subtotal + initialDeliveryPrice);
+    });
+  }, [subtotal]);
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-r from-gray-100 to-gray-300">
@@ -46,124 +86,100 @@ const DataDeliveryPage = () => {
           Datos Domicilio
         </h2>
         <div className="flex flex-row justify-between">
-          <h3 className="text-left font-semibold  text-gray-700">Subtotal:</h3>
+          <h3 className="text-left font-semibold text-gray-700">Subtotal:</h3>
           <h3 className="text-right font-semibold mb-6 text-gray-700">
-            ${ subTotal}
+            ${subtotal}
           </h3>
         </div>
-
-        {/*  */}
         <form onSubmit={handleSubmit}>
           <div className="mb-4">
-            <label
-              className="block text-gray-700 font-semibold mb-2"
-              htmlFor="username"
-            >
+            <label className="block text-gray-700 font-semibold mb-2">
               Nombre
             </label>
             <input
-            required={true}
+              required
               type="text"
-              id="nombre"
-
-              className="w-full px-3 py-2 border rounded-lg focus:outline-none  focus:border-gray-400"
+              name="nombre"
+              value={formData.nombre}
+              onChange={handleInputChange}
+              className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:border-gray-400"
               placeholder="¿Quién recibe el pedido?"
             />
           </div>
           <div className="mb-4">
-            <label
-              htmlFor="neighborhoods"
-              className="block text-gray-700 font-semibold mb-2"
-            >
+            <label className="block text-gray-700 font-semibold mb-2">
               Barrio:
             </label>
             <select
-            onClick={handleTotalChange}
-            onChange={handleTotalChange}
-
-              id="neighborhoods"
-              name="cars"
-              className="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-gray-300 focus:border-gray-500 sm:text-sm rounded-md"
+              name="barrio"
+              value={formData.deliveryValue}
+              onChange={handleNeighborhoodChange}
+              className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:border-gray-400"
             >
-            {/* <option key={0} value={0}>{"Selecciona tu barrio"}</option> */}
-            {neighborhoods && neighborhoods.map((neighborhood) => (
-              
-              <option key={neighborhood.neighborhood_id} value={neighborhood.
-delivery_price}>{neighborhood.name}</option>
-            ))}
+              {neighborhoods.map((neighborhood) => (
+                <option
+                  key={neighborhood.neighborhood_id}
+                  value={neighborhood.delivery_price}
+                >
+                  {neighborhood.name}
+                </option>
+              ))}
             </select>
           </div>
           <div className="mb-4">
-            <label
-              className="block text-gray-700 font-semibold mb-2"
-              htmlFor="username"
-            >
+            <label className="block text-gray-700 font-semibold mb-2">
               Dirección
             </label>
             <input
-            required
+              required
               type="text"
-              id="ddress"
-              className="w-full px-3 py-2 border rounded-lg focus:outline-none  focus:border-gray-400"
+              name="direccion"
+              value={formData.direccion}
+              onChange={handleInputChange}
+              className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:border-gray-400"
               placeholder="Calle 51 # 40c-03"
             />
           </div>
           <div className="mb-4">
-            <label
-              className="block text-gray-700 font-semibold mb-2"
-              htmlFor="username"
-            >
+            <label className="block text-gray-700 font-semibold mb-2">
               Teléfono
             </label>
             <input
-            required
+              required
               type="number"
-              id="phone"
-              minLength={10}
-              maxLength={10}
-              onChange={telefono => {
-              if (telefono.target.value.length > 10) {
-                telefono.target.value = telefono.target.value.slice(0, 10)
-
-              }}}
-              
-              // value={username}
-              // onChange={(e) => setUsername(e.target.value)}
-
-              className="w-full px-3 py-2 border rounded-lg focus:outline-none  focus:border-gray-400"
+              name="telefono"
+              value={formData.telefono}
+              onChange={handleInputChange}
+              maxLength="10"
+              className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:border-gray-400"
               placeholder="3165684544"
             />
-
           </div>
           <div className="mb-4">
-            <label
-              htmlFor="payment"
-              className="block text-gray-700 font-semibold mb-2"
-            >
+            <label className="block text-gray-700 font-semibold mb-2">
               Forma de pago:
             </label>
             <select
-              id="payment"
-              name="cars"
-              onClick={handlePaymentChange}
-              className="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-gray-300 focus:border-gray-500 sm:text-sm rounded-md"
+              name="formaPago"
+              value={formData.formaPago}
+              onChange={handleInputChange}
+              className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:border-gray-400"
             >
               <option value="Efectivo">Efectivo</option>
               <option value="Transferencia">Transferencia</option>
             </select>
           </div>
-          {paymentMethod === "Efectivo" && (
+          {formData.formaPago === "Efectivo" && (
             <div className="mb-4">
-              <label
-                className="block text-gray-700 font-semibold mb-2"
-                htmlFor="cashs"
-              >
-                Con cuanto pago
+              <label className="block text-gray-700 font-semibold mb-2">
+                ¿Con cuánto pagas?
               </label>
               <input
-              required
+                required
                 type="number"
-                id="cashs"
+                name="conCuantoPago"
+                value={formData.conCuantoPago}
+                onChange={handleInputChange}
                 className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:border-gray-400"
                 placeholder="$"
                 min={total}
@@ -171,29 +187,30 @@ delivery_price}>{neighborhood.name}</option>
             </div>
           )}
           <div className="mb-4">
-            <label
-              className="block text-gray-700 font-semibold mb-2"
-              htmlFor="username"
-            >
-              Comentarios <span className="font-extralight">opcional</span>
-            </label> 
+            <label className="block text-gray-700 font-semibold mb-2">
+              Comentarios <span className="font-extralight">(opcional)</span>
+            </label>
             <textarea
-              type="text"
-              id="cashs"
-              className="w-full px-3 py-2 border rounded-lg focus:outline-none  focus:border-gray-400"
-              placeholder="¿Alguna especificacion?"
+              name="comentarios"
+              value={formData.comentarios}
+              onChange={handleInputChange}
+              className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:border-gray-400"
+              placeholder="¿Alguna especificación?"
             />
           </div>
           <div className="flex flex-row justify-between">
-            <h3 className="text-left font-bold  text-gray-700">Total:</h3>
+            <h3 className="text-left font-bold text-gray-700">Total:</h3>
             <h3 className="text-right font-bold mb-6 text-gray-700">
-              {total}
+              ${total}
             </h3>
           </div>
-          <div className="flex flex-row justify-center">  
-              <ButtonComponent title={"Realizar pedido"} onClickButton={()=>{}} type="submit" />
+          <div className="flex flex-row justify-center">
+            <ButtonComponent
+              title={"Realizar pedido"}
+              type="submit"
+              onClickButton={() => {}}
+            />
           </div>
-          
         </form>
       </div>
     </div>

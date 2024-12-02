@@ -6,28 +6,26 @@ import WhatsAppIcon from "@mui/icons-material/WhatsApp";
 import { Link } from "react-router-dom";
 
 const ConfirmPage = () => {
-  const { cart, total } = useContext(ProductsContext);
-  const [client, setClient] = useState(null);
+  const { cart, total, client, setClient } = useContext(ProductsContext);
   const [comanda, setComanda] = useState("");
   let nombreCliente = "";
 
   useEffect(() => {
-    const storedClient = localStorage.getItem("client");
-    if (storedClient) {
-      const clientFormatted = JSON.parse(storedClient);
-      nombreCliente = clientFormatted.nombre;
+    const generateComanda = () => {
+      if (!client || cart.length === 0) return "";
+      const formattedClient = formatClient(client);
+      const texto = formatComanda() + formattedClient;
+      return texto;
+    };
 
-      setClient(formatClient(clientFormatted));
-    }
-
-    const texto = formatComanda() + client;
-    setComanda(texto);
-
+    setComanda(generateComanda());
     window.scrollTo(0, 0);
-  }, [cart]);
+  }, [client, cart]);
 
   const sendWhatsappMessage = (name, request_id, comanda) => {
-    let textWpp = `Hola, soy ${name}.\n\n#${request_id}\n\n${comanda}\n 
+    let textWpp = `Hola, soy ${name}.\n\n#${request_id}\n\n${
+      comanda + "\n total:" + total
+    }\n 
     `;
 
     let cellphone = "573006999492";
@@ -82,7 +80,9 @@ const ConfirmPage = () => {
   };
 
   const confirmButtonClicked = async () => {
-    const insertedRequest = await insertRequest(client, total);
+    nombreCliente = client.nombre;
+    let formatted = formatClient(client);
+    const insertedRequest = await insertRequest(formatted, total);
     if (insertedRequest.error) {
       alert("Error al insertar la solicitud");
       return;
