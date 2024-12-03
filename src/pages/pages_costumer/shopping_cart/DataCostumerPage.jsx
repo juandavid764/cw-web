@@ -93,16 +93,11 @@ const DataCostumerPage = () => {
             <input
               required
               type="number"
-              id="phone"
-              minLength={10}
-              maxLength={10}
-              onChange={(telefono) => {
-                if (telefono.target.value.length > 10) {
-                  telefono.target.value = telefono.target.value.slice(0, 10);
-                }
-                handleInputChange(telefono);
-              }}
-              className="w-full px-3 py-2 border rounded-lg focus:outline-none  focus:border-gray-400"
+              name="telefono"
+              value={formData.telefono}
+              onChange={handleInputChange}
+              maxLength="10"
+              className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:border-gray-400"
               placeholder="3165684544"
             />
           </div>

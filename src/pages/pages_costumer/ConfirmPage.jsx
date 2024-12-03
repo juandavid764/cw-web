@@ -24,7 +24,7 @@ const ConfirmPage = () => {
 
   const sendWhatsappMessage = (name, request_id, comanda) => {
     let textWpp = `Hola, soy ${name}.\n\n#${request_id}\n\n${
-      comanda + "\n total:" + total
+      comanda + "\n   total:" + total
     }\n 
     `;
 
@@ -52,14 +52,36 @@ const ConfirmPage = () => {
   };
 
   const formatClient = (client) => {
-    const { nombre, telefono, comentarios, conCuantoPago, formaPago } = client;
-    return `
-  - - - - - - - - - - - - -
-  ${nombre}
-  ${telefono}
-  ${comentarios}
-  ${formaPago === "Efectivo" ? conCuantoPago : "Transferencia"}
-  `.trim();
+    const {
+      nombre,
+      telefono,
+      comentarios,
+      conCuantoPago,
+      formaPago,
+      direccion,
+      barrio,
+    } = client;
+
+    let res = "";
+    res += `
+    - - - - - - - - - - - - -
+${nombre}
+${telefono}
+${formaPago === "Efectivo" ? conCuantoPago : "Transferencia"}
+    `.trim();
+
+    if (direccion) {
+      res += `
+${direccion}
+${barrio}`;
+    }
+
+    if (comentarios != "") {
+      res += `
+"${comentarios}"`;
+    }
+
+    return res;
   };
 
   const formatSauces = (orderNow) => {
