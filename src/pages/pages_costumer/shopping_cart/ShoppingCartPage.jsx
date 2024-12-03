@@ -5,7 +5,6 @@ import Footer from "../../../components/web/Footer";
 import { ProductsContext } from "../../../context/ProductsContext";
 
 const ShoppingCartPage = () => {
-
   useEffect(() => {
     window.scrollTo(0, 0);
   }, []);
@@ -16,9 +15,9 @@ const ShoppingCartPage = () => {
       <div className="w-full">
         {cart.length > 0 ? (
           <div className="flex w-full justify-center">
-            <div className="flex bg-white w-[75%] items-center justify-between">
+            <div className="flex flex-col lg:flex-row bg-white w-full lg:w-[75%] items-center lg:justify-between">
               <QuantityContainer />
-              <div className="flex flex-col h-full space-y-2">
+              <div className="flex flex-col h-full space-y-2 w-full md:w-[70%] lg:w-[42%] ">
                 <PurchaseDetails />
               </div>
             </div>

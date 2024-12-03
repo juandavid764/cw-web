@@ -5,7 +5,7 @@ import { ProductsContext } from "../../context/ProductsContext";
 const QuantityContainer = () => {
   const { cart } = useContext(ProductsContext);
   return (
-    <div className="mt-5 mb-5 w-[448px] h-[600px]">
+    <div className="lg:mt-5 lg:mb-5 lg:w-[448px] lg:h-[600px]">
       <div className="flex flex-col space-y-2">
         <div className="flex flex-col items max-h-[600px] overflow-y-scroll scrollbar">
           {" "}

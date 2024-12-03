@@ -1,4 +1,4 @@
-import React, { useState, useContext } from "react";
+import React, { useState, useContext, useEffect } from "react";
 import Additions from "./Additions";
 import Sauces from "./Sauces";
 import CardHeader from "./CardHeader";
@@ -9,6 +9,14 @@ const CompleteCard = ({ product, onClose }) => {
   const [selectedAdditions, setSelectedAdditions] = useState([]);
   const [selectedSauces, setSelectedSauces] = useState([]);
   const { addToCart } = useContext(ProductsContext); // Importo el contexto con la funcion addToCart
+
+  // Bloquear el scroll en el fondo mientras el modal esté abierto
+  useEffect(() => {
+    document.body.style.overflow = "hidden";
+    return () => {
+      document.body.style.overflow = "";
+    };
+  }, []);
 
   //Funcion que me permite agregar el producto al carrito
   const handleAddToCart = () => {

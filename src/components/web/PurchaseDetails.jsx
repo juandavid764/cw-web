@@ -22,7 +22,7 @@ const PurchaseDetails = () => {
   const setTotalPrice = () => setTotal(subtotal);
 
   return (
-    <div className=" mt-5 mb-5 w-[448px] h-max-[600px]  bg-white rounded-lg border border-gray-200 shadow-md p-6">
+    <div className=" mt-2 mb-6 lg:mt-5 lg:mb-5 lg:w-[448px] lg:h-max-[600px]  bg-white rounded-lg border border-gray-200 shadow-md p-6">
       <h2 className="text-lg font-bold mb-4">Detalles de compra</h2>
       <div className="max-h-[400px] overflow-y-scroll scrollbar">
         {" "}
