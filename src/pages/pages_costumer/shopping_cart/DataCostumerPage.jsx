@@ -52,7 +52,7 @@ const DataCostumerPage = () => {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-r from-gray-100 to-gray-300">
+    <div className="min-h-screen flex items-center justify-center bg-orange-300">
       <div className="bg-slate-50 p-8 rounded-lg shadow-lg w-full max-w-md border-2">
         <h2 className="text-center text-2xl font-bold mb-6 text-gray-700">
           Datos Cliente
