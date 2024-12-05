@@ -1,12 +1,10 @@
 
 export async function getFormatRequest() {
-    let { data: formatted_request_products, error } = await supabase
-        .from('formatted_request_products')
-        .select('*')
-    if (error) {
-        console.log(error);
-        return null;
-    }
 
-    return formatted_request_products;
+    let { data, error } = await supabase
+        .rpc('get_recent_requests_2_days')
+    if (error) console.error(error)
+    else console.log(data)
+
+    return data;
 }
