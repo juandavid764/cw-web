@@ -1,9 +1,5 @@
 import { supabase } from "./client";
-import {
-  deleteImage,
-  insertImage,
-  getCurrentImageUrl,
-} from "./bucketFunctions";
+import { deleteImage, insertImage } from "./bucketFunctions";
 
 //!Product
 //!----------------------------------------------------------------------------------------------------------------------------
@@ -45,9 +41,9 @@ export async function insertProduct({
     console.log(error);
     return null;
   }
-
+  console.log(data);
   // Subir la imagen al bucket
-  await insertImage(file, data.product_id);
+  await insertImage(file, data[0].product_id);
 
   /* {
       "status": 201,

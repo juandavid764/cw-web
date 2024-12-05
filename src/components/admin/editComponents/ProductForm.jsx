@@ -51,7 +51,7 @@ const ProductForm = ({ categories, productToEdit, setProductToEdit }) => {
 
   const submitProduct = async (e) => {
     e.preventDefault();
-
+    console.log(product.image);
     let productData = {
       name: product.name,
       price: parseInt(product.price),
