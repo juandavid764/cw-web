@@ -23,9 +23,9 @@ const ConfirmPage = () => {
   }, [client, cart]);
 
   const sendWhatsappMessage = (name, request_id, comanda) => {
-    let textWpp = `Hola, soy ${name}.\n\n#${request_id}\n\n${
-      comanda + "\n   total:" + total
-    }\n 
+    let textWpp = `Hola, soy ${name}.\n\n#${request_id}\n\n${comanda}\n${
+      "total: " + total
+    } 
     `;
 
     let cellphone = "573006999492";

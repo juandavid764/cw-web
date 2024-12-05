@@ -1,69 +1,66 @@
 import { supabase } from "./client";
 
 export async function deleteImage(imageUrl) {
-    // Extract the path from the image URL
-    const path = imageUrl.split('/').pop();
+  // Extract the path from the image URL
+  const path = imageUrl.split("/").pop();
 
-    const { error } = await supabase
-        .storage
-        .from('imgsProducts')
-        .remove([path]);
+  const { error } = await supabase.storage.from("imgsProducts").remove([path]);
 
-    if (error) {
-        console.error('Error al eliminar la imagen:', error);
-        return error;
-    }
+  if (error) {
+    console.error("Error al eliminar la imagen:", error);
+    return error;
+  }
 
-    return null;
+  return null;
 }
 
 //Sube la imagen al bucket y guarda la URL en la tabla Productos
 export async function insertImage(file, productoId) {
-    const filePath = `/${productoId}/${file.name}`;
+  if (!file) {
+    console.error("El archivo no es válido o no se ha proporcionado.");
+    return null;
+  }
+  if (!productoId) {
+    console.error("Cualejesa de que no hay productoid.");
+    return null;
+  }
 
-    // Subir la imagen al bucket
-    const { data, error } = await supabase.storage
-        .from('imgsProducts')
-        .upload(filePath, file, {
-            cacheControl: '3600',
-            upsert: true
-        });
+  const filePath = `/${productoId}`;
 
+  console.log("filePath", filePath);
 
-    if (error) {
-        console.error('Error al subir imagen:', error);
-        return null;
-    }
+  // Subir la imagen al bucket
+  const { data, error } = await supabase.storage
+    .from("imgsProducts")
+    .upload(filePath, file, {
+      cacheControl: "3600",
+      upsert: true,
+    });
 
-    // Generar la URL pública o privada
-    const { publicUrl } = supabase.storage.from('imgsProducts').getPublicUrl(filePath);
+  if (error) {
+    console.error("Error al subir imagen:", error);
+    return null;
+  }
 
-    // Guardar la URL en la tabla Productos
-    const { error: dbError } = await supabase
-        .from('Productos')
-        .update({ imagen_url: publicUrl })
-        .eq('id', productoId);
+  // Generar la URL pública o privada
+  const { data: informacion, error: errorimagen } = supabase.storage
+    .from("imgsProducts") // Nombre del bucket
+    .getPublicUrl(filePath);
 
-    if (dbError) {
-        console.error('Error al guardar URL en Productos:', dbError);
-    }
+  if (errorimagen) {
+    console.error("Error al obtener la url:", errorimagen);
+    return null;
+  }
 
-    return publicUrl;
-}
+  console.log("publicUrl", informacion.publicUrl);
 
+  // Guardar la URL en la tabla Productos
+  const { error: dbError } = await supabase
+    .from("Product")
+    .update({ imgUrl: informacion.publicUrl })
+    .eq("product_id", productoId);
 
-// Obtener la URL de la imagen actual
-export async function getCurrentImageUrl(id) {
-    const { data: currentUrl, error: currentError } = await supabase
-        .from('Productos')
-        .select('imagen_url')
-        .eq('id', id)
-        .single();
-
-    if (currentError) {
-        console.error('Error al obtener la url actual:', currentError);
-        return null;
-    }
-
-    return currentUrl.imagen_url;
+  if (dbError) {
+    console.error("Error al guardar URL en Productos:", dbError);
+  }
 }

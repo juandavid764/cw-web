@@ -1,6 +1,7 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import { insertProduct, updateProduct } from "../../../supabase/crudFunctions"; // Asegúrate de tener una función para actualizar
 
-const ProductForm = () => {
+const ProductForm = ({ categories, productToEdit, setProductToEdit }) => {
   const [product, setProduct] = useState({
     name: "",
     price: "",
@@ -9,6 +10,35 @@ const ProductForm = () => {
     category: "porciones",
     image: null,
   });
+
+  // Al recibir el producto a editar, pre-llenamos el formulario
+  useEffect(() => {
+    if (productToEdit) {
+      setProduct({
+        name: productToEdit.name,
+        price: productToEdit.price,
+        hasAddition: productToEdit.withAddition ? "si" : "no",
+        description: productToEdit.description,
+        category: productToEdit.category_id,
+        image: null,
+      });
+    } else {
+      // Si no hay producto a editar, restablecer el formulario
+      resetForm();
+    }
+  }, [productToEdit]);
+
+  // Función para restablecer el formulario
+  const resetForm = () => {
+    setProduct({
+      name: "",
+      price: "",
+      hasAddition: "no",
+      description: "",
+      category: "porciones",
+      image: null,
+    });
+  };
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -19,15 +49,34 @@ const ProductForm = () => {
     setProduct({ ...product, image: e.target.files[0] });
   };
 
-  const handleSubmit = (e) => {
+  const submitProduct = async (e) => {
     e.preventDefault();
-    console.log("Product submitted:", product);
+    console.log(product.image);
+    let productData = {
+      name: product.name,
+      price: parseInt(product.price),
+      withAddition: product.hasAddition === "si",
+      description: product.description,
+      category: product.category,
+      file: product.image,
+    };
+
+    if (productToEdit) {
+      // Si estamos editando, actualizamos el producto y agregamos el id que se trae
+      productData.id = productToEdit.product_id;
+
+      await updateProduct(productData);
+    } else {
+      await insertProduct(productData);
+    }
+    resetForm();
+    setProductToEdit(null);
   };
 
   return (
     <form
-      onSubmit={handleSubmit}
       className="max-w-lg mx-auto p-4 bg-white w-[800px]"
+      onSubmit={submitProduct}
     >
       <div className="mb-4">
         <label className="block  font-bold mb-2" htmlFor="name">
@@ -83,9 +132,11 @@ const ProductForm = () => {
           onChange={handleChange}
           className="w-full px-3 py-2 border rounded"
         >
-          <option value="porciones">Porciones</option>
-          <option value="salchipapa">Salchipapa</option>
-          <option value="bebidas">Bebidas</option>
+          {categories.map((item, index) => (
+            <option key={index} value={item.category_id}>
+              {item.category_name}
+            </option>
+          ))}
         </select>
       </div>
       <div className="mb-4">
@@ -118,8 +169,21 @@ const ProductForm = () => {
         type="submit"
         className="w-full bg-orange-500 text-white py-2 px-4 rounded hover:bg-orange-400"
       >
-        Crear Producto
+        {productToEdit ? "Actualizar" : "Crear"}
       </button>
+      {/* Botón adicional para limpiar el formulario y crear un nuevo producto */}
+      {productToEdit && (
+        <button
+          type="button"
+          onClick={() => {
+            resetForm();
+            setProductToEdit(null);
+          }}
+          className="w-full bg-black text-white py-2 px-4 rounded hover:bg-gray-400 mt-4"
+        >
+          Nuevo
+        </button>
+      )}
     </form>
   );
 };
