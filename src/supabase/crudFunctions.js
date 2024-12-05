@@ -99,7 +99,7 @@ export async function updateProduct({
   const { data, error } = await supabase
     .from("Product")
     .update(updateData)
-    .eq("id", id)
+    .eq("product_id", id)
     .select();
 
   if (error) {
