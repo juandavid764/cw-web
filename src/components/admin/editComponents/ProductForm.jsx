@@ -1,7 +1,12 @@
 import React, { useState, useEffect } from "react";
 import { insertProduct, updateProduct } from "../../../supabase/crudFunctions"; // Asegúrate de tener una función para actualizar
 
-const ProductForm = ({ categories, productToEdit, setProductToEdit }) => {
+const ProductForm = ({
+  categories,
+  productToEdit,
+  setProductToEdit,
+  reload,
+}) => {
   const [product, setProduct] = useState({
     name: "",
     price: "",
@@ -50,7 +55,7 @@ const ProductForm = ({ categories, productToEdit, setProductToEdit }) => {
   };
 
   const submitProduct = async (e) => {
-    // e.preventDefault();
+    e.preventDefault();
     // console.log(product.image);
     let productData = {
       name: product.name,
@@ -71,6 +76,7 @@ const ProductForm = ({ categories, productToEdit, setProductToEdit }) => {
     }
     resetForm();
     setProductToEdit(null);
+    reload(null, "insert");
   };
 
   return (

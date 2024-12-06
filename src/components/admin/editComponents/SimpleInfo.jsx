@@ -32,7 +32,7 @@ const SimpleInfo = ({ title, info, obj, click, onDelete }) => {
         deletedId = obj.domiciliary_id;
       }
 
-      onDelete(deletedId);
+      onDelete(deletedId, "delete");
     } catch (error) {
       console.error("Error al eliminar:", error);
     }

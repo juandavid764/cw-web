@@ -45,7 +45,7 @@ const EditPage = () => {
   }, []);
 
   // Función para manejar la eliminación de un item y mostrar mensaje de confirmación al usuario
-  const handleDeleteAndReload = async (deletedId) => {
+  const handleReload = async (id, action) => {
     try {
       // Recargar los datos de la tabla seleccionada
       const newData = await fetchTableData(selectedTable);
@@ -70,8 +70,14 @@ const EditPage = () => {
           break;
       }
 
-      // Mostrar mensaje de confirmación
-      alert(`Item con ID ${deletedId} eliminado de la tabla ${selectedTable}`);
+      // Mostrar mensaje de confirmación dependiendo de la acción realizada
+      if (action === "delete") {
+        alert(`Item con ID ${id} eliminado de la tabla ${selectedTable}`);
+      } else if (action === "update") {
+        alert(`Item con ID ${id} actualizado en la tabla ${selectedTable}`);
+      } else if (action === "insert") {
+        alert(`Item insertado en la tabla ${selectedTable}`);
+      }
     } catch (error) {
       console.error("Error al recargar los datos:", error);
       alert("Ocurrió un error al recargar los datos.");
@@ -144,9 +150,9 @@ const EditPage = () => {
   const dataToDisplay = getDataForSelectedTable();
 
   return (
-    <div className="bg-gray-100 flex justify-between">
+    <div className="bg-gray-100 flex justify-between w-full">
       {/* Barra lateral */}
-      <div className="w-2/5 p-4">
+      <div className="w-3/5 p-4 flex flex-col items-center ">
         <ButtonGroup
           options={[
             "Productos",
@@ -158,21 +164,23 @@ const EditPage = () => {
           selected={selectedTable}
           onSelect={handleTableChange}
         />
-        {dataToDisplay.map((item, index) => (
-          <SimpleInfo
-            key={index}
-            title={
-              item.name ||
-              item.title ||
-              item.category_name ||
-              `Item ${index + 1}`
-            }
-            info={item[getIdKey(selectedTable)] || item.info || selectedTable}
-            obj={item}
-            click={() => handleProductSelect(item)}
-            onDelete={handleDeleteAndReload}
-          />
-        ))}
+        <div className="flex flex-col w-[80%]">
+          {dataToDisplay.map((item, index) => (
+            <SimpleInfo
+              key={index}
+              title={
+                item.name ||
+                item.title ||
+                item.category_name ||
+                `Item ${index + 1}`
+              }
+              info={item[getIdKey(selectedTable)] || item.info || selectedTable}
+              obj={item}
+              click={() => handleProductSelect(item)}
+              onDelete={handleReload}
+            />
+          ))}
+        </div>
       </div>
       <div className="w-3/5 p-4 flex flex-col items-center">
         <h2 className="font-bold text-xl">Datos</h2>
@@ -181,6 +189,7 @@ const EditPage = () => {
             categories={categories}
             productToEdit={productToEdit}
             setProductToEdit={setProductToEdit}
+            reload={handleReload}
           />
         )}
       </div>
