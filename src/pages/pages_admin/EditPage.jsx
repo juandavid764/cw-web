@@ -152,7 +152,7 @@ const EditPage = () => {
   return (
     <div className="bg-gray-100 flex justify-between w-full">
       {/* Barra lateral */}
-      <div className="w-3/5 p-4 flex flex-col items-center ">
+      <div className="w-3/5 p-4 flex flex-col items-center h-[800px]">
         <ButtonGroup
           options={[
             "Productos",
@@ -164,7 +164,7 @@ const EditPage = () => {
           selected={selectedTable}
           onSelect={handleTableChange}
         />
-        <div className="flex flex-col w-[80%]">
+        <div className="flex flex-col w-[80%] h-[600px] overflow-y-scroll scrollbar">
           {dataToDisplay.map((item, index) => (
             <SimpleInfo
               key={index}

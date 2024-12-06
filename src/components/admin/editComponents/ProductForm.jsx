@@ -71,12 +71,13 @@ const ProductForm = ({
       productData.id = productToEdit.product_id;
 
       await updateProduct(productData);
+      reload(productData.id, "update");
     } else {
       await insertProduct(productData);
+      reload(null, "insert");
     }
     resetForm();
     setProductToEdit(null);
-    reload(null, "insert");
   };
 
   return (
