@@ -75,7 +75,7 @@ const ProductForm = ({ categories, productToEdit, setProductToEdit }) => {
 
   return (
     <form
-      className="max-w-lg mx-auto p-4 bg-white w-[800px]"
+      className="max-w-lg mx-auto p-4 bg-gray-100 w-[800px]"
       onSubmit={submitProduct}
     >
       <div className="mb-4">

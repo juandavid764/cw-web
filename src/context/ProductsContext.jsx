@@ -75,6 +75,8 @@ export const ProductsProvider = ({ children }) => {
     <ProductsContext.Provider
       value={{
         products,
+        setProducts,
+        setAdditions,
         additions,
         sauces,
         addToCart,

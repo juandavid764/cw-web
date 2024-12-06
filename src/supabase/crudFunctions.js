@@ -1,5 +1,9 @@
 import { supabase } from "./client";
-import { deleteImage, insertImage } from "./bucketFunctions";
+import {
+  deleteImage,
+  insertImage,
+  getCurrentImageUrl,
+} from "./bucketFunctions";
 
 //!Product
 //!----------------------------------------------------------------------------------------------------------------------------
@@ -119,7 +123,10 @@ export async function deleteProduct(id) {
   }
 
   //Eliminar el producto de la base de datos
-  const { data, error } = await supabase.from("Product").delete().eq("id", id);
+  const { data, error } = await supabase
+    .from("Product")
+    .delete()
+    .eq("product_id", id);
   if (error) {
     console.log(error);
     return null;

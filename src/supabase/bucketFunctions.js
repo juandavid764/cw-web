@@ -64,3 +64,23 @@ export async function insertImage(file, productoId) {
     console.error("Error al guardar URL en Productos:", dbError);
   }
 }
+
+export async function getCurrentImageUrl(id) {
+  if (!id) {
+    console.error("Falta el ID del producto.");
+    return null;
+  }
+
+  const { data, error } = await supabase
+    .from("Product")
+    .select("imgUrl")
+    .eq("product_id", id)
+    .single();
+
+  if (error) {
+    console.error("Error al obtener la URL de la imagen:", error);
+    return null;
+  }
+
+  return data ? data.imgUrl : null;
+}

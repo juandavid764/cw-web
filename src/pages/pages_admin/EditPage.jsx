@@ -4,13 +4,16 @@ import SimpleInfo from "../../components/admin/editComponents/SimpleInfo";
 import { ProductsContext } from "../../context/ProductsContext";
 import ButtonGroup from "../../components/admin/editComponents/ButtonGroup";
 import {
+  getProducts,
+  getAdditions,
   getCategories,
   getDomiciliaries,
   getNeighborhoods,
 } from "../../supabase/crudFunctions";
 
 const EditPage = () => {
-  const { products, additions } = useContext(ProductsContext);
+  const { products, additions, setProducts, setAdditions } =
+    useContext(ProductsContext);
   const [categories, setCategories] = useState([]);
   const [neighborhoods, setNeighborhoods] = useState([]);
   const [domiciliaries, setDomiciliaries] = useState([]);
@@ -40,6 +43,58 @@ const EditPage = () => {
 
     fetchData();
   }, []);
+
+  // Función para manejar la eliminación de un item y mostrar mensaje de confirmación al usuario
+  const handleDeleteAndReload = async (deletedId) => {
+    try {
+      // Recargar los datos de la tabla seleccionada
+      const newData = await fetchTableData(selectedTable);
+
+      switch (selectedTable) {
+        case "Productos":
+          setProducts(newData);
+          break;
+        case "Categorías":
+          setCategories(newData);
+          break;
+        case "Adiciones":
+          setAdditions(newData);
+          break;
+        case "Barrios":
+          setNeighborhoods(newData);
+          break;
+        case "Domiciliarios":
+          setDomiciliaries(newData);
+          break;
+        default:
+          break;
+      }
+
+      // Mostrar mensaje de confirmación
+      alert(`Item con ID ${deletedId} eliminado de la tabla ${selectedTable}`);
+    } catch (error) {
+      console.error("Error al recargar los datos:", error);
+      alert("Ocurrió un error al recargar los datos.");
+    }
+  };
+
+  // Función auxiliar para cargar datos por tabla
+  const fetchTableData = async (table) => {
+    switch (table) {
+      case "Productos":
+        return await getProducts();
+      case "Categorías":
+        return await getCategories();
+      case "Adiciones":
+        return await getAdditions();
+      case "Barrios":
+        return await getNeighborhoods();
+      case "Domiciliarios":
+        return await getDomiciliaries();
+      default:
+        return [];
+    }
+  };
 
   // Mapeo de datos en función de la tabla seleccionada para cambiar entre uno y otro
   const getDataForSelectedTable = () => {
@@ -89,7 +144,7 @@ const EditPage = () => {
   const dataToDisplay = getDataForSelectedTable();
 
   return (
-    <div className="flex justify-between">
+    <div className="bg-gray-100 flex justify-between">
       {/* Barra lateral */}
       <div className="w-2/5 p-4">
         <ButtonGroup
@@ -115,6 +170,7 @@ const EditPage = () => {
             info={item[getIdKey(selectedTable)] || item.info || selectedTable}
             obj={item}
             click={() => handleProductSelect(item)}
+            onDelete={handleDeleteAndReload}
           />
         ))}
       </div>
