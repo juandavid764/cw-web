@@ -12,7 +12,7 @@ export async function getProducts() {
     console.log(error);
     return null;
   }
-  console.log(Products);
+  // console.log(Products);
   return Products;
 }
 
@@ -189,7 +189,7 @@ export async function getAdditions() {
     console.log(error);
     return null;
   }
-  console.log(Addition);
+  // console.log(Addition);
   return Addition;
 }
 
