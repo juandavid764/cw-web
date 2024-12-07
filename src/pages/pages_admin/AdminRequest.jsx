@@ -40,7 +40,7 @@ const AdminRequest = () => {
         selectedBtn === 0 || pedido.status === buttons[selectedBtn].label;
       const matchesSearch =
         pedido.client.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        Number(pedido.request_id).toString().includes(searchTerm);
+        Number(pedido.request_id).toString().includes(searchTerm );
       return matchesStatus && matchesSearch;
     });
   }, [formattedRequest, selectedBtn, searchTerm]);
