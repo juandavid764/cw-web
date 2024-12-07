@@ -36,11 +36,11 @@ const CompleteCard = ({ product, onClose }) => {
 
   return (
     <div className="fixed inset-0 bg-gray-800 bg-opacity-75 flex items-center justify-center z-50">
-  <div className="bg-white max-w-lg w-full max-h-[600px] relative overflow-hidden rounded-lg">
+  <div className="bg-white h-screen max-w-lg w-full md:max-h-[600px] relative overflow-hidden rounded-lg">
     <div className="sticky top-0 bg-white z-10 px-3 pt-2">
       <CardHeader total={total} onClose={onClose} />
     </div>
-    <div className="p-6 overflow-y-scroll max-h-[500px]">
+    <div className="flex flex-col p-6 overflow-y-scroll max-h-[95%] h-[95%]">
       <div className="flex justify-center items-center">
         <img
           src={product.image}
@@ -48,7 +48,7 @@ const CompleteCard = ({ product, onClose }) => {
           className="w-48 h-48 object-cover rounded-md"
         />
       </div>
-      <div className="mt-4">
+      <div className="mt-auto">
         <div className="flex items-baseline justify-between">
           <h2 className="text-xl font-bold">{product.name}</h2>
           <span className="block text-lg font-semibold">

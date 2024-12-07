@@ -1,5 +1,6 @@
 import React, { createContext, useState, useEffect } from "react";
 import { getProducts, getAdditions } from "../supabase/crudFunctions";
+import { toast } from "react-toastify";
 
 export const ProductsContext = createContext();
 
@@ -67,6 +68,8 @@ export const ProductsProvider = ({ children }) => {
     setCart((prevCart) => {
       const updatedCart = [...prevCart, newOrder];
       setOrderCount(updatedCart.length);
+      toast("✅ ¡Producto agregado al carrito!", {
+      });
       return updatedCart;
     });
   };
