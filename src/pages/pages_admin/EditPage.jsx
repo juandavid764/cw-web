@@ -1,5 +1,6 @@
 import React, { useState, useContext, useEffect } from "react";
 import ProductForm from "../../components/admin/editComponents/ProductForm";
+import AdditionForm from "../../components/admin/editComponents/AdditionForm";
 import SimpleInfo from "../../components/admin/editComponents/SimpleInfo";
 import { ProductsContext } from "../../context/ProductsContext";
 import ButtonGroup from "../../components/admin/editComponents/ButtonGroup";
@@ -189,6 +190,13 @@ const EditPage = () => {
             categories={categories}
             productToEdit={productToEdit}
             setProductToEdit={setProductToEdit}
+            reload={handleReload}
+          />
+        )}
+        {selectedTable === "Adiciones" && (
+          <AdditionForm
+            additionToEdit={productToEdit} // Reutilizamos el mismo estado para editar adiciones
+            setAdditionToEdit={setProductToEdit}
             reload={handleReload}
           />
         )}

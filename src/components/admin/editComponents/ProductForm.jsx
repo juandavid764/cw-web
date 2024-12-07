@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { insertProduct, updateProduct } from "../../../supabase/crudFunctions"; // Asegúrate de tener una función para actualizar
+import ImageUploader from "./ImageUploader";
 
 const ProductForm = ({
   categories,
@@ -12,11 +13,11 @@ const ProductForm = ({
     price: "",
     hasAddition: "no",
     description: "",
-    category: "porciones",
+    category: "Bebidas",
     image: null,
+    currentImageUrl: null, // URL de la imagen actual
   });
 
-  // Al recibir el producto a editar, pre-llenamos el formulario
   useEffect(() => {
     if (productToEdit) {
       setProduct({
@@ -26,9 +27,9 @@ const ProductForm = ({
         description: productToEdit.description,
         category: productToEdit.category_id,
         image: null,
+        currentImageUrl: productToEdit.imgUrl || null, // Carga la URL existente
       });
     } else {
-      // Si no hay producto a editar, restablecer el formulario
       resetForm();
     }
   }, [productToEdit]);
@@ -50,32 +51,53 @@ const ProductForm = ({
     setProduct({ ...product, [name]: value });
   };
 
-  const handleFileChange = (e) => {
-    setProduct({ ...product, image: e.target.files[0] });
+  const handleImageChange = (event) => {
+    const file = event.target.files[0];
+    if (file) {
+      const currentImageUrl = URL.createObjectURL(file);
+      setProduct({ ...product, image: file, currentImageUrl });
+    }
+  };
+
+  const removeImage = () => {
+    setProduct({ ...product, image: null, currentImageUrl: null });
   };
 
   const submitProduct = async (e) => {
     e.preventDefault();
-    // console.log(product.image);
+
     let productData = {
       name: product.name,
       price: parseInt(product.price),
       withAddition: product.hasAddition === "si",
       description: product.description,
       category: product.category,
-      file: product.image,
     };
 
     if (productToEdit) {
-      // Si estamos editando, actualizamos el producto y agregamos el id que se trae
+      // Si estamos editando
       productData.id = productToEdit.product_id;
+
+      if (product.image) {
+        // Nueva imagen cargada, procesa la subida
+        productData.file = product.image;
+      } else if (product.currentImageUrl) {
+        // Mantener la imagen actual
+        productData.file = product.currentImageUrl;
+      } else {
+        // No hay imagen (ni nueva ni actual)
+        productData.file = null;
+      }
 
       await updateProduct(productData);
       reload(productData.id, "update");
     } else {
+      // Crear nuevo producto
+      productData.file = product.image;
       await insertProduct(productData);
       reload(null, "insert");
     }
+
     resetForm();
     setProductToEdit(null);
   };
@@ -160,16 +182,11 @@ const ProductForm = ({
         />
       </div>
       <div className="mb-4">
-        <label className="block  font-bold mb-2" htmlFor="image">
-          Adjuntar Imagen
-        </label>
-        <input
-          type="file"
-          id="image"
-          name="image"
-          accept="image/*"
-          onChange={handleFileChange}
-          className="w-full"
+        <ImageUploader
+          image={product.image}
+          previewUrl={product.currentImageUrl}
+          onImageChange={handleImageChange}
+          onRemoveImage={removeImage}
         />
       </div>
       <button

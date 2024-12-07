@@ -66,36 +66,28 @@ export async function updateProduct({
   category,
   file = null,
 }) {
-  let imagen_url = null;
-
-  // Si se envió una imagen, actualizarla
-  if (file) {
-    imgUrl = await getCurrentImageUrl(id);
-
-    //TODO: Revisar deleteImage
-    // Eliminar la imagen anterior del bucket
-    if (imgUrl) {
-      const deleteError = await deleteImage(currentUrl.imagen_url);
-      if (deleteError) {
-        console.error("Error al eliminar la imagen anterior:", deleteError);
-        return null;
-      }
-    }
-
-    imagen_url = await insertImage(file, id);
-    if (!imagen_url) {
+  let imgUrl = null;
+  if (!file) {
+    const currentData = await getCurrentImageUrl(id);
+    imgUrl = currentData;
+  } else {
+    // Subir la nueva imagen
+    imgUrl = await insertImage(file, id);
+    if (!imgUrl) {
       console.error("Error al subir la imagen");
       return null;
     }
   }
 
+  // Construir los datos para actualizar
   const updateData = { name, price, withAddition, text, category };
 
-  // Si se subió una imagen, agregarla a los datos a actualizar
-  if (imagen_url) {
-    updateData.imagen_url = imagen_url;
+  // Agregar la URL de la imagen si existe
+  if (imgUrl) {
+    updateData.imgUrl = imgUrl;
   }
 
+  // Actualizar el producto en la base de datos
   const { data, error } = await supabase
     .from("Product")
     .update(updateData)
@@ -201,7 +193,7 @@ export async function getAdditions() {
 }
 
 // insert data into the table Addition
-export async function insertAddition(name, price) {
+export async function insertAddition({ name, price }) {
   const { data, error } = await supabase
     .from("Addition")
     .insert([{ name: name, price: price }])
