@@ -22,8 +22,8 @@ const LoginPage = () => {
     }
   };
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-100">
-      <div className="bg-slate-50 p-8 rounded-lg shadow-lg w-full max-w-md border-2 border-orange-300">
+    <div className="min-h-screen flex items-center justify-center bg-orange-300">
+      <div className="bg-slate-50 p-8 rounded-lg shadow-lg w-full max-w-md border-2 border-gray-300">
         <div className="flex justify-center mb-6">
           <img src={cwLogo} alt="Logo" className="w-2/5 h-1/5" />
         </div>
