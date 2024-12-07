@@ -11,6 +11,9 @@ import {
   getDomiciliaries,
   getNeighborhoods,
 } from "../../supabase/crudFunctions";
+import CategoryForm from "../../components/admin/editComponents/CategoryForm";
+import NeighborhoodForm from "../../components/admin/editComponents/NeighborhoodForm";
+import DomiciliaryForm from "../../components/admin/editComponents/DomiciliaryForm";
 
 const EditPage = () => {
   const { products, additions, setProducts, setAdditions } =
@@ -197,6 +200,27 @@ const EditPage = () => {
           <AdditionForm
             additionToEdit={productToEdit} // Reutilizamos el mismo estado para editar adiciones
             setAdditionToEdit={setProductToEdit}
+            reload={handleReload}
+          />
+        )}
+        {selectedTable === "Categorías" && (
+          <CategoryForm
+            categoryToEdit={productToEdit} // Reutilizamos el mismo estado para editar adiciones
+            setCategoryToEdit={setProductToEdit}
+            reload={handleReload}
+          />
+        )}
+        {selectedTable === "Barrios" && (
+          <NeighborhoodForm
+            neighborhoodToEdit={productToEdit} // Reutilizamos el mismo estado para editar adiciones
+            setNeighborhoodToEdit={setProductToEdit}
+            reload={handleReload}
+          />
+        )}
+        {selectedTable === "Domiciliarios" && (
+          <DomiciliaryForm
+            domiciliaryToEdit={productToEdit} // Reutilizamos el mismo estado para editar adiciones
+            setDomiciliaryToEdit={setProductToEdit}
             reload={handleReload}
           />
         )}

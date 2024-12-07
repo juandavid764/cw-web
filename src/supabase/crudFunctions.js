@@ -139,7 +139,7 @@ export async function getCategories() {
 }
 
 // insert data into the table Category
-export async function insertCategory(category_name) {
+export async function insertCategory({ category_name }) {
   const { data, error } = await supabase
     .from("Category")
     .insert([{ category_name: category_name }])
@@ -156,11 +156,11 @@ export async function insertCategory(category_name) {
 }
 
 // update data in the table Category
-export async function updateCategory(id, category_name) {
+export async function updateCategory({ id, category_name }) {
   const { data, error } = await supabase
     .from("Category")
     .update({ category_name: category_name })
-    .eq("id", id)
+    .eq("category_id", id)
     .select();
   if (error) {
     console.log(error);
@@ -171,7 +171,10 @@ export async function updateCategory(id, category_name) {
 
 // delete data from the table Category
 export async function deleteCategory(id) {
-  const { data, error } = await supabase.from("Category").delete().eq("id", id);
+  const { data, error } = await supabase
+    .from("Category")
+    .delete()
+    .eq("category_id", id);
   if (error) {
     console.log(error);
     return null;
@@ -210,11 +213,11 @@ export async function insertAddition({ name, price }) {
 }
 
 // update data in the table Addition
-export async function updateAddition(id, name, price) {
+export async function updateAddition({ id, name, price }) {
   const { data, error } = await supabase
     .from("Addition")
     .update({ name: name, price: price })
-    .eq("id", id)
+    .eq("addition_id", id)
     .select();
   if (error) {
     console.log(error);
@@ -225,7 +228,10 @@ export async function updateAddition(id, name, price) {
 
 // delete data from the table Addition
 export async function deleteAddition(id) {
-  const { data, error } = await supabase.from("Addition").delete().eq("id", id);
+  const { data, error } = await supabase
+    .from("Addition")
+    .delete()
+    .eq("addition_id", id);
   if (error) {
     console.log(error);
     return null;
@@ -249,7 +255,7 @@ export async function getDomiciliaries() {
 }
 
 // insert data into the table Domiciliary
-export async function insertDomiciliary(name) {
+export async function insertDomiciliary({ name }) {
   const { data, error } = await supabase
     .from("Domiciliary")
     .insert([{ name: name }])
@@ -266,11 +272,11 @@ export async function insertDomiciliary(name) {
 }
 
 // update data in the table Domiciliary
-export async function updateDomiciliary(id, name) {
+export async function updateDomiciliary({ id, name }) {
   const { data, error } = await supabase
     .from("Domiciliary")
     .update({ name: name })
-    .eq("id", id)
+    .eq("domiciliary_id", id)
     .select();
   if (error) {
     console.log(error);
@@ -284,7 +290,7 @@ export async function deleteDomiciliary(id) {
   const { data, error } = await supabase
     .from("Domiciliary")
     .delete()
-    .eq("id", id);
+    .eq("domiciliary_id", id);
   if (error) {
     console.log(error);
     return null;
@@ -308,7 +314,7 @@ export async function getNeighborhoods() {
 }
 
 // insert data into the table Neighborhood
-export async function insertNeighborhood(name, delivery_price) {
+export async function insertNeighborhood({ name, delivery_price }) {
   const { data, error } = await supabase
     .from("Neighborhood")
     .insert([{ name: name, delivery_price: delivery_price }])
@@ -321,11 +327,11 @@ export async function insertNeighborhood(name, delivery_price) {
 }
 
 // update data in the table Neighborhood
-export async function updateNeighborhood(id, name, delivery_price) {
+export async function updateNeighborhood({ id, name, delivery_price }) {
   const { data, error } = await supabase
     .from("Neighborhood")
     .update({ name: name, delivery_price: delivery_price })
-    .eq("id", id)
+    .eq("neighborhood_id", id)
     .select();
   if (error) {
     console.log(error);
@@ -339,7 +345,7 @@ export async function deleteNeighborhood(id) {
   const { data, error } = await supabase
     .from("Neighborhood")
     .delete()
-    .eq("id", id);
+    .eq("neighborhood_id", id);
   if (error) {
     console.log(error);
     return null;
@@ -438,7 +444,7 @@ export async function insertRequest(client, total) {
 }
 
 // update in the table Request
-export async function updateRequest({request_id, client, status, total}) {
+export async function updateRequest({ request_id, client, status, total }) {
   const { data, error } = await supabase
     .from("Request")
     .update({ status: status, total: total, client: client })

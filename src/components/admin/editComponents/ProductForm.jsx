@@ -137,7 +137,7 @@ const ProductForm = ({
       </div>
       <div className="mb-4">
         <label className="block font-bold mb-2" htmlFor="hasAddition">
-          Lleva adición?
+          ¿Lleva adición?
         </label>
         <select
           id="hasAddition"
