@@ -445,12 +445,12 @@ export async function insertRequest(client, total) {
   return data;
 }
 
-// update status in the table Request
-export async function updateStatusRequest(id, status) {
+// update in the table Request
+export async function updateRequest({request_id, client, status, total}) {
   const { data, error } = await supabase
     .from("Request")
-    .update({ status })
-    .eq("id", id)
+    .update({ status: status, total: total, client: client })
+    .eq("request_id", request_id)
     .select();
   if (error) {
     console.log(error);
