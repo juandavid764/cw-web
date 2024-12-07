@@ -1,7 +1,6 @@
 import { useEffect } from "react";
 import foodImg from "../../assets/aboutUsPage/imgAboutUs1.webp";
 import teamImg from "../../assets/aboutUsPage/imgAboutUs2.webp";
-import Footer from "../../components/web/Footer";
 import { Link } from "react-router-dom";
 
 
@@ -73,9 +72,6 @@ const AboutUsPage = () => {
 
       </div>
       <br />
-      <div>
-        <Footer />
-      </div>
     </div>
   );
 };

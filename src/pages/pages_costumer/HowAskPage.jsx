@@ -1,5 +1,3 @@
-import Footer from "../../components/web/Footer";
-
 const HowAskPage = () => {
   return (
     <div className="">
@@ -24,9 +22,6 @@ const HowAskPage = () => {
           Aprende a dominar el arte de ordenar como un verdadero villano.
         </h2>
         <br></br>
-      </div>
-      <div>
-        <Footer />
       </div>
     </div>
   );

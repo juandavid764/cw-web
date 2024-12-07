@@ -1,7 +1,6 @@
 import React, { useContext, useEffect } from "react";
 import PurchaseDetails from "../../../components/web/PurchaseDetails";
 import QuantityContainer from "../../../components/web/QuantityContainer";
-import Footer from "../../../components/web/Footer";
 import { ProductsContext } from "../../../context/ProductsContext";
 
 const ShoppingCartPage = () => {
@@ -29,7 +28,6 @@ const ShoppingCartPage = () => {
             </h1>
           </div>
         )}
-        <Footer />
       </div>
     </div>
   );

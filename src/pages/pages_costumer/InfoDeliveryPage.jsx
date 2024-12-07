@@ -1,5 +1,4 @@
 import CustomizedSteppers from "../../components/web/CustomizedSteppers";
-import Footer from "../../components/web/Footer";
 import CustomizedInputBase from "../../components/web/TextFieldWithIcon"
 
 const InfoDeliveryPage = () => {
@@ -16,9 +15,6 @@ const InfoDeliveryPage = () => {
                     <CustomizedSteppers />
                 </div>
                 <br></br>
-            </div>
-            <div>
-                <Footer />
             </div>
         </div>
     );

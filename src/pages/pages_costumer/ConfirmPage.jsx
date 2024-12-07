@@ -1,5 +1,4 @@
 import React, { useEffect, useState, useContext } from "react";
-import Footer from "../../components/web/Footer";
 import { ProductsContext } from "../../context/ProductsContext";
 import { insertRequest, insertOrder } from "../../supabase/crudFunctions";
 import WhatsAppIcon from "@mui/icons-material/WhatsApp";
@@ -131,7 +130,7 @@ ${barrio}`;
   };
 
   return (
-    <div className="flex flex-col min-h-screen bg-neutral-100">
+    <div className="flex flex-col">
       <main className="flex-grow flex flex-col items-center p-6">
         <div className="bg-white border border-gray-300 rounded-lg shadow-lg max-w-lg w-full p-6">
           <h2 className="text-center text-xl font-bold text-gray-700 mb-4">
@@ -159,9 +158,6 @@ ${barrio}`;
           </div>
         </div>
       </main>
-      <footer className="bg-gray-200 text-center py-4">
-        <Footer />
-      </footer>
     </div>
   );
 };
