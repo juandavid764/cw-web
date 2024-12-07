@@ -6,8 +6,9 @@ import { useAuth } from "../../context/AuthContext";
 const AdminNavbar = () => {
   const menuItems = [
     { name: "Pedidos", link: "/admin/pedidos" },
-    { name: "Editar", link: "/admin/editar" },
     { name: "Rutas", link: "/admin/rutas" },
+    { name: "Editar", link: "/admin/editar" },
+    { name: "Estadisticas", link: "/admin/estadisticas" },
   ];
 
   const { signOut } = useAuth();
@@ -20,7 +21,7 @@ const AdminNavbar = () => {
       <div className="hidden md:flex space-x-8">
         <MenuLinks
           menuItems={menuItems}
-          className="text-gray-300 hover:text-orange-300"
+          className="text-gray-300 font-bold hover:text-orange-300"
         />
       </div>
       <div className="hidden md:flex items-center">

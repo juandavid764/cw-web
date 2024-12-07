@@ -1,7 +1,9 @@
 import React, { useEffect, useMemo, useRef, useState } from "react";
 import { getFormatRequest } from "../../supabase/nativeQuerys";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faEdit, faSave, faTimes, faCopy, faSearch } from "@fortawesome/free-solid-svg-icons";
+import { faEdit, faSave, faTimes } from "@fortawesome/free-solid-svg-icons";
+import { RequestsList } from "../../components/admin/requestsComponents/RequestsList";
+import { DropdownStates } from "../../components/admin/requestsComponents/DropdownStates";
 
 const AdminRequest = () => {
   const buttons = [
@@ -17,9 +19,12 @@ const AdminRequest = () => {
   const [selectedPedido, setSelectedPedido] = useState(null);
   const [formattedRequest, setFormattedRequest] = useState([]);
   const [searchTerm, setSearchTerm] = useState(""); // Estado para el texto de búsqueda
+  const [newState, setNewState] = useState("Pendiente");
+  const [newTotal, setNewTotal] = useState(0);
 
   const clientDataRef = useRef();
   const productDataRef = useRef();
+  const totalCostRef = useRef();
 
   useEffect(() => {
     async function fetchData() {
@@ -33,9 +38,9 @@ const AdminRequest = () => {
     return formattedRequest.filter((pedido) => {
       const matchesStatus =
         selectedBtn === 0 || pedido.status === buttons[selectedBtn].label;
-      const matchesSearch = pedido.client
-        .toLowerCase()
-        .includes(searchTerm.toLowerCase());
+      const matchesSearch =
+        pedido.client.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        Number(pedido.request_id).toString().includes(searchTerm );
       return matchesStatus && matchesSearch;
     });
   }, [formattedRequest, selectedBtn, searchTerm]);
@@ -49,29 +54,45 @@ const AdminRequest = () => {
 
   function handleRequestSelection(pedido) {
     setSelectedPedido(pedido);
-    clientDataRef.current.value = pedido.client;
-    productDataRef.current.value = pedido.formatted_products;
+    clientDataRef.current.value = pedido.client.replace(/\\n/g, "\n");
+    productDataRef.current.value = pedido.formatted_products.replace(
+      /\\n/g,
+      "\n"
+    );
   }
 
-  function getStatusColor(status) {
-    switch (status) {
-      case "Pendiente":
-        return "bg-yellow-200";
-      case "En proceso":
-        return "bg-blue-200";
-      case "Completado":
-        return "bg-green-200";
-      case "Cancelado":
-        return "bg-red-200";
-      default:
-        return "bg-gray-100";
+  // actualiza el estado del pedido apenas haya un pedido seleccionado
+  useEffect(() => {
+    if (selectedPedido) {
+      setNewState(selectedPedido?.status);
+      setNewTotal(selectedPedido?.total);
+      totalCostRef.current.value = selectedPedido?.total;
     }
+  }, [selectedPedido]);
+
+  function handleSave() {
+    const pedidoUpdating = selectedPedido;
+
+    // validación
+    if (newTotal < 0 || !parseFloat(newTotal)) {
+      alert("Hay un error con alguno de los campos");
+      return;
+    }
+
+    // actualizamos los campos que supuestamente cambian
+    pedidoUpdating.status = newState;
+    pedidoUpdating.total = parseFloat(newTotal);
+
+    // y AQUÍ se actualizaría el pedido:
+    // updatePedido(pedidoUpdating)
+
+    console.log(pedidoUpdating); // ELIMINAR ESTO!
   }
 
   return (
-    <div className="bg-gray-100 py-8">
+    <div className="bg-gray-100 py-4">
       {/* Encabezado */}
-      <div className="flex items-center justify-center mb-6">
+      <div className="flex items-center justify-center mb-6 bg-orange-200 py-5 ml-[20vw] mr-[20vh] rounded-full">
         <button
           onClick={() => setIsEditing(!isEditing)}
           className={`flex items-center px-5 py-2 rounded-md text-white font-semibold text-xl transition-colors ${
@@ -86,70 +107,18 @@ const AdminRequest = () => {
         </button>
       </div>
 
-      <div className="grid grid-cols-4 gap-4 px-24">
-        {/* Sección izquierda */}
-        <section className="col-span-1" id="left">
-          <h3 className="text-lg font-medium mb-4">Pedidos</h3>
-          {/* Campo de búsqueda */}
-          <div className="mb-4">
-            <div className="relative">
-              <FontAwesomeIcon
-                icon={faSearch}
-                className="absolute left-3 top-2.5 text-gray-400"
-              />
-              <input
-                type="text"
-                value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
-                placeholder="Buscar pedidos..."
-                className="w-full p-2 pl-10 border border-gray-300 rounded-full shadow-sm focus:outline-none focus:ring-2 focus:ring-orange-300"
-              />
-            </div>
-          </div>
-          {/* Lista de pedidos */}
-          <div className="space-y-4">
-            {filteredPedidos.map((pedido) => (
-              <div
-                key={pedido.request_id}
-                onClick={() => handleRequestSelection(pedido)}
-                className={`border rounded-md cursor-pointer transition-colors flex items-center justify-around py-3  ${
-                  selectedPedido?.request_id === pedido.request_id
-                    ? "border-orange-400"
-                    : "border-gray-300"
-                } ${getStatusColor(pedido.status)}`}
-              >
-                <div className="flex flex-col p-0 ">
-                  <p>
-                    <strong>#{pedido.request_id}</strong>
-                  </p>
-                  <div>
-                    <img src="" alt="" />
-                    {/* TODO agregar un ícono de tiemppo */}
-                    <p>
-                      <strong>Hora:</strong> {pedido.time.split(".")[0]}
-                    </p>
-                  </div>
-                </div>
-                <div className="flex align-top text-xl">
-                  <p>
-                    <strong>{pedido.status.toUpperCase()}</strong>
-                  </p>
-                </div>
-                <div>
-                  <button>
-                    <FontAwesomeIcon
-                      icon={faCopy}
-                      className="absolute left-3 top-2.5 text-gray-400"
-                    />
-                  </button>
-                </div>
-              </div>
-            ))}
-          </div>
+      <div className="flex items-center  justify-around  gap-0 px-52 md:px-5">
+        <section className="col-span-2" id="left">
+          <RequestsList
+            filteredPedidos={filteredPedidos}
+            handleRequestSelection={handleRequestSelection}
+            selectedPedido={selectedPedido}
+            searchTerm={searchTerm}
+            setSearchTerm={setSearchTerm}
+          />
         </section>
 
-        {/* Sección derecha */}
-        <section className="col-span-3 flex flex-col items-center gap-10">
+        <section className="col-span-5 flex flex-col items-center gap-10">
           <div className="flex space-x-2">
             {buttons.map((button) => (
               <button
@@ -167,23 +136,53 @@ const AdminRequest = () => {
           </div>
 
           <div className="flex gap-10">
-            <div className="border-2 border-orange-400 rounded-lg p-4 shadow-lg h-80 w-80">
+            <div className="border-2 border-orange-400 rounded-lg p-4 shadow-lg h-96 w-80">
               <h3 className="text-lg font-medium mb-2">Datos del cliente</h3>
               <textarea
-                readOnly={!isEditing}
+                readOnly
                 ref={clientDataRef}
-                className={`w-full h-60 p-2 border rounded ${
+                className={`w-full h-56 p-2 rounded  resize-none border-4 border-gray-400 ${
                   isEditing ? "" : "bg-gray-100 cursor-not-allowed"
                 }`}
               ></textarea>
+              <div className="flex flex-col items-center justify-center py-2 gap-0">
+                <div className="flex items-center justify-center mb-5 gap-3">
+                  {selectedPedido && (
+                    <>
+                      {" "}
+                      <h1 className="p-0 m-0 ">Total:</h1>
+                      <input
+                        onChange={(e) => setNewTotal(e.target.value)}
+                        readOnly={!isEditing}
+                        type="text"
+                        ref={totalCostRef}
+                        className={
+                          "border-2 border-black rounded-2xl w-36 pl-5 " +
+                          `${
+                            isEditing === false
+                              ? " hover:cursor-not-allowed bg-gray-500 text-gray-200"
+                              : "bg-white"
+                          }`
+                        }
+                      />
+                    </>
+                  )}
+                </div>
+
+                <DropdownStates
+                  estado={newState}
+                  setNewState={setNewState}
+                  disabled={!isEditing}
+                />
+              </div>
             </div>
 
-            <div className="border-2 border-orange-400 rounded-lg p-4 shadow-lg h-80 w-80">
+            <div className="border-2 border-orange-400 rounded-lg p-4 shadow-lg h-96 w-80">
               <h3 className="text-lg font-medium mb-2">Datos del Producto</h3>
               <textarea
-                readOnly={!isEditing}
+                readOnly
                 ref={productDataRef}
-                className={`w-full h-64 p-2 border rounded ${
+                className={`w-full h-64 p-2 rounded resize-none border-4 border-gray-400 ${
                   isEditing ? "" : "bg-gray-100 cursor-not-allowed"
                 }`}
               ></textarea>
@@ -192,11 +191,9 @@ const AdminRequest = () => {
 
           {isEditing ? (
             <button
-              className="bg-orange-400 text-white px-6 py-2 rounded-md hover:bg-orange-300"
+              className="bg-orange-400 text-white px-6 rounded-md hover:bg-orange-300"
               disabled={!isEditing}
-              onClick={() => {
-                alert("Guardar en la base de datos!");
-              }}
+              onClick={handleSave}
             >
               <FontAwesomeIcon icon={faSave} className="mr-2" />
               Guardar cambios
