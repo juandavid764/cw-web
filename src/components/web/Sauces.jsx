@@ -8,11 +8,11 @@ const Sauces = ({ updateSauces }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [selectedSauces, setSelectedSauces] = useState([]);
 
-  // const handleSauceSelection = (sauce) => {
-  //   setSelectedSauces((prev) =>
-  //     prev.includes(sauce) ? prev.filter((s) => s !== sauce) : [...prev, sauce]
-  //   );
-  // };
+  const handleSauceSelection = (sauce) => {
+    setSelectedSauces((prev) =>
+      prev.includes(sauce) ? prev.filter((s) => s !== sauce) : [...prev, sauce]
+    );
+  };
 
   useEffect(() => {
     updateSauces(selectedSauces);
@@ -41,7 +41,7 @@ const Sauces = ({ updateSauces }) => {
       </div>
       {isOpen && (
         <div className="mt-2 space-y-2">
-          {/* {sauces.map((sauce) => (
+          {sauces.map((sauce) => (
             <div key={sauce} className="flex justify-between items-center">
               <div className="flex items-center">
                 <input
@@ -54,13 +54,14 @@ const Sauces = ({ updateSauces }) => {
                 <label className="text-sm" htmlFor={sauce}>{sauce}</label>
               </div>
             </div>
-          ))} */}
-          <Select
+          ))}
+          {/* <Select
+            defaultValue={selectedSauces}
             placeholder="Selecciona tus salsas..."
             isMulti
             options={options}
-            onChange={(sauce) => {setSelectedSauces(sauce.map((x)=>{return x.value}))}}
-          />
+            onChange={(sauce) => {setSelectedSauces((prev) => (sauce.map((x)=>{return x.value})).length === 0 ? [...prev] : sauce.map((x)=>{return x.value}))}}
+          /> */}
         </div>
       )}
     </div>
