@@ -134,7 +134,7 @@ const AdminRequest = () => {
   }
 
   return (
-    <div className="my-4 w-full grow">
+    <div className="my-8 w-full grow flex flex-col justify-center">
       <div className="mx-12 grid grid-cols-[360px_2fr] grid-rows-1 gap-2">
         {/* Campo de búsqueda */}
         <div className="relative grow gap-4">
@@ -180,11 +180,11 @@ const AdminRequest = () => {
       </div>
         
 
-      <div className="mx-12 my-2 grid grid-cols-[360px_2fr] grid-rows-1 gap-12">
+      <div className="mx-12 my-2 grid grid-cols-[360px_2fr] grid-rows-[500px] gap-12">
       {/* Encabezado */}
 
         <section
-          className="overflow-y-scroll h-[750px] px-5"
+          className="overflow-y-scroll h-[500px] px-5"
           id="left"
         >
           <RequestsList
@@ -195,7 +195,7 @@ const AdminRequest = () => {
         </section>
         <section className="flex flex-col items-center gap-8 pt-4">
           <div className="grid grid-cols-2 grid-rows-1 w-full h-full gap-12">
-            <div className="  rounded-lg p-4 shadow-md h-[450px] w-full flex flex-col">
+            <div className="  rounded-lg p-4 shadow-md h-full w-full flex flex-col">
               <h3 className="text-xl mb-2">Datos del cliente</h3>
               <textarea
                 ref={clientDataRef}
@@ -227,7 +227,7 @@ const AdminRequest = () => {
               </div>
             </div>
 
-            <div className=" rounded-lg p-4 shadow-lg h-[450px] w-full">
+            <div className=" rounded-lg p-4 shadow-lg h-full w-full">
               <h3 className="text-xl mb-2">Datos del producto</h3>
               <textarea
                 readOnly
