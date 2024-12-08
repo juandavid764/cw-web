@@ -15,13 +15,14 @@ const AdminRequest = () => {
     { id: 4, label: "Cancelado" },
   ];
 
-  const [isEditing, setIsEditing] = useState(false);
-  const [selectedBtn, setSelectedBtn] = useState(0);
+  const [selectedBtn, setSelectedStateBtn] = useState(0);
   const [selectedPedido, setSelectedPedido] = useState(null);
   const [formattedRequest, setFormattedRequest] = useState([]);
   const [searchTerm, setSearchTerm] = useState(""); // Estado para el texto de búsqueda
   const [newState, setNewState] = useState("Pendiente");
   const [newTotal, setNewTotal] = useState(0);
+
+  const [refreshData, setRefreshData] = useState(false);
 
   const clientDataRef = useRef();
   const productDataRef = useRef();
@@ -31,9 +32,17 @@ const AdminRequest = () => {
     async function fetchData() {
       const data = await getFormatRequest();
       setFormattedRequest(data || []);
+      console.log("Actualice la data");
+
     }
     fetchData();
-  }, []);
+
+    // const timer = setTimeout(() => {
+    //   setRefreshData(!refreshData);
+    // }, 3000);
+
+    // return () => clearTimeout(timer);
+  }, [refreshData]);
 
   const filteredPedidos = useMemo(() => {
     return formattedRequest.filter((pedido) => {
@@ -41,7 +50,7 @@ const AdminRequest = () => {
         selectedBtn === 0 || pedido.status === buttons[selectedBtn].label;
       const matchesSearch =
         pedido.client.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        Number(pedido.request_id).toString().includes(searchTerm );
+        Number(pedido.request_id).toString().includes(searchTerm);
       return matchesStatus && matchesSearch;
     });
   }, [formattedRequest, selectedBtn, searchTerm]);
@@ -120,7 +129,13 @@ const AdminRequest = () => {
         </section>
 
         <section className="col-span-5 flex flex-col items-center gap-10">
+          
           <div className="flex space-x-2">
+          <div>
+            <button className="bg-gray-900 text-white px-6 rounded-md" onClick={() => { setRefreshData(!refreshData)}}>
+              Refrescar
+            </button>
+          </div>
             {buttons.map((button) => (
               <button
                 key={button.id}
@@ -129,7 +144,7 @@ const AdminRequest = () => {
                   selectedBtn === button.id
                     ? "shadow-2xl bg-orange-400 text-white"
                     : "bg-gray-200 text-gray-700 hover:bg-gray-300"
-                }`}
+                  }`}
               >
                 {button.label}
               </button>
@@ -140,7 +155,6 @@ const AdminRequest = () => {
             <div className="  rounded-lg p-4 shadow-lg h-96 w-80">
               <h3 className="text-lg font-medium mb-2">Datos del cliente</h3>
               <textarea
-                readOnly
                 ref={clientDataRef}
                 className={`border w-full h-56 p-2 rounded  resize-none ${
                   isEditing ? "" : "bg-gray-100 cursor-not-allowed"
@@ -154,7 +168,6 @@ const AdminRequest = () => {
                       <h1 className="p-0 m-0 ">Total:</h1>
                       <input
                         onChange={(e) => setNewTotal(e.target.value)}
-                        readOnly={!isEditing}
                         type="text"
                         ref={totalCostRef}
                         className={
@@ -173,7 +186,7 @@ const AdminRequest = () => {
                 <DropdownStates
                   estado={newState}
                   setNewState={setNewState}
-                  disabled={!isEditing}
+
                 />
               </div>
             </div>
@@ -190,18 +203,14 @@ const AdminRequest = () => {
             </div>
           </div>
 
-          {isEditing ? (
-            <button
-              className="bg-orange-400 text-white px-6 rounded-md hover:bg-orange-300"
-              disabled={!isEditing}
-              onClick={handleSave}
-            >
-              <FontAwesomeIcon icon={faSave} className="mr-2" />
-              Guardar cambios
-            </button>
-          ) : (
-            ""
-          )}
+
+          <button
+            className="bg-orange-400 text-white px-6 rounded-md hover:bg-orange-300 py-4"
+            onClick={handleSave}
+          >
+            <FontAwesomeIcon icon={faSave} className="mr-2" />
+          </button>
+
         </section>
       </div>
     </div>
