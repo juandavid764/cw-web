@@ -13,7 +13,7 @@ export function RequestsList({
 }) {
   return (
     <>
-      <h3 className="text-lg font-medium mb-4">Pedidos</h3>
+      <h3 className="font-bold mb-4 text-xl">Pedidos</h3>
       {/* Campo de búsqueda */}
       <div className="mb-4">
         <div className="relative">

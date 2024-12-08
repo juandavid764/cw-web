@@ -104,18 +104,19 @@ const Additions = ({ updateTotal }) => {
               key={addition.addition_id}
               className="flex justify-between items-center mb-2"
             >
-              <div className="flex justify-between w-full">
+              <label htmlFor={addition.addition_id} className="flex justify-between w-full">
                 <div className="flex items-center">
                   <input
                     className="mr-2"
                     type="checkbox"
                     checked={!!selected[addition.addition_id]}
                     onChange={() => handleCheckbox(addition)}
+                    id={addition.addition_id}
                   />
-                  <span>{addition.name}</span>
+                  <span >{addition.name}</span>
                 </div>
                 <span>${addition.price.toLocaleString()}</span>
-              </div>
+              </label>
               {selected[addition.addition_id] && (
                 <div className="flex flex-row justify-center">
                   <button

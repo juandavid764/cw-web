@@ -1,4 +1,5 @@
 import React, { useEffect, useMemo, useRef, useState } from "react";
+import { Input } from '@mui/material';
 import { getFormatRequest } from "../../supabase/nativeQuerys";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEdit, faSave, faTimes } from "@fortawesome/free-solid-svg-icons";
@@ -14,13 +15,14 @@ const AdminRequest = () => {
     { id: 4, label: "Cancelado" },
   ];
 
-  const [isEditing, setIsEditing] = useState(false);
-  const [selectedBtn, setSelectedBtn] = useState(0);
+  const [selectedBtn, setSelectedStateBtn] = useState(0);
   const [selectedPedido, setSelectedPedido] = useState(null);
   const [formattedRequest, setFormattedRequest] = useState([]);
   const [searchTerm, setSearchTerm] = useState(""); // Estado para el texto de búsqueda
   const [newState, setNewState] = useState("Pendiente");
   const [newTotal, setNewTotal] = useState(0);
+
+  const [refreshData, setRefreshData] = useState(false);
 
   const clientDataRef = useRef();
   const productDataRef = useRef();
@@ -31,9 +33,17 @@ const AdminRequest = () => {
       const data = await getFormatRequest();
       console.log(data);
       setFormattedRequest(data || []);
+      console.log("Actualice la data");
+
     }
     fetchData();
-  }, []);
+
+    // const timer = setTimeout(() => {
+    //   setRefreshData(!refreshData);
+    // }, 3000);
+
+    // return () => clearTimeout(timer);
+  }, [refreshData]);
 
   const filteredPedidos = useMemo(() => {
     return formattedRequest.filter((pedido) => {
@@ -91,7 +101,7 @@ const AdminRequest = () => {
   }
 
   return (
-    <div className="bg-gray-100 py-4">
+    <div className="py-4">
       {/* Encabezado */}
       <div className="flex items-center justify-center mb-6 bg-orange-200 py-5 ml-[20vw] mr-[20vh] rounded-full">
         <button
@@ -108,8 +118,8 @@ const AdminRequest = () => {
         </button>
       </div>
 
-      <div className="flex items-center  justify-around  gap-0 px-52 md:px-5">
-        <section className="col-span-2" id="left">
+      <div className="flex justify-around">
+        <section className="col-span-1 overflow-y-scroll max-h-[650px] px-5" id="left">
           <RequestsList
             filteredPedidos={filteredPedidos}
             handleRequestSelection={handleRequestSelection}
@@ -120,16 +130,22 @@ const AdminRequest = () => {
         </section>
 
         <section className="col-span-5 flex flex-col items-center gap-10">
+          
           <div className="flex space-x-2">
+          <div>
+            <button className="bg-gray-900 text-white px-6 rounded-md" onClick={() => { setRefreshData(!refreshData)}}>
+              Refrescar
+            </button>
+          </div>
             {buttons.map((button) => (
               <button
                 key={button.id}
                 onClick={() => setSelectedBtn(button.id)}
-                className={`px-4 py-2 rounded-md font-medium transition-colors ${
+                className={`shadow px-4 py-2 rounded-md font-medium transition-colors ${
                   selectedBtn === button.id
-                    ? "bg-orange-400 text-white"
+                    ? "shadow-2xl bg-orange-400 text-white"
                     : "bg-gray-200 text-gray-700 hover:bg-gray-300"
-                }`}
+                  }`}
               >
                 {button.label}
               </button>
@@ -137,12 +153,11 @@ const AdminRequest = () => {
           </div>
 
           <div className="flex gap-10">
-            <div className="border-2 border-orange-400 rounded-lg p-4 shadow-lg h-96 w-80">
+            <div className="  rounded-lg p-4 shadow-lg h-96 w-80">
               <h3 className="text-lg font-medium mb-2">Datos del cliente</h3>
               <textarea
-                readOnly
                 ref={clientDataRef}
-                className={`w-full h-56 p-2 rounded  resize-none border-4 border-gray-400 ${
+                className={`border w-full h-56 p-2 rounded  resize-none ${
                   isEditing ? "" : "bg-gray-100 cursor-not-allowed"
                 }`}
               ></textarea>
@@ -154,15 +169,14 @@ const AdminRequest = () => {
                       <h1 className="p-0 m-0 ">Total:</h1>
                       <input
                         onChange={(e) => setNewTotal(e.target.value)}
-                        readOnly={!isEditing}
                         type="text"
                         ref={totalCostRef}
                         className={
-                          "border-2 border-black rounded-2xl w-36 pl-5 " +
+                          " w-36 pl-5 border" +
                           `${
                             isEditing === false
-                              ? " hover:cursor-not-allowed bg-gray-500 text-gray-200"
-                              : "bg-white"
+                              ? ""
+                              : ""
                           }`
                         }
                       />
@@ -173,35 +187,31 @@ const AdminRequest = () => {
                 <DropdownStates
                   estado={newState}
                   setNewState={setNewState}
-                  disabled={!isEditing}
+
                 />
               </div>
             </div>
 
-            <div className="border-2 border-orange-400 rounded-lg p-4 shadow-lg h-96 w-80">
+            <div className=" rounded-lg p-4 shadow-lg h-96 w-80">
               <h3 className="text-lg font-medium mb-2">Datos del Producto</h3>
               <textarea
                 readOnly
                 ref={productDataRef}
-                className={`w-full h-64 p-2 rounded resize-none border-4 border-gray-400 ${
-                  isEditing ? "" : "bg-gray-100 cursor-not-allowed"
+                className={`w-full h-64 p-2 border rounded resize-none${
+                  isEditing ? "bg-gray-400" : "bg-gray-200 cursor-not-allowed"
                 }`}
               ></textarea>
             </div>
           </div>
 
-          {isEditing ? (
-            <button
-              className="bg-orange-400 text-white px-6 rounded-md hover:bg-orange-300"
-              disabled={!isEditing}
-              onClick={handleSave}
-            >
-              <FontAwesomeIcon icon={faSave} className="mr-2" />
-              Guardar cambios
-            </button>
-          ) : (
-            ""
-          )}
+
+          <button
+            className="bg-orange-400 text-white px-6 rounded-md hover:bg-orange-300 py-4"
+            onClick={handleSave}
+          >
+            <FontAwesomeIcon icon={faSave} className="mr-2" />
+          </button>
+
         </section>
       </div>
     </div>

@@ -1,18 +1,18 @@
 /* eslint-disable react/prop-types */
-import { faCopy } from "@fortawesome/free-solid-svg-icons";
+import { faClock, faCopy } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 export function Request({ pedido, handleRequestSelection, selectedPedido }) {
   function getStatusColor(status) {
     switch (status) {
       case "Pendiente":
-        return "bg-yellow-400";
+        return "bg-yellow-200";
       case "En proceso":
-        return "bg-blue-400";
+        return "bg-blue-200";
       case "Completado":
-        return "bg-green-400";
+        return "bg-green-200";
       case "Cancelado":
-        return "bg-red-400";
+        return "bg-red-200";
       default:
         return "bg-gray-100";
     }
@@ -72,19 +72,21 @@ export function Request({ pedido, handleRequestSelection, selectedPedido }) {
   return (
     <div
       onClick={() => handleRequestSelection(pedido)}
-      className={`border rounded-md cursor-pointer transition-colors flex items-center justify-around py-3 px- w-80 ${
+      className={`shadow cursor-pointer transition-colors flex items-center justify-around py-3 px- w-80 ${
         selectedPedido?.request_id === pedido.request_id
-          ? "border-orange-400"
-          : "border-gray-300"
+          ? "ring-4 ring-sky-500 shadow-xl"
+          : "shadow"
       } ${getStatusColor(pedido.status)}`}
     >
       <div className="flex flex-col items-center justify-center">
-        <p>
+        <p className="w-full text-left">
           <strong>#{pedido.request_id}</strong>
         </p>
         <div>
           <p>
-            <strong>Hora:</strong> {pedido.time.split(".")[0]}
+            <span>
+              <FontAwesomeIcon icon={faClock} />
+            </span>&nbsp;&nbsp;{pedido.time.split(".")[0]}
           </p>
         </div>
       </div>

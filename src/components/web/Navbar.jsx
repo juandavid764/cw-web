@@ -49,14 +49,28 @@ const Navbar = () => {
         />
       </div>
 
-      {/* Íconos del alternador del menú móvil */}
-      <div className="flex items-center space-x-2 md:hidden">
-        <button
-          onClick={toggleMenu}
-          className="text-white hover:text-orange-300"
-        >
-          <Bars3Icon className="h-6 w-6" />
-        </button>
+      {/* contenedor padre de carrito y menu para pantallas pequeñas */}
+      <div className="md:hidden flex flex-row gap-2">
+        {/* icono del carrito para pantallas pequeñas */}
+        <div className="flex items-center">
+          <Link to="/carrito">
+            <button className="hover:text-orange-300 text-white relative">
+              <ShoppingCartIcon className="h-6 w-6" />
+              <span className="absolute bottom-3 left-2 bg-orange-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">
+                {orderCount}
+              </span>
+            </button>
+          </Link>
+        </div>
+        {/* Íconos del alternador del menú móvil */}
+        <div className="flex items-center space-x-2 md:hidden">
+          <button
+            onClick={toggleMenu}
+            className="text-white hover:text-orange-300"
+          >
+            <Bars3Icon className="h-6 w-6" />
+          </button>
+        </div>
       </div>
 
       {/* Ícono del carrito - solo visible en pantallas grandes */}
@@ -70,13 +84,14 @@ const Navbar = () => {
           </button>
         </Link>
       </div>
-
+      
       {/* Drawer para el menú móvil */}
       <div
         className={`fixed top-0 right-0 w-64 h-full bg-black text-white p-8 transform ${
           isMenuOpen ? "translate-x-0" : "translate-x-full"
         } transition-transform duration-300 ease-in-out z-50`}
       >
+
         <button
           onClick={toggleMenu}
           className="text-white hover:text-orange-300 self-end mb-4"
@@ -89,14 +104,14 @@ const Navbar = () => {
             className="text-xl text-gray-300 hover:text-orange-300"
             onClick={toggleMenu}
           />
-          <Link
+          {/* <Link
             to="/carrito"
             onClick={toggleMenu}
             className="text-xl text-gray-300 hover:text-orange-300 flex items-center"
           >
             <ShoppingCartIcon className="h-6 w-6 mr-2" />
             Carrito
-          </Link>
+          </Link> */}
         </nav>
       </div>
 

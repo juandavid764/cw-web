@@ -3,6 +3,7 @@ import React from "react";
 import "./App.css";
 import { BrowserRouter as Router } from "react-router-dom";
 import Navbar from "./components/web/Navbar";
+import Footer from "./components/web/Footer";
 import AdminNavbar from "./components/admin/AdminNavbar";
 import { ProductsProvider } from "./context/ProductsContext";
 import { useAuth } from "./context/AuthContext";
@@ -15,8 +16,11 @@ function App() {
   return (
     <ProductsProvider>
       <Router>
-        {user ? <AdminNavbar /> : <Navbar />}
-        {user ? <AdminRoutes /> : <CustomerRoutes />}
+        <div className="flex flex-col min-h-screen">
+          {user ? <AdminNavbar /> : <Navbar />}
+          {user ? <AdminRoutes /> : <CustomerRoutes />}
+          <Footer/>
+        </div>
       </Router>
     </ProductsProvider>
   );

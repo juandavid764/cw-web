@@ -23,7 +23,9 @@
     "cw-web": "file:",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
-    "react-router-dom": "^6.27.0"
+    "react-router-dom": "^6.27.0",
+    "react-select": "^5.8.3",
+    "react-toastify": "^10.0.6"
   },
   "devDependencies": {
     "@types/react": "^18.3.3",
