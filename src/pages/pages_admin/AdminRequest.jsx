@@ -134,7 +134,7 @@ const AdminRequest = () => {
   }
 
   return (
-    <div className="my-8 w-full grow flex flex-col justify-center">
+    <div className="my-4 w-full grow flex flex-col justify-center">
       <div className="mx-12 grid grid-cols-[360px_2fr] grid-rows-1 gap-2">
         {/* Campo de búsqueda */}
         <div className="relative grow gap-4">
