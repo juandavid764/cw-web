@@ -1,7 +1,7 @@
 const HowAskPage = () => {
   return (
     <div className="grow">
-      <div className="flex flex-col items-center md:p-10 gap-4">
+      <div className="flex flex-col items-center  gap-4">
         <h1 className="font-bold text-center lg:text-left text-2xl mt-3">
           Manual del Villano Hambriento: ¿Cómo Pedir?
         </h1>
