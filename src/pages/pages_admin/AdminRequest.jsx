@@ -1,4 +1,5 @@
 import React, { useEffect, useMemo, useRef, useState } from "react";
+import { Input } from '@mui/material';
 import { getFormatRequest } from "../../supabase/nativeQuerys";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEdit, faSave, faTimes } from "@fortawesome/free-solid-svg-icons";
@@ -90,7 +91,7 @@ const AdminRequest = () => {
   }
 
   return (
-    <div className="bg-gray-100 py-4">
+    <div className="py-4">
       {/* Encabezado */}
       <div className="flex items-center justify-center mb-6 bg-orange-200 py-5 ml-[20vw] mr-[20vh] rounded-full">
         <button
@@ -107,8 +108,8 @@ const AdminRequest = () => {
         </button>
       </div>
 
-      <div className="flex items-center  justify-around  gap-0 px-52 md:px-5">
-        <section className="col-span-2" id="left">
+      <div className="flex justify-around">
+        <section className="col-span-1 overflow-y-scroll max-h-[650px] px-5" id="left">
           <RequestsList
             filteredPedidos={filteredPedidos}
             handleRequestSelection={handleRequestSelection}
@@ -124,9 +125,9 @@ const AdminRequest = () => {
               <button
                 key={button.id}
                 onClick={() => setSelectedBtn(button.id)}
-                className={`px-4 py-2 rounded-md font-medium transition-colors ${
+                className={`shadow px-4 py-2 rounded-md font-medium transition-colors ${
                   selectedBtn === button.id
-                    ? "bg-orange-400 text-white"
+                    ? "shadow-2xl bg-orange-400 text-white"
                     : "bg-gray-200 text-gray-700 hover:bg-gray-300"
                 }`}
               >
@@ -136,12 +137,12 @@ const AdminRequest = () => {
           </div>
 
           <div className="flex gap-10">
-            <div className="border-2 border-orange-400 rounded-lg p-4 shadow-lg h-96 w-80">
+            <div className="  rounded-lg p-4 shadow-lg h-96 w-80">
               <h3 className="text-lg font-medium mb-2">Datos del cliente</h3>
               <textarea
                 readOnly
                 ref={clientDataRef}
-                className={`w-full h-56 p-2 rounded  resize-none border-4 border-gray-400 ${
+                className={`border w-full h-56 p-2 rounded  resize-none ${
                   isEditing ? "" : "bg-gray-100 cursor-not-allowed"
                 }`}
               ></textarea>
@@ -157,11 +158,11 @@ const AdminRequest = () => {
                         type="text"
                         ref={totalCostRef}
                         className={
-                          "border-2 border-black rounded-2xl w-36 pl-5 " +
+                          " w-36 pl-5 border" +
                           `${
                             isEditing === false
-                              ? " hover:cursor-not-allowed bg-gray-500 text-gray-200"
-                              : "bg-white"
+                              ? ""
+                              : ""
                           }`
                         }
                       />
@@ -177,13 +178,13 @@ const AdminRequest = () => {
               </div>
             </div>
 
-            <div className="border-2 border-orange-400 rounded-lg p-4 shadow-lg h-96 w-80">
+            <div className=" rounded-lg p-4 shadow-lg h-96 w-80">
               <h3 className="text-lg font-medium mb-2">Datos del Producto</h3>
               <textarea
                 readOnly
                 ref={productDataRef}
-                className={`w-full h-64 p-2 rounded resize-none border-4 border-gray-400 ${
-                  isEditing ? "" : "bg-gray-100 cursor-not-allowed"
+                className={`w-full h-64 p-2 border rounded resize-none${
+                  isEditing ? "bg-gray-400" : "bg-gray-200 cursor-not-allowed"
                 }`}
               ></textarea>
             </div>

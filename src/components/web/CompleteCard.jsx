@@ -59,8 +59,8 @@ const CompleteCard = ({ product, onClose }) => {
 
         {product.withAddition && (
           <>
-            <Additions updateTotal={updateTotal} />
             <Sauces updateSauces={setSelectedSauces} />
+            <Additions updateTotal={updateTotal} />
           </>
         )}
         <button

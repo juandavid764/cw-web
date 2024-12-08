@@ -15,7 +15,7 @@ const AboutUsPage = () => {
   );
 
   return (
-    <div className="flex flex-col lg:mt-10 bg-neutral-50">
+    <div className="flex flex-col lg:mt-10 bg-neutral-50 gap-4">
       <div className="flex flex-col-reverse lg:flex-row justify-center lg:mx-24">
         <div className="lg:w-4/6 p-5 lg:p-5">
           <h1 className="font-bold text-center lg:text-left text-4xl mt-3">
@@ -35,7 +35,7 @@ const AboutUsPage = () => {
         </div>
       </div>
       <br />
-      <div className="flex flex-row justify-center lg:px-28">
+      <div className="flex flex-row justify-center md:px-28">
         <img src={teamImg} alt="Imagen 2" className="" />
       </div>
       <br />
@@ -49,7 +49,7 @@ const AboutUsPage = () => {
         </p>
       </div>
       <br />
-      <div className="flex flex-col justify-center items-center lg:px-24">
+      <div className="flex flex-col justify-center items-center lg:px-14">
         <h2 className="text-2xl font-bold text-center pb-3 lg:pb-5">
           ¡Te esperamos para que formes parte de nuestra conspiración culinaria!{" "}
         </h2>

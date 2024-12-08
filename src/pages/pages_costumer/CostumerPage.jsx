@@ -17,7 +17,7 @@ const CostumerPage = () => {
       <SecondaryMenu />
       <CardsContainer />
       <ToastContainer
-        toastStyle={{  backgroundColor: "#fb923c", color: "white", boxShadow:" 0px -4px 15px 0px rgba(0,0,0,0.2)" }} 
+        toastStyle={{  backgroundColor: "#fb923c", color: "white", fontWeight:"bold", boxShadow:" 0px -4px 15px 0px rgba(0,0,0,0.2)" }} 
         position="bottom-center"
         autoClose={2000}
         hideProgressBar={false}
