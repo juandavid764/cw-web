@@ -1,13 +1,17 @@
 import React, { useEffect, useMemo, useRef, useState } from "react";
-import { Input } from "@mui/material";
+import { Input, SpeedDial, SpeedDialAction } from "@mui/material";
 import { getFormatRequest } from "../../supabase/nativeQuerys";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faEdit,
   faSave,
   faTimes,
+  faSearch,
   faRefresh,
+  faCopy,
+  faPlus,
 } from "@fortawesome/free-solid-svg-icons";
+import FileCopyIcon from '@mui/icons-material/FileCopyOutlined';
 import { RequestsList } from "../../components/admin/requestsComponents/RequestsList";
 import { DropdownStates } from "../../components/admin/requestsComponents/DropdownStates";
 import { updateRequest } from "../../supabase/crudFunctions";
@@ -20,6 +24,12 @@ const AdminRequest = () => {
     { id: 3, label: "Completado" },
     { id: 4, label: "Cancelado" },
   ];
+  
+  const actions = [
+    { icon: <FontAwesomeIcon icon={faCopy} />, name: 'Copiar' },
+    { icon: <FontAwesomeIcon icon={faSave} />, name: 'Guardar' },
+  ];
+  
 
   const [isEditing, setIsEditing] = useState(null);
   const [selectedBtn, setSelectedBtn] = useState(0);
@@ -124,67 +134,80 @@ const AdminRequest = () => {
   }
 
   return (
-    <div className="py-4">
+    <div className="my-4 w-full grow">
+      <div className="mx-12 grid grid-cols-[360px_2fr] grid-rows-1 gap-2">
+        {/* Campo de búsqueda */}
+        <div className="relative grow gap-4">
+            <FontAwesomeIcon
+              icon={faSearch}
+              className="absolute left-3 top-2.5 text-gray-400"
+            />
+            <input
+              type="text" 
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              placeholder="Buscar pedidos..."
+              className="w-full p-2 pl-10 border border-gray-300 rounded-full shadow-sm focus:outline-none focus:ring-2 focus:ring-orange-300"
+            />
+        </div>
+        <div className="flex space-x-2 justify-center">
+            <div>
+              <button
+                className=" px-3 rounded-md my-2"
+                onClick={() => {
+                  setRefreshData(!refreshData);
+                  restartFields();
+                }}
+              >
+                <FontAwesomeIcon icon={faRefresh}/>
+              </button>
+            </div>
+              
+              {buttons.map((button) => (
+                <button
+                  key={button.id}
+                  onClick={() => setSelectedBtn(button.id)}
+                  className={`shadow px-4 py-2 rounded-md font-medium transition-colors ${
+                    selectedBtn === button.id
+                      ? "shadow-2xl bg-orange-400 text-white"
+                      : "bg-gray-200 text-gray-700 hover:bg-gray-300"
+                  }`}
+                >
+                  {button.label}
+                </button>
+              ))}
+        </div>
+      </div>
+        
+
+      <div className="mx-12 my-2 grid grid-cols-[360px_2fr] grid-rows-1 gap-12">
       {/* Encabezado */}
 
-      <div className="flex justify-around">
         <section
-          className="col-span-1 overflow-y-scroll max-h-[650px] px-5"
+          className="overflow-y-scroll h-[750px] px-5"
           id="left"
         >
           <RequestsList
             filteredPedidos={filteredPedidos}
             handleRequestSelection={handleRequestSelection}
             selectedPedido={selectedPedido}
-            searchTerm={searchTerm}
-            setSearchTerm={setSearchTerm}
           />
         </section>
-
-        <section className="col-span-5 flex flex-col items-center gap-10 ">
-          <div className="flex space-x-2">
-            <div>
-              <button
-                className="bg-gray-900 text-white px-3 rounded-md my-2"
-                onClick={() => {
-                  setRefreshData(!refreshData);
-                  restartFields();
-                }}
-              >
-                <FontAwesomeIcon icon={faRefresh} className="mr-2" />
-                Refrescar
-              </button>
-            </div>
-            {buttons.map((button) => (
-              <button
-                key={button.id}
-                onClick={() => setSelectedBtn(button.id)}
-                className={`shadow px-4 py-2 rounded-md font-medium transition-colors ${
-                  selectedBtn === button.id
-                    ? "shadow-2xl bg-orange-400 text-white"
-                    : "bg-gray-200 text-gray-700 hover:bg-gray-300"
-                }`}
-              >
-                {button.label}
-              </button>
-            ))}
-          </div>
-
-          <div className="flex gap-10">
-            <div className="  rounded-lg p-4 shadow-lg h-96 w-80">
-              <h3 className="text-lg font-medium mb-2">Datos del cliente</h3>
+        <section className="flex flex-col items-center gap-4 pt-4">
+          <div className="grid grid-cols-2 grid-rows-1 w-full h-full gap-12">
+            <div className="  rounded-lg p-4 shadow-md h-[380px] w-full flex flex-col">
+              <h3 className="text-xl mb-2">Datos del cliente</h3>
               <textarea
                 ref={clientDataRef}
                 className={`border w-full h-56 p-2 rounded  resize-none ${
                   isEditing ? "" : "bg-gray-100"
                 }`}
               ></textarea>
-              <div className="flex flex-col items-center justify-center py-2 gap-0">
-                <div className="flex items-center justify-center mb-5 gap-3">
+              <div className="flex flex-col items-center justify-center py-2 mt-2">
+                <div className="flex items-center justify-end mb-5 gap-3 w-full">
                   {selectedPedido && (
                     <>
-                      {" "}
-                      <h1 className="p-0 m-0 ">Total:</h1>
+                      <p>Total:</p>
                       <input
                         onChange={(e) => setNewTotal(e.target.value)}
                         type="text"
@@ -198,30 +221,49 @@ const AdminRequest = () => {
                   )}
                 </div>
 
-                <DropdownStates estado={newState} setNewState={setNewState} />
+                  <div className="w-full flex justify-end">
+                    <DropdownStates estado={newState} setNewState={setNewState}/>
+                  </div>
               </div>
             </div>
 
-            <div className=" rounded-lg p-4 shadow-lg h-96 w-80">
-              <h3 className="text-lg font-medium mb-2">Datos del Producto</h3>
+            <div className=" rounded-lg p-4 shadow-lg h-full w-full">
+              <h3 className="text-xl mb-2">Datos del producto</h3>
               <textarea
                 readOnly
                 ref={productDataRef}
-                className={`w-full h-64 p-2 border rounded resize-none${
+                className={`w-full h-[90%] p-2 border rounded resize-none${
                   isEditing ? "bg-gray-400" : "bg-gray-200 cursor-not-allowed"
                 }`}
               ></textarea>
             </div>
           </div>
 
-          <button
-            className="bg-orange-400 text-white px-6 rounded-md hover:bg-orange-300 py-4"
-            onClick={handleSave}
+          <div className="w-full flex justify-end">
+            {/* {Botón de solo guardar} */}
+              <button className="bg-orange-400 text-white px-8 rounded-md hover:bg-orange-300 py-2"
+              onClick={handleSave}>
+                <FontAwesomeIcon icon={faSave} />
+              </button>
+
+            {/* {Guardar y copiar} */}
+          {/* <SpeedDial
+            color="orange"
+            ariaLabel="SpeedDial basic example"
+            
+            icon={<FontAwesomeIcon icon={faPlus}/>}
           >
-            <FontAwesomeIcon icon={faSave} className="mr-2" />
-          </button>
+            {actions.map((action) => (
+              <SpeedDialAction
+                key={action.name}
+                icon={action.icon}
+                tooltipTitle={action.name}
+              />
+            ))}
+          </SpeedDial> */}
+          </div>
         </section>
-      </div>
+    </div>
     </div>
   );
 };
