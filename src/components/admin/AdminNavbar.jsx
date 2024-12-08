@@ -16,7 +16,7 @@ const AdminNavbar = () => {
   return (
     <nav className="bg-black shadow-md p-4 flex justify-between items-center relative">
       <div className="text-2xl font-bold text-white">
-        <img className="md:max-h-20 max-w-20" src={cwLogo} alt="Cartoon war" />
+        <img className="md:max-h-10 max-w-10" src={cwLogo} alt="Cartoon war" />
       </div>
       <div className="hidden md:flex space-x-8">
         <MenuLinks

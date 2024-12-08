@@ -1,10 +1,16 @@
 import React, { useEffect, useMemo, useRef, useState } from "react";
-import { Input } from '@mui/material';
+import { Input } from "@mui/material";
 import { getFormatRequest } from "../../supabase/nativeQuerys";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faEdit, faSave, faTimes } from "@fortawesome/free-solid-svg-icons";
+import {
+  faEdit,
+  faSave,
+  faTimes,
+  faRefresh,
+} from "@fortawesome/free-solid-svg-icons";
 import { RequestsList } from "../../components/admin/requestsComponents/RequestsList";
 import { DropdownStates } from "../../components/admin/requestsComponents/DropdownStates";
+import { updateRequest } from "../../supabase/crudFunctions";
 
 const AdminRequest = () => {
   const buttons = [
@@ -15,7 +21,8 @@ const AdminRequest = () => {
     { id: 4, label: "Cancelado" },
   ];
 
-  const [selectedBtn, setSelectedStateBtn] = useState(0);
+  const [isEditing, setIsEditing] = useState(null);
+  const [selectedBtn, setSelectedBtn] = useState(0);
   const [selectedPedido, setSelectedPedido] = useState(null);
   const [formattedRequest, setFormattedRequest] = useState([]);
   const [searchTerm, setSearchTerm] = useState(""); // Estado para el texto de búsqueda
@@ -31,10 +38,8 @@ const AdminRequest = () => {
   useEffect(() => {
     async function fetchData() {
       const data = await getFormatRequest();
-      console.log(data);
       setFormattedRequest(data || []);
       console.log("Actualice la data");
-
     }
     fetchData();
 
@@ -66,10 +71,21 @@ const AdminRequest = () => {
   function handleRequestSelection(pedido) {
     setSelectedPedido(pedido);
     clientDataRef.current.value = pedido.client.replace(/\\n/g, "\n");
-    productDataRef.current.value = pedido.formatted_products.replace(
-      /\\n/g,
-      "\n"
-    );
+    productDataRef.current.value = pedido.formatted_products
+      .replace(/\\nAdics:\\n/g, " ")
+      .replace(/- Adics/g, " \n \n Adics ")
+      .replace(/- /g, " \n ")
+      .replace(/\[\[/g, "[")
+      .replace(/\]\]/g, "]")
+      .replace(/\\n/g, " \n ");
+  }
+
+  function restartFields() {
+    setRefreshData(!refreshData);
+    clientDataRef.current.value = "";
+    productDataRef.current.value = "";
+    totalCostRef.current.value = "";
+    setSelectedPedido(null);
   }
 
   // actualiza el estado del pedido apenas haya un pedido seleccionado
@@ -81,7 +97,7 @@ const AdminRequest = () => {
     }
   }, [selectedPedido]);
 
-  function handleSave() {
+  async function handleSave() {
     const pedidoUpdating = selectedPedido;
 
     // validación
@@ -91,35 +107,31 @@ const AdminRequest = () => {
     }
 
     // actualizamos los campos que supuestamente cambian
+    pedidoUpdating.client = clientDataRef.current.value;
     pedidoUpdating.status = newState;
     pedidoUpdating.total = parseFloat(newTotal);
 
     // y AQUÍ se actualizaría el pedido:
     // updatePedido(pedidoUpdating)
+    await updateRequest({
+      request_id: pedidoUpdating.request_id,
+      client: pedidoUpdating.client,
+      status: pedidoUpdating.status,
+      total: pedidoUpdating.total,
+    });
 
-    console.log(pedidoUpdating); // ELIMINAR ESTO!
+    restartFields();
   }
 
   return (
     <div className="py-4">
       {/* Encabezado */}
-      <div className="flex items-center justify-center mb-6 bg-orange-200 py-5 ml-[20vw] mr-[20vh] rounded-full">
-        <button
-          onClick={() => setIsEditing(!isEditing)}
-          className={`flex items-center px-5 py-2 rounded-md text-white font-semibold text-xl transition-colors ${
-            isEditing ? "bg-orange-500" : "bg-gray-700 hover:bg-gray-600"
-          }`}
-        >
-          <FontAwesomeIcon
-            icon={isEditing ? faTimes : faEdit}
-            className="mr-2"
-          />
-          {isEditing ? "Cancelar edición" : "Editar"}
-        </button>
-      </div>
 
       <div className="flex justify-around">
-        <section className="col-span-1 overflow-y-scroll max-h-[650px] px-5" id="left">
+        <section
+          className="col-span-1 overflow-y-scroll max-h-[650px] px-5"
+          id="left"
+        >
           <RequestsList
             filteredPedidos={filteredPedidos}
             handleRequestSelection={handleRequestSelection}
@@ -129,14 +141,20 @@ const AdminRequest = () => {
           />
         </section>
 
-        <section className="col-span-5 flex flex-col items-center gap-10">
-          
+        <section className="col-span-5 flex flex-col items-center gap-10 ">
           <div className="flex space-x-2">
-          <div>
-            <button className="bg-gray-900 text-white px-6 rounded-md" onClick={() => { setRefreshData(!refreshData)}}>
-              Refrescar
-            </button>
-          </div>
+            <div>
+              <button
+                className="bg-gray-900 text-white px-3 rounded-md my-2"
+                onClick={() => {
+                  setRefreshData(!refreshData);
+                  restartFields();
+                }}
+              >
+                <FontAwesomeIcon icon={faRefresh} className="mr-2" />
+                Refrescar
+              </button>
+            </div>
             {buttons.map((button) => (
               <button
                 key={button.id}
@@ -145,7 +163,7 @@ const AdminRequest = () => {
                   selectedBtn === button.id
                     ? "shadow-2xl bg-orange-400 text-white"
                     : "bg-gray-200 text-gray-700 hover:bg-gray-300"
-                  }`}
+                }`}
               >
                 {button.label}
               </button>
@@ -158,7 +176,7 @@ const AdminRequest = () => {
               <textarea
                 ref={clientDataRef}
                 className={`border w-full h-56 p-2 rounded  resize-none ${
-                  isEditing ? "" : "bg-gray-100 cursor-not-allowed"
+                  isEditing ? "" : "bg-gray-100"
                 }`}
               ></textarea>
               <div className="flex flex-col items-center justify-center py-2 gap-0">
@@ -173,22 +191,14 @@ const AdminRequest = () => {
                         ref={totalCostRef}
                         className={
                           " w-36 pl-5 border" +
-                          `${
-                            isEditing === false
-                              ? ""
-                              : ""
-                          }`
+                          `${isEditing === false ? "" : ""}`
                         }
                       />
                     </>
                   )}
                 </div>
 
-                <DropdownStates
-                  estado={newState}
-                  setNewState={setNewState}
-
-                />
+                <DropdownStates estado={newState} setNewState={setNewState} />
               </div>
             </div>
 
@@ -204,14 +214,12 @@ const AdminRequest = () => {
             </div>
           </div>
 
-
           <button
             className="bg-orange-400 text-white px-6 rounded-md hover:bg-orange-300 py-4"
             onClick={handleSave}
           >
             <FontAwesomeIcon icon={faSave} className="mr-2" />
           </button>
-
         </section>
       </div>
     </div>

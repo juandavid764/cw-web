@@ -13,7 +13,9 @@ export function RequestsList({
 }) {
   return (
     <>
-      <h3 className="font-bold mb-4 text-xl">Pedidos</h3>
+      <h3 className="flex items-center justify-center font-bold mb-4 text-xl">
+        Administra los pedidos
+      </h3>
       {/* Campo de búsqueda */}
       <div className="mb-4">
         <div className="relative">

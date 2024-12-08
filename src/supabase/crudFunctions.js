@@ -368,13 +368,13 @@ export async function getOrders() {
 }
 
 // insert data into the table Order
-export async function insertOrder(
+export async function insertOrder({
   product_id,
   additions,
   sauces,
   request,
-  quantity
-) {
+  quantity,
+}) {
   const { data, error } = await supabase
     .from("Order")
     .insert([{ product_id, additions, sauces, request, quantity }])
@@ -391,11 +391,17 @@ export async function insertOrder(
 }
 
 // update data in the table Order
-export async function updateOrder(id, product_id, additions, sauces, request) {
+export async function updateOrder({
+  id,
+  product_id,
+  additions,
+  sauces,
+  request,
+}) {
   const { data, error } = await supabase
     .from("Order")
     .update({ product_id, additions, sauces, request })
-    .eq("id", id)
+    .eq("order_id", id)
     .select();
   if (error) {
     console.log(error);
