@@ -193,9 +193,9 @@ const AdminRequest = () => {
             selectedPedido={selectedPedido}
           />
         </section>
-        <section className="flex flex-col items-center gap-4 pt-4">
+        <section className="flex flex-col items-center gap-8 pt-4">
           <div className="grid grid-cols-2 grid-rows-1 w-full h-full gap-12">
-            <div className="  rounded-lg p-4 shadow-md h-[380px] w-full flex flex-col">
+            <div className="  rounded-lg p-4 shadow-md h-full w-full flex flex-col">
               <h3 className="text-xl mb-2">Datos del cliente</h3>
               <textarea
                 ref={clientDataRef}
@@ -203,8 +203,8 @@ const AdminRequest = () => {
                   isEditing ? "" : "bg-gray-100"
                 }`}
               ></textarea>
-              <div className="flex flex-col items-center justify-center py-2 mt-2">
-                <div className="flex items-center justify-end mb-5 gap-3 w-full">
+              <div className="flex flex-col items-center justify-center py-2 gap-4 mt-auto">
+                <div className="flex items-center justify-center mb-5 gap-3 w-full">
                   {selectedPedido && (
                     <>
                       <p>Total:</p>
@@ -221,7 +221,7 @@ const AdminRequest = () => {
                   )}
                 </div>
 
-                  <div className="w-full flex justify-end">
+                  <div className="w-full flex justify-center">
                     <DropdownStates estado={newState} setNewState={setNewState}/>
                   </div>
               </div>
@@ -239,12 +239,12 @@ const AdminRequest = () => {
             </div>
           </div>
 
-          <div className="w-full flex justify-end">
-            {/* {Botón de solo guardar} */}
-              <button className="bg-orange-400 text-white px-8 rounded-md hover:bg-orange-300 py-2"
+          <div className="w-full flex justify-center">
+              <button className="bg-orange-400 text-white px-8 rounded-lg hover:bg-orange-300 py-2"
               onClick={handleSave}>
                 <FontAwesomeIcon icon={faSave} />
               </button>
+            {/* {Botón de solo guardar} */}
 
             {/* {Guardar y copiar} */}
           {/* <SpeedDial
