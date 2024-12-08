@@ -8,6 +8,12 @@ const DetailsData = ({ order }) => {
         <p className="font-bold">${order.product.price.toLocaleString()}</p>
       </div>
       <div className="ml-4">
+        <p className="font-semibold mt-2">Salsas:</p>
+        {order.sauces.length > 0 ? (
+          <p>{order.sauces.join(", ")}</p>
+        ) : (
+          <p>Sin salsas</p>
+        )}
         <p className="font-semibold">Adiciones:</p>
         {order.additions.length > 0 ? (
           order.additions.map((addition, index) => (
@@ -24,12 +30,6 @@ const DetailsData = ({ order }) => {
           ))
         ) : (
           <p>No hay adiciones.</p>
-        )}
-        <p className="font-semibold mt-2">Salsas:</p>
-        {order.sauces.length > 0 ? (
-          <p>{order.sauces.join(", ")}</p>
-        ) : (
-          <p>Sin salsas</p>
         )}
       </div>
     </div>

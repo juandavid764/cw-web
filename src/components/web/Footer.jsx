@@ -9,7 +9,7 @@ import { orange } from '@mui/material/colors';
 const Footer = () => {
     return (
 
-        <footer className="bg-black grid grid-cols-1 lg:flex lg:flex-col lg:pt-10 p-5 lg:w-full lg:items-stretch">
+        <footer className="mt-auto bg-black grid grid-cols-1 lg:flex lg:flex-col lg:pt-10 p-5 lg:w-full lg:items-stretch">
             <div className='lg:flex lg:flex-row lg:justify-center gap-x-72'>
                 <div className="size-40 lg:w-56 flex flex-col justify-start	h-min">
                     <img src={cwLogo} alt="Company Logo" className="" />

@@ -1,17 +1,18 @@
 import { ChevronDownIcon, ChevronUpIcon } from "@heroicons/react/24/solid";
 import React, { useContext, useState, useEffect } from "react";
 import { ProductsContext } from "../../context/ProductsContext";
+import Select from 'react-select';
 
 const Sauces = ({ updateSauces }) => {
   const { sauces } = useContext(ProductsContext);
   const [isOpen, setIsOpen] = useState(false);
   const [selectedSauces, setSelectedSauces] = useState([]);
 
-  const handleSauceSelection = (sauce) => {
-    setSelectedSauces((prev) =>
-      prev.includes(sauce) ? prev.filter((s) => s !== sauce) : [...prev, sauce]
-    );
-  };
+  // const handleSauceSelection = (sauce) => {
+  //   setSelectedSauces((prev) =>
+  //     prev.includes(sauce) ? prev.filter((s) => s !== sauce) : [...prev, sauce]
+  //   );
+  // };
 
   useEffect(() => {
     updateSauces(selectedSauces);
@@ -20,6 +21,10 @@ const Sauces = ({ updateSauces }) => {
   const toggleOpen = () => {
     setIsOpen(!isOpen);
   };
+
+  const options = sauces.map((sauce) => {
+    return { value: `${sauce}`, label: `${sauce}`}
+  });
 
   return (
     <div className="mt-4">
@@ -36,7 +41,7 @@ const Sauces = ({ updateSauces }) => {
       </div>
       {isOpen && (
         <div className="mt-2 space-y-2">
-          {sauces.map((sauce) => (
+          {/* {sauces.map((sauce) => (
             <div key={sauce} className="flex justify-between items-center">
               <div className="flex items-center">
                 <input
@@ -44,11 +49,18 @@ const Sauces = ({ updateSauces }) => {
                   className="mr-2"
                   checked={selectedSauces.includes(sauce)}
                   onChange={() => handleSauceSelection(sauce)}
+                  id={sauce}
                 />
-                <label className="text-sm">{sauce}</label>
+                <label className="text-sm" htmlFor={sauce}>{sauce}</label>
               </div>
             </div>
-          ))}
+          ))} */}
+          <Select
+            placeholder="Selecciona tus salsas..."
+            isMulti
+            options={options}
+            onChange={(sauce) => {setSelectedSauces(sauce.map((x)=>{return x.value}))}}
+          />
         </div>
       )}
     </div>
