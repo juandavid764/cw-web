@@ -11,6 +11,7 @@ import DataDeliveryPage from "../pages/pages_costumer/shopping_cart/DataDelivery
 import LoginPage from "../pages/pages_admin/LoginPage";
 import RoutesPage from "../pages/pages_admin/RoutesPage";
 import ConfirmPage from "../pages/pages_costumer/ConfirmPage";
+import NotFoundPage from "../pages/pages_costumer/NotFoundPage";
 
 const CustomerRoutes = () => {
   return (
@@ -24,6 +25,7 @@ const CustomerRoutes = () => {
       <Route path="/carrito/infoPedido" element={<DataDeliveryPage />} />
       <Route path="/carrito/confirmPage" element={<ConfirmPage />} />
       <Route path="/Login" element={<LoginPage />} />
+      <Route path="*" element={<NotFoundPage />} />
     </Routes>
   );
 };
