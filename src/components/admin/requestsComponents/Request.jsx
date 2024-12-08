@@ -66,17 +66,20 @@ export function Request({ pedido, handleRequestSelection, selectedPedido }) {
   return (
     <div
       onClick={() => handleRequestSelection(pedido)}
-      className={`shadow cursor-pointer transition-colors flex items-center justify-around py-3 px- w-80 ${
+      className={`px-4 shadow cursor-pointer rounded-lg transition-colors flex items-center justify-around py-3 w-80 ${
         selectedPedido?.request_id === pedido.request_id
-          ? "ring-4 ring-black shadow-xl"
+          ? "ring-1 ring-gray-500 shadow-xl"
           : "shadow"
       } ${getStatusColor(pedido.status)}`}
     >
-      <div className="flex flex-col items-center justify-center">
-        <p className="w-full text-left">
-          <strong>#{pedido.request_id}</strong>
-        </p>
-        <div>
+      <div className="flex flex-col items-center justify-center grow">
+        <div className="flex justify-around w-full">
+          <p className="text-left">
+            <strong>#{pedido.request_id}</strong>
+          </p>
+          <p className="grow">&nbsp;&nbsp;{pedido.status}</p>
+        </div>
+        <div className="flex w-full">
           <p>
             <span>
               <FontAwesomeIcon icon={faClock} />
@@ -85,11 +88,6 @@ export function Request({ pedido, handleRequestSelection, selectedPedido }) {
           </p>
         </div>
       </div>
-      <div className="flex align-top text-xl">
-        <p>
-          <strong>{pedido.status.toUpperCase()}</strong>
-        </p>
-      </div>
       <div>
         {/* Botón para copiar al portapapeles */}
         <button
@@ -97,9 +95,9 @@ export function Request({ pedido, handleRequestSelection, selectedPedido }) {
             e.stopPropagation(); // Evita que el evento haga clic en el contenedor principal
             copyToClipboard();
           }}
-          className="p-2 bg-transparent rounded hover:scale-150 scale-125"
+          className="p-2 bg-transparent rounded active:scale-150 scale-125"
         >
-          <FontAwesomeIcon icon={faCopy} className="text-white-800 font-bold" />
+          <FontAwesomeIcon icon={faCopy} />
         </button>
       </div>
     </div>
