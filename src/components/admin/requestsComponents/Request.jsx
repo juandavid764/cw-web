@@ -18,22 +18,46 @@ export function Request({ pedido, handleRequestSelection, selectedPedido }) {
     }
   }
 
-  // Función para formatear el contenido del pedido
   function formatPedidoContent(pedido) {
-    const formattedProducts = pedido.formatted_products
-      .replace(/\\n/g, "\n") // Reemplaza los caracteres \n
+    // Formatear los productos, eliminando etiquetas innecesarias y saltos de línea
+    let formattedProducts = pedido.formatted_products
+      .replace(/\\n/g, "\n") // Reemplaza los caracteres \n por saltos de línea reales
       .replace(/\[\[.*?\]\]/g, "") // Elimina las etiquetas [[...]]
-      .replace(/Adics:/g, "Adics:\n"); // Asegura saltos de línea en adiciones
+      .trim(); // Elimina los espacios extra al inicio y final
 
+    // Asegurarse de que la palabra "Adics:" sólo aparezca una vez
+    formattedProducts = formattedProducts.replace(/Adics:/g, "Adics:");
+
+    // Si hay adiciones, agregarlas al final
+    if (pedido.additions && pedido.additions.length > 0) {
+      formattedProducts += "\nAdics:\n";
+      formattedProducts += pedido.additions
+        .map((addition) => `- ${addition.quantity} ${addition.name}`)
+        .join("\n");
+    }
+
+    // Organizar los productos para que cada uno tenga el formato correcto
+    let products = formattedProducts.split("\n*");
+
+    // Limpiar los productos y agregar los saltos de línea correctos
+    products = products
+      .map((product, index) => {
+        // Eliminar saltos de línea adicionales y asegurarse de que todos los productos empiecen con "*"
+        product = product.trim().replace(/^\*/g, "*"); // Asegura que cada producto empiece con "*"
+        if (index > 0) product = `*${product}`; // Volver a agregar '*' en los productos
+        return product;
+      })
+      .join("\n\n"); // Unir los productos con saltos de línea entre ellos
+
+    // Devolver el contenido final con el formato esperado
     return `
-#${pedido.request_id}
-
-${formattedProducts.trim()}
-
-- - - - - - - - - - - - -
-${pedido.client.replace(/\\n/g, "\n").trim()}
-total: ${pedido.total}
-`;
+  #${pedido.request_id}
+  
+  ${products}
+  
+  ${pedido.client.replace(/\\n/g, "\n").trim()}
+  total: ${pedido.total}
+  `;
   }
 
   // Función para copiar al portapapeles

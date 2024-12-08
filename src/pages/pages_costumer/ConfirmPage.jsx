@@ -23,10 +23,7 @@ const ConfirmPage = () => {
   }, [client, cart]);
 
   const sendWhatsappMessage = (name, request_id, comanda) => {
-    let textWpp = `Hola, soy ${name}.\n\n#${request_id}\n\n${comanda}\n${
-      "total: " + total
-    } 
-    `;
+    let textWpp = `Hola, soy ${name}.\n\n#${request_id}\n\n${comanda}`;
 
     let cellphone = "573006999492";
 
@@ -67,7 +64,7 @@ const ConfirmPage = () => {
     - - - - - - - - - - - - -
 ${nombre}
 ${telefono}
-${formaPago === "Efectivo" ? conCuantoPago : "Transferencia"}
+${formaPago === "Efectivo" ? conCuantoPago + "/" + total : "Transferencia"}
     `.trim();
 
     if (direccion) {

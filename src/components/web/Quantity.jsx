@@ -35,9 +35,9 @@ const Quantity = ({ order }) => {
   return (
     <div className=" flex items-center justify-between p-4 bg-white rounded-lg shadow mb-2">
       <img
-        src={order.product.image}
+        src={order.product.imgUrl}
         alt={order.product.name}
-        className="w-16 h-16 object-cover rounded"
+        className="w-16 h-16 object-contain rounded"
       />
       <div className="flex-1 ml-4">
         <h3 className="text-base font-semibold">{order.product.name}</h3>

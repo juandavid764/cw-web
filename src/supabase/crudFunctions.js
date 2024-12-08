@@ -69,6 +69,7 @@ export async function updateProduct({
   let imgUrl = null;
   if (!file) {
     const currentData = await getCurrentImageUrl(id);
+    console.log(currentData);
     imgUrl = currentData;
   } else {
     // Subir la nueva imagen

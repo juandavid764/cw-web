@@ -144,6 +144,7 @@ const EditPage = () => {
   // Función para manejar la selección de un producto
   const handleProductSelect = (product) => {
     setProductToEdit(product); // Actualizamos el producto a editar
+    console.log("Imagen:", product);
   };
 
   // Manejo del cambio de tabla seleccionada

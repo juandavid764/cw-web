@@ -10,7 +10,7 @@ const Card = ({ product, onClick }) => {
       >
         <img
           className="w-full h-48 object-cover rounded-md"
-          src={product.image}
+          src={product.imgUrl}
           alt={product.name}
         />
         <div className="p-4">
