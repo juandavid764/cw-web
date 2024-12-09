@@ -93,7 +93,6 @@ export const ProductsProvider = ({ children }) => {
         loading,
         filteredProducts,
         setFilteredProducts,
-        setOrderCount,
       }}
     >
       {children}

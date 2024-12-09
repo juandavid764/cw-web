@@ -2,25 +2,6 @@ import React, { useState, useEffect } from "react";
 import { PlusIcon } from "@heroicons/react/24/solid";
 
 const Card = ({ product, onClick }) => {
-  const [imageUrl, setImageUrl] = useState(null);
-
-  useEffect(() => {
-    const fetchImage = async () => {
-      try {
-        // Obtener la imagen forzando una nueva solicitud al servidor
-        const response = await fetch(product.imgUrl, { cache: "reload" });
-        const blob = await response.blob();
-        const objectUrl = URL.createObjectURL(blob);
-        setImageUrl(objectUrl);
-      } catch (error) {
-        console.error("Error al cargar la imagen:", error);
-        setImageUrl(product.imgUrl); // Fallback a la URL original si falla
-      }
-    };
-
-    fetchImage();
-  }, [product.imgUrl]);
-
   return (
     <div
       className="max-w-xs h-[400px] bg-white rounded-xl shadow-md overflow-hidden transform hover:scale-105 transition duration-300 ease-in-out p-4"
@@ -28,7 +9,7 @@ const Card = ({ product, onClick }) => {
     >
       <img
         className="w-full h-48 object-cover rounded-md"
-        src={imageUrl || product.imgUrl}
+        src={product.imgUrl}
         alt={product.name}
       />
       <div className="p-4">

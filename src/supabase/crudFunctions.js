@@ -423,6 +423,35 @@ export async function deleteOrder(id) {
 //!Request
 //!----------------------------------------------------------------------------------------------------------------------------
 
+// get data from the view view_request_details
+export async function getRequestDetails(requestId) {
+  try {
+    if (!requestId) {
+      console.error("El ID de la solicitud es obligatorio.");
+      return null;
+    }
+
+    // Realiza la consulta en la vista
+    const { data, error } = await supabase
+      .from("formatted_request_products")
+      .select(
+        "request_id, client, date, time, status, total, formatted_products"
+      )
+      .eq("request_id", requestId)
+      .single();
+
+    if (error) {
+      console.error("Error al consultar la vista:", error);
+      return null;
+    }
+
+    return data;
+  } catch (err) {
+    console.error("Ocurrió un error inesperado:", err.message);
+    return null;
+  }
+}
+
 // get all data from the table Request
 export async function getRequests() {
   let { data: Request, error } = await supabase.from("Request").select("*");
