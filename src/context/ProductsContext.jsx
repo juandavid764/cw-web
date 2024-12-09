@@ -68,8 +68,7 @@ export const ProductsProvider = ({ children }) => {
     setCart((prevCart) => {
       const updatedCart = [...prevCart, newOrder];
       setOrderCount(updatedCart.length);
-      toast("✅ ¡Producto agregado al carrito!", {
-      });
+      toast("✅ ¡Producto agregado al carrito!", {});
       return updatedCart;
     });
   };
@@ -94,6 +93,7 @@ export const ProductsProvider = ({ children }) => {
         loading,
         filteredProducts,
         setFilteredProducts,
+        setOrderCount,
       }}
     >
       {children}

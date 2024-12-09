@@ -11,7 +11,7 @@ import {
   faCopy,
   faPlus,
 } from "@fortawesome/free-solid-svg-icons";
-import FileCopyIcon from '@mui/icons-material/FileCopyOutlined';
+import FileCopyIcon from "@mui/icons-material/FileCopyOutlined";
 import { RequestsList } from "../../components/admin/requestsComponents/RequestsList";
 import { DropdownStates } from "../../components/admin/requestsComponents/DropdownStates";
 import { updateRequest } from "../../supabase/crudFunctions";
@@ -24,12 +24,11 @@ const AdminRequest = () => {
     { id: 3, label: "Completado" },
     { id: 4, label: "Cancelado" },
   ];
-  
+
   const actions = [
-    { icon: <FontAwesomeIcon icon={faCopy} />, name: 'Copiar' },
-    { icon: <FontAwesomeIcon icon={faSave} />, name: 'Guardar' },
+    { icon: <FontAwesomeIcon icon={faCopy} />, name: "Copiar" },
+    { icon: <FontAwesomeIcon icon={faSave} />, name: "Guardar" },
   ];
-  
 
   const [isEditing, setIsEditing] = useState(null);
   const [selectedBtn, setSelectedBtn] = useState(0);
@@ -98,6 +97,21 @@ const AdminRequest = () => {
     setSelectedPedido(null);
   }
 
+  // Función para copiar al portapapeles
+  function copyToClipboard() {
+    const content =
+      "#" +
+      selectedPedido.request_id +
+      "\n" +
+      productDataRef.current.value +
+      "\n" +
+      clientDataRef.current.value;
+    navigator.clipboard
+      .writeText(content)
+      .then(() => alert("¡Contenido actualizado y copiado al portapapeles!"))
+      .catch((err) => alert("Hubo un error al copiar el contenido."));
+  }
+
   // actualiza el estado del pedido apenas haya un pedido seleccionado
   useEffect(() => {
     if (selectedPedido) {
@@ -129,6 +143,7 @@ const AdminRequest = () => {
       status: pedidoUpdating.status,
       total: pedidoUpdating.total,
     });
+    copyToClipboard();
 
     restartFields();
   }
@@ -138,55 +153,51 @@ const AdminRequest = () => {
       <div className="mx-12 grid grid-cols-[360px_2fr] grid-rows-1 gap-2">
         {/* Campo de búsqueda */}
         <div className="relative grow gap-4">
-            <FontAwesomeIcon
-              icon={faSearch}
-              className="absolute left-3 top-2.5 text-gray-400"
-            />
-            <input
-              type="text" 
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-              placeholder="Buscar pedidos..."
-              className="w-full p-2 pl-10 border border-gray-300 rounded-full shadow-sm focus:outline-none focus:ring-2 focus:ring-orange-300"
-            />
+          <FontAwesomeIcon
+            icon={faSearch}
+            className="absolute left-3 top-2.5 text-gray-400"
+          />
+          <input
+            type="text"
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+            placeholder="Buscar pedidos..."
+            className="w-full p-2 pl-10 border border-gray-300 rounded-full shadow-sm focus:outline-none focus:ring-2 focus:ring-orange-300"
+          />
         </div>
         <div className="flex space-x-2 justify-center">
-            <div>
-              <button
-                className=" px-3 rounded-md my-2"
-                onClick={() => {
-                  setRefreshData(!refreshData);
-                  restartFields();
-                }}
-              >
-                <FontAwesomeIcon icon={faRefresh}/>
-              </button>
-            </div>
-              
-              {buttons.map((button) => (
-                <button
-                  key={button.id}
-                  onClick={() => setSelectedBtn(button.id)}
-                  className={`shadow px-4 py-2 rounded-md font-medium transition-colors ${
-                    selectedBtn === button.id
-                      ? "shadow-2xl bg-orange-400 text-white"
-                      : "bg-gray-200 text-gray-700 hover:bg-gray-300"
-                  }`}
-                >
-                  {button.label}
-                </button>
-              ))}
+          <div>
+            <button
+              className=" px-3 rounded-md my-2"
+              onClick={() => {
+                setRefreshData(!refreshData);
+                restartFields();
+              }}
+            >
+              <FontAwesomeIcon icon={faRefresh} />
+            </button>
+          </div>
+
+          {buttons.map((button) => (
+            <button
+              key={button.id}
+              onClick={() => setSelectedBtn(button.id)}
+              className={`shadow px-4 py-2 rounded-md font-medium transition-colors ${
+                selectedBtn === button.id
+                  ? "shadow-2xl bg-orange-400 text-white"
+                  : "bg-gray-200 text-gray-700 hover:bg-gray-300"
+              }`}
+            >
+              {button.label}
+            </button>
+          ))}
         </div>
       </div>
-        
 
       <div className="mx-12 my-2 grid grid-cols-[360px_2fr] grid-rows-[500px] gap-12">
-      {/* Encabezado */}
+        {/* Encabezado */}
 
-        <section
-          className="overflow-y-scroll h-[500px] px-5"
-          id="left"
-        >
+        <section className="overflow-y-scroll h-[500px] px-5" id="left">
           <RequestsList
             filteredPedidos={filteredPedidos}
             handleRequestSelection={handleRequestSelection}
@@ -221,9 +232,9 @@ const AdminRequest = () => {
                   )}
                 </div>
 
-                  <div className="w-full flex justify-center">
-                    <DropdownStates estado={newState} setNewState={setNewState}/>
-                  </div>
+                <div className="w-full flex justify-center">
+                  <DropdownStates estado={newState} setNewState={setNewState} />
+                </div>
               </div>
             </div>
 
@@ -240,14 +251,18 @@ const AdminRequest = () => {
           </div>
 
           <div className="w-full flex justify-center">
-              <button className="bg-orange-400 text-white px-8 rounded-lg hover:bg-orange-300 py-2"
-              onClick={handleSave}>
-                <FontAwesomeIcon icon={faSave} />
-              </button>
+            <button
+              className="bg-orange-400 text-white px-8 rounded-lg hover:bg-orange-300 py-2"
+              onClick={() => {
+                handleSave();
+              }}
+            >
+              <FontAwesomeIcon icon={faSave} />
+            </button>
             {/* {Botón de solo guardar} */}
 
             {/* {Guardar y copiar} */}
-          {/* <SpeedDial
+            {/* <SpeedDial
             color="orange"
             ariaLabel="SpeedDial basic example"
             
@@ -263,7 +278,7 @@ const AdminRequest = () => {
           </SpeedDial> */}
           </div>
         </section>
-    </div>
+      </div>
     </div>
   );
 };

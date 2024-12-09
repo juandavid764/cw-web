@@ -5,7 +5,8 @@ import WhatsAppIcon from "@mui/icons-material/WhatsApp";
 import { Link } from "react-router-dom";
 
 const ConfirmPage = () => {
-  const { cart, total, client, setClient } = useContext(ProductsContext);
+  const { cart, total, client, setClient, setCart, setOrderCount } =
+    useContext(ProductsContext);
   const [comanda, setComanda] = useState("");
   let nombreCliente = "";
 
@@ -109,13 +110,14 @@ ${barrio}`;
     const orderPromises = cart.map(async (order) => {
       const formattedSauces = formatSauces(order);
       const formattedAdditions = formatAdditions(order);
-      return await insertOrder(
-        order.product.id,
-        formattedAdditions,
-        formattedSauces,
-        insertedRequest[0].request_id,
-        order.quantity
-      );
+
+      return await insertOrder({
+        product_id: order.product.id,
+        additions: formattedAdditions,
+        sauces: formattedSauces,
+        request: insertedRequest[0].request_id,
+        quantity: order.quantity,
+      });
     });
 
     const ordersResponse = await Promise.all(orderPromises);
@@ -124,6 +126,9 @@ ${barrio}`;
     }
 
     sendWhatsappMessage(nombreCliente, insertedRequest[0].request_id, comanda);
+    setCart([]);
+    setClient(null);
+    setOrderCount(0);
   };
 
   return (
