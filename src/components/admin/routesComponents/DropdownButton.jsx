@@ -20,8 +20,8 @@ export default function DropdownButton({
   let estadoInicial = 0;
   let color = false;
   if (options[0] === "Pendiente") {
-    colorIncial = "success";
-    estadoInicial = 2;
+    colorIncial = "warning";
+    estadoInicial = 1;
     color = true;
   }
   const [open, setOpen] = React.useState(false);

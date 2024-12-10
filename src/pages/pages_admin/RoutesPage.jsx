@@ -6,30 +6,33 @@ import {
   getDomiciliaries,
   getRoutes,
   getRequestsInProcess,
+  getRequestsWithRouteId,
 } from "../../supabase/crudFunctions";
 
 const RoutesPage = () => {
   const [domiciliaries, setDomiciliaries] = useState([]);
   const [routes, setRoutes] = useState([]);
   const [requests, setRequests] = useState([]);
+  const [requestWithRoute, setRequestWithRoute] = useState([]);
   const [selectedDomiciliary, setSelectedDomiciliary] = useState("");
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const [routesData, domiciliaryData, requestsData] = await Promise.all([
-          getRoutes(),
-          getDomiciliaries(),
-          getRequestsInProcess(),
-        ]);
+        const [routesData, domiciliaryData, requestsData, requestWithRoute] =
+          await Promise.all([
+            getRoutes(),
+            getDomiciliaries(),
+            getRequestsInProcess(),
+            getRequestsWithRouteId(),
+          ]);
 
         setRoutes(routesData);
         setDomiciliaries(domiciliaryData);
         setRequests(requestsData);
-
-        // Set default selected domiciliary to the first one
+        setRequestWithRoute(requestWithRoute);
         if (domiciliaryData.length > 0) {
-          setSelectedDomiciliary(domiciliaryData[0].domiciliary_id); // Usar ID en lugar de nombre
+          setSelectedDomiciliary(domiciliaryData[0].domiciliary_id);
         }
       } catch (error) {
         console.error("Error al cargar los datos:", error);
@@ -91,12 +94,15 @@ const RoutesPage = () => {
           reloadRoutes={reloadRoutes}
         />
       </div>
-      <div className="min-h-screen flex justify-center flex-row bg-gray-100">
+      <div className=" flex justify-center flex-row bg-gray-100">
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 gap-6 p-1">
-          {/* Mostrar las rutas filtradas */}
           {filteredRoutes.map((route) => (
             <div key={route.route_id} className="flex-grow">
-              <CardRoute route={route} />
+              <CardRoute
+                route={route}
+                domiciliaryOptions={domiciliaryOptions}
+                requestWithRoute={requestWithRoute}
+              />
             </div>
           ))}
         </div>

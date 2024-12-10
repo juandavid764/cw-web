@@ -477,6 +477,19 @@ export async function getRequestsInProcess() {
   return Request;
 }
 
+export async function getRequestsWithRouteId() {
+  let { data: Request, error } = await supabase
+    .from("Request")
+    .select("*")
+    .not("route_id", "is", null); // Corrección aquí
+
+  if (error) {
+    console.log(error);
+    return null;
+  }
+  return Request;
+}
+
 // insert data into the table Request
 export async function insertRequest(client, total) {
   const { data, error } = await supabase
@@ -518,7 +531,7 @@ export async function deleteRequest(id) {
   return data;
 }
 
-//!Route
+//!Route and related functions
 //!----------------------------------------------------------------------------------------------------------------------------
 
 // get all data from the table Route
@@ -549,11 +562,24 @@ export async function insertRoute({ domiciliary, total }) {
 }
 
 // update data in the table Route
-export async function updateRoute(domiciliary) {
+export async function updateRoute({ id }) {
   const { data, error } = await supabase
     .from("Route")
     .update({ domiciliary })
     .eq("id", id)
+    .select();
+  if (error) {
+    console.log(error);
+    return null;
+  }
+  return data;
+}
+
+export async function updateRouteStatus({ id, status }) {
+  const { data, error } = await supabase
+    .from("Route")
+    .update({ status: status })
+    .eq("route_id", id)
     .select();
   if (error) {
     console.log(error);

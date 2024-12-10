@@ -1,37 +1,113 @@
-import * as React from "react";
-import Card from "@mui/material/Card";
-import CardContent from "@mui/material/CardContent";
-import Typography from "@mui/material/Typography";
-import CardActionArea from "@mui/material/CardActionArea";
-import CardActions from "@mui/material/CardActions";
-import DropdownButton from "./DropdownButton";
-import Box from "@mui/material/Box";
+import React, { useState } from "react";
+import { ChevronDownIcon } from "@heroicons/react/24/solid";
+import { updateRouteStatus } from "../../../supabase/crudFunctions";
 
-export default function CardRoute({ route }) {
+export default function CardRoute({
+  route,
+  domiciliaryOptions,
+  requestWithRoute,
+}) {
+  const [dropdownOpen, setDropdownOpen] = useState(false);
+  const [selectedStatus, setSelectedStatus] = useState(route.status);
+
+  const statuses = ["En proceso", "Completado", "Cancelado"];
+
+  const selected = domiciliaryOptions.find((d) => d.id === route.domiciliary);
+  const filteredRequests = requestWithRoute.filter(
+    (request) => request.route_id === route.route_id
+  );
+
+  const statusColors = {
+    "En proceso": "bg-blue-400",
+    Completado: "bg-green-600",
+    Cancelado: "bg-red-400",
+  };
+
+  const domiciliaryName = selected ? selected.name : "Sin asignar";
+
+  const toggleDropdown = () => {
+    console.log("Status", selectedStatus);
+    setDropdownOpen((prev) => !prev);
+  };
+
+  const handleStatusChange = async (newStatus) => {
+    setSelectedStatus(newStatus);
+    setDropdownOpen(false);
+    console.log("Cambiando estado de la ruta", route.route_id, "a", newStatus);
+    try {
+      await updateRouteStatus({ id: route.route_id, status: newStatus }); // Llamar a la función para actualizar en la base de datos
+    } catch (error) {
+      console.error("Error actualizando el estado:", error);
+    }
+  };
+
+  const colorClass = statusColors[selectedStatus] || "bg-red-400";
+
   return (
-    <Card sx={{ maxWidth: 400, width: 350, maxHeight: 400 }}>
-      <CardActionArea>
-        {/* Donde creo las clases */}
-        <CardContent>
-          <Box display="flex" justifyContent="space-between">
-            <Typography gutterBottom variant="h5" component="div">
-              {route.Domiciliario}
-            </Typography>
-            <Typography gutterBottom variant="h5" component="div">
-              {"#" + route.idRuta}
-            </Typography>
-          </Box>
-          <Typography variant="body1" sx={{ color: "black" }}>
-            {route.pedidos}
-          </Typography>
-        </CardContent>
-      </CardActionArea>
-      <CardActions className="justify-between">
-        <Typography variant="body1" sx={{ color: "black" }}>
-          Total: ${route.pedidos}
-        </Typography>
-        <DropdownButton avalibleOptions={1} color={true} />
-      </CardActions>
-    </Card>
+    <div
+      className={`relative flex flex-col items-center bg-white text-black p-6 rounded-lg shadow-lg transition-transform ${
+        dropdownOpen ? "" : "hover:scale-105"
+      } m-3 w-80`}
+    >
+      {/* Bloquear interacción con otras cards */}
+      {dropdownOpen && (
+        <div
+          className="fixed inset-0 z-40 bg-transparent pointer-events-auto"
+          onClick={() => setDropdownOpen(false)}
+        />
+      )}
+
+      {/* Contenido de la Card */}
+      <div className="flex justify-between w-full">
+        <p className="text-base font-semibold">
+          {domiciliaryName || "Sin asignar"}
+        </p>
+        <h3 className="text-base font-bold mb-2">#{route.route_id}</h3>
+      </div>
+
+      <div className="flex justify-start w-full">
+        <p className="text-sm">
+          Pedidos:{" "}
+          {filteredRequests?.map((req) => req.request_id).join(", ") ||
+            "Ninguno"}
+        </p>
+      </div>
+
+      <div className="flex justify-between items-center w-full mt-2 relative">
+        <p className="text-sm">Total: ${route.total || 0}</p>
+        <div className="relative z-50">
+          <button
+            className={`flex justify-between items-center px-3 py-2 border rounded text-gray-700 bg-white hover:bg-gray-100  ${colorClass}`}
+            onClick={toggleDropdown}
+          >
+            {selectedStatus}
+            <ChevronDownIcon
+              className={`h-5 w-5 ml-1 transform transition-transform ${
+                dropdownOpen ? "rotate-180" : ""
+              }`}
+            />
+          </button>
+          {dropdownOpen && (
+            <div
+              className="absolute right-0 mt-2 w-40 bg-gray-100 p-2 rounded-lg shadow-lg z-50 pointer-events-auto"
+              style={{ position: "absolute" }}
+            >
+              {statuses.map(
+                (status) =>
+                  status !== selectedStatus && (
+                    <button
+                      key={status}
+                      className="block w-full text-left px-2 py-1 hover:bg-gray-200 rounded"
+                      onClick={() => handleStatusChange(status)}
+                    >
+                      {status}
+                    </button>
+                  )
+              )}
+            </div>
+          )}
+        </div>
+      </div>
+    </div>
   );
 }
