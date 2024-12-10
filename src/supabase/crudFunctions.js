@@ -462,6 +462,21 @@ export async function getRequests() {
   return Request;
 }
 
+// Obtener solo los pedidos en estado "en proceso"
+export async function getRequestsInProcess() {
+  let { data: Request, error } = await supabase
+    .from("Request")
+    .select("*")
+    .eq("status", "En proceso")
+    .is("route_id", null);
+
+  if (error) {
+    console.log(error);
+    return null;
+  }
+  return Request;
+}
+
 // insert data into the table Request
 export async function insertRequest(client, total) {
   const { data, error } = await supabase
@@ -517,10 +532,10 @@ export async function getRoutes() {
 }
 
 // insert data into the table Route
-export async function insertRoute(domiciliary) {
+export async function insertRoute({ domiciliary, total }) {
   const { data, error } = await supabase
     .from("Route")
-    .insert([{ domiciliary }])
+    .insert([{ domiciliary: domiciliary, total: total }])
     .select();
   if (error) {
     console.log(error);
@@ -552,6 +567,20 @@ export async function deleteRoute(id) {
   const { data, error } = await supabase.from("Route").delete().eq("id", id);
   if (error) {
     console.log(error);
+    return null;
+  }
+  return data;
+}
+
+//Actualizar la request con el route_id
+export async function updateRequestsWithRoute({ requestId, routeId }) {
+  const { data, error } = await supabase
+    .from("Request")
+    .update({ route_id: routeId })
+    .eq("request_id", requestId);
+
+  if (error) {
+    console.error("Error al actualizar la solicitud:", error);
     return null;
   }
   return data;
