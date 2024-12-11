@@ -2,9 +2,10 @@ import React, { useEffect, useState, useContext } from "react";
 import { ProductsContext } from "../../context/ProductsContext";
 import { insertRequest, insertOrder } from "../../supabase/crudFunctions";
 import WhatsAppIcon from "@mui/icons-material/WhatsApp";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 const ConfirmPage = () => {
+  const navigate = useNavigate();
   const { cart, total, client, setClient, setCart, setOrderCount } =
     useContext(ProductsContext);
   const [comanda, setComanda] = useState("");
@@ -135,6 +136,7 @@ ${
     setCart([]);
     setClient(null);
     setOrderCount(0);
+    navigate("/rastrearPedido");
   };
 
   return (
