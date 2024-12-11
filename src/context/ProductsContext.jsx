@@ -55,7 +55,7 @@ export const ProductsProvider = ({ children }) => {
         id: product.product_id,
         name: product.name,
         price: product.price,
-        image: product.image,
+        imgUrl: product.imgUrl,
       },
       additions: selectedAdditions.map((addition) => ({
         name: addition.name,

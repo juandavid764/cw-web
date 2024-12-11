@@ -64,19 +64,26 @@ const ConfirmPage = () => {
     - - - - - - - - - - - - -
 ${nombre}
 ${telefono}
-${formaPago === "Efectivo" ? conCuantoPago + "/" + total : "Transferencia"}
     `.trim();
 
     if (direccion) {
       res += `
 ${direccion}
-${barrio}`;
+${barrio}
+`;
     }
 
     if (comentarios != "") {
       res += `
-"${comentarios}"`;
+"${comentarios}" 
+`;
     }
+
+    res += `${
+      formaPago === "Efectivo"
+        ? "$" + conCuantoPago + "/$" + total
+        : "Transferencia" + "/$" + total
+    }`;
 
     return res;
   };

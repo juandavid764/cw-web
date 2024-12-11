@@ -16,6 +16,7 @@ const Quantity = ({ order }) => {
 
   const increaseQuantity = () => {
     updateQuantity(order.id, order.quantity + 1);
+    console.log(order.product.image);
   };
 
   const decreaseQuantity = () => {
@@ -37,7 +38,7 @@ const Quantity = ({ order }) => {
       <img
         src={order.product.imgUrl}
         alt={order.product.name}
-        className="w-16 h-16 object-contain rounded"
+        className="w-16 h-16 object-cover rounded-md"
       />
       <div className="flex-1 ml-4">
         <h3 className="text-base font-semibold">{order.product.name}</h3>

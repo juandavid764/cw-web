@@ -40,12 +40,12 @@ const CompleteCard = ({ product, onClose }) => {
         <div className="sticky top-0 bg-white z-10 px-3 pt-2">
           <CardHeader total={total} onClose={onClose} />
         </div>
-        <div className="flex flex-col p-6 overflow-y-scroll max-h-[95%] h-[95%]">
-          <div className="flex justify-center items-center">
+        <div className="flex flex-col p-6 overflow-y-scroll max-h-[90%] h-[90%] md:h-[95%] md:max-h-[95%]">
+          <div className="flex justify-center items-center pb-2 pt-2 md:pb-0 md:pt-0">
             <img
-              src={product.image}
+              src={product.imgUrl}
               alt={product.name}
-              className="w-48 h-48 object-cover rounded-md"
+              className="w-96 h-96 md:w-60 md:h-60 object-cover rounded-md"
             />
           </div>
           <div className="mt-auto">

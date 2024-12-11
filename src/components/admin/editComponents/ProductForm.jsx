@@ -174,7 +174,11 @@ const ProductForm = ({
         />
       </div>
       <div className="mb-4">
-        <ImageUpload onImageChange={handleImageChange} ref={imageUploadRef} />
+        <ImageUpload
+          onImageChange={handleImageChange}
+          ref={imageUploadRef}
+          currentImageUrl={product.currentImageUrl}
+        />
       </div>
       <button
         type="submit"

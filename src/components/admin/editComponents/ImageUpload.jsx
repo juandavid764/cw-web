@@ -1,19 +1,18 @@
 import { useState, forwardRef, useImperativeHandle } from "react";
 
-// Usamos forwardRef para exponer funciones desde ImageUpload al componente padre
-const ImageUpload = forwardRef(({ onImageChange }, ref) => {
-  const [image, setImage] = useState(null); // Para almacenar el archivo seleccionado
-  const [preview, setPreview] = useState(null); // Para la vista previa de la imagen
-  const [uploadedUrl, setUploadedUrl] = useState(""); // URL de la imagen subida
-  const [isUploaded, setIsUploaded] = useState(false); // Para controlar el estado de subida
+const ImageUpload = forwardRef(({ onImageChange, currentImageUrl }, ref) => {
+  const [image, setImage] = useState(null); // Archivo seleccionado
+  const [preview, setPreview] = useState(currentImageUrl || null); // Prioriza la URL actual
+  const [uploadedUrl, setUploadedUrl] = useState(currentImageUrl || ""); // Prioriza la URL actual
+  const [isUploaded, setIsUploaded] = useState(!!currentImageUrl); // Marca como subida si existe una URL actual
 
-  // Exponer la función reset al componente padre
+  // Exponer reset al padre
   useImperativeHandle(ref, () => ({
     reset: () => {
       setImage(null);
-      setPreview(null);
-      setUploadedUrl("");
-      setIsUploaded(false);
+      setPreview(currentImageUrl || null);
+      setUploadedUrl(currentImageUrl || "");
+      setIsUploaded(!!currentImageUrl);
     },
   }));
 
@@ -21,8 +20,8 @@ const ImageUpload = forwardRef(({ onImageChange }, ref) => {
   const handleFileChange = (e) => {
     const file = e.target.files[0];
     setImage(file);
-    setPreview(URL.createObjectURL(file)); // Generar vista previa
-    setIsUploaded(false); // Reiniciar estado de subida al seleccionar una nueva imagen
+    setPreview(URL.createObjectURL(file)); // Nueva vista previa
+    setIsUploaded(false); // No está subida hasta confirmar
   };
 
   // Subir la imagen
@@ -46,11 +45,10 @@ const ImageUpload = forwardRef(({ onImageChange }, ref) => {
 
       const data = await response.json();
       if (response.ok) {
-        setUploadedUrl(data.url); // Guardar URL de la imagen subida
-        onImageChange(data.url); // Pasar la URL al componente padre
-        setPreview(null); // Limpiar vista previa
+        setUploadedUrl(data.url); // URL de la imagen subida
+        onImageChange(data.url); // Pasar URL al componente padre
+        setPreview(null); // Limpiar vista previa temporal
         setIsUploaded(true); // Marcar como subida
-        alert("Imagen lista");
       } else {
         alert(data.error || "Error al subir la imagen");
       }
@@ -91,8 +89,8 @@ const ImageUpload = forwardRef(({ onImageChange }, ref) => {
       )}
       {isUploaded && (
         <div>
-          <p>Completado</p>
-          <p>Imagen lista: {uploadedUrl}</p>
+          <h2>Imagen cargada:</h2>
+          <p>URL: {uploadedUrl}</p>
         </div>
       )}
     </div>

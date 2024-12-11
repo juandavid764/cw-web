@@ -56,7 +56,6 @@ export async function insertProduct({
   return data;
 }
 
-// Función para actualizar el producto con un parámetro opcional para la imagen
 export async function updateProduct({
   id,
   name,
@@ -67,23 +66,24 @@ export async function updateProduct({
   file,
 }) {
   let imgUrl = null;
+
+  // Si no se proporciona una nueva imagen (file), intentar obtener la URL actual de la imagen
   if (!file) {
     const currentData = await getCurrentImageUrl(id);
     console.log(currentData);
     imgUrl = currentData;
   } else {
-    // Subir la nueva imagen
-    if (!imgUrl) {
-      console.error("Error al subir la imagen");
-      return null;
-    }
+    // Si se proporciona un archivo, asignar la URL de la nueva imagen
+    imgUrl = "https://cartoonwarfastfood.com/" + file;
   }
 
   // Construir los datos para actualizar
   const updateData = { name, price, withAddition, text, category };
 
-  // Agregar la URL de la imagen si existe
-  updateData.imgUrl = file;
+  // Solo agregar la URL de la imagen si existe (si imgUrl no es nulo)
+  if (imgUrl) {
+    updateData.imgUrl = imgUrl;
+  }
 
   // Actualizar el producto en la base de datos
   const { data, error } = await supabase
