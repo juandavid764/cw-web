@@ -45,7 +45,7 @@ export default function CardRoute({
 
   return (
     <div
-      className={`relative flex flex-col items-center bg-white text-black p-6 rounded-lg shadow-lg transition-transform ${
+      className={`relative flex flex-col items-center p-6 rounded-lg shadow-lg transition-transform ${
         dropdownOpen ? "" : "hover:scale-105"
       } m-3 w-80`}
     >
@@ -67,9 +67,7 @@ export default function CardRoute({
 
       <div className="flex justify-start w-full">
         <p className="text-sm">
-          Pedidos:{" "}
-          {filteredRequests?.map((req) => req.request_id).join(", ") ||
-            "Ninguno"}
+          Pedidos: {filteredRequests?.map((req) => req.request_id).join(", ") || "Ninguno"}
         </p>
       </div>
 
@@ -77,7 +75,7 @@ export default function CardRoute({
         <p className="text-sm">Total: ${route.total || 0}</p>
         <div className="relative z-50">
           <button
-            className={`flex justify-between items-center px-3 py-2 border rounded text-gray-700 bg-white hover:bg-gray-100  ${colorClass}`}
+            className={`flex justify-between items-center px-3 py-2 border rounded text-white ${colorClass}`}
             onClick={toggleDropdown}
           >
             {selectedStatus}
