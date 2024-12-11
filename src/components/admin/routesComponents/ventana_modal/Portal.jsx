@@ -3,12 +3,7 @@ import { createPortal } from "react-dom";
 import ModalContent from "./ModalContent";
 import ButtonComponent from "../../../web/ButtonComponent";
 
-export default function Portal({
-  domiciliarios,
-  idPedidos,
-  reloadRoutes,
-  setUpdating,
-}) {
+export default function Portal({ domiciliarios, idPedidos, reloadRoutes }) {
   const [showModal, setShowModal] = useState(false);
   return (
     <>
@@ -24,7 +19,6 @@ export default function Portal({
             domiciliarios={domiciliarios}
             pedidos={idPedidos}
             reloadRoutes={reloadRoutes}
-            setUpdating={setUpdating}
           />,
           document.getElementById("modal")
         )}
