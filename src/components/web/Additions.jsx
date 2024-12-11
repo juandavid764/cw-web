@@ -107,7 +107,9 @@ const Additions = ({ updateTotal }) => {
               <label htmlFor={addition.addition_id} className="flex justify-between w-full">
                 <div className="flex items-center">
                   <input
-                    className="mr-2"
+          
+                  
+                    className="mr-2 size-5"
                     type="checkbox"
                     checked={!!selected[addition.addition_id]}
                     onChange={() => handleCheckbox(addition)}

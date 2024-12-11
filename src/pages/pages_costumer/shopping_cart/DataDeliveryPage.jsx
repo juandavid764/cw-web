@@ -80,7 +80,7 @@ const DataDeliveryPage = () => {
   }, [subtotal]);
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-orange-300">
+    <div className="min-h-screen flex items-center justify-center bg-orange-300 py-5">
       <div className="bg-slate-50 p-8 rounded-lg shadow-lg w-full max-w-md border-2">
         <h2 className="text-center text-2xl font-bold mb-6 text-gray-700">
           Datos Domicilio
@@ -128,7 +128,7 @@ const DataDeliveryPage = () => {
           </div>
           <div className="mb-4">
             <label className="block text-gray-700 font-semibold mb-2">
-              Dirección
+              Dirección:
             </label>
             <input
               required
@@ -137,12 +137,12 @@ const DataDeliveryPage = () => {
               value={formData.direccion}
               onChange={handleInputChange}
               className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:border-gray-400"
-              placeholder="Calle 51 # 40c-03"
+              placeholder="Ingrese la dirección de entrega"
             />
           </div>
           <div className="mb-4">
             <label className="block text-gray-700 font-semibold mb-2">
-              Teléfono
+              Teléfono:
             </label>
             <input
               required
@@ -152,7 +152,7 @@ const DataDeliveryPage = () => {
               onChange={handleInputChange}
               maxLength="10"
               className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:border-gray-400"
-              placeholder="3165684544"
+              placeholder="Ingrese su número de teléfono"
             />
           </div>
           <div className="mb-4">

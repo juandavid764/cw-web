@@ -40,13 +40,13 @@ const Sauces = ({ updateSauces }) => {
         )}
       </div>
       {isOpen && (
-        <div className="mt-2 space-y-2">
+        <div className="mt-2 space-y-2 ">
           {sauces.map((sauce) => (
             <div key={sauce} className="flex justify-between items-center">
               <div className="flex items-center">
                 <input
                   type="checkbox"
-                  className="mr-2"
+                  className="mr-2 size-5"
                   checked={selectedSauces.includes(sauce)}
                   onChange={() => handleSauceSelection(sauce)}
                   id={sauce}

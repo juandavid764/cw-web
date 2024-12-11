@@ -36,7 +36,7 @@ const CompleteCard = ({ product, onClose }) => {
 
   return (
     <div className="fixed inset-0 bg-gray-800 bg-opacity-75 flex items-center justify-center z-50">
-      <div className="bg-white h-screen max-w-lg w-full md:max-h-[600px] relative overflow-hidden rounded-lg">
+      <div className="bg-white h-screen max-w-lg w-full md:max-h-[600px] relative overflow rounded-lg mt-4">
         <div className="sticky top-0 bg-white z-10 px-3 pt-2">
           <CardHeader total={total} onClose={onClose} />
         </div>

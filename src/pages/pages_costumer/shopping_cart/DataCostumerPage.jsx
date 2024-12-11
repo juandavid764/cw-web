@@ -52,7 +52,7 @@ const DataCostumerPage = () => {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-orange-300">
+    <div className="min-h-screen flex items-center justify-center bg-orange-300 py-5">
       <div className="bg-slate-50 p-8 rounded-lg shadow-lg w-full max-w-md border-2">
         <h2 className="text-center text-2xl font-bold mb-6 text-gray-700">
           Datos Cliente
@@ -98,7 +98,7 @@ const DataCostumerPage = () => {
               onChange={handleInputChange}
               maxLength="10"
               className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:border-gray-400"
-              placeholder="3165684544"
+              placeholder="Ingresa tu número de contacto"
             />
           </div>
           <div className="mb-4">
