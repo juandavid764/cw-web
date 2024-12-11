@@ -15,6 +15,7 @@ import FileCopyIcon from "@mui/icons-material/FileCopyOutlined";
 import { RequestsList } from "../../components/admin/requestsComponents/RequestsList";
 import { DropdownStates } from "../../components/admin/requestsComponents/DropdownStates";
 import { updateRequest } from "../../supabase/crudFunctions";
+import { supabase } from "../../supabase/client";
 
 const AdminRequest = () => {
   const buttons = [
@@ -76,6 +77,25 @@ const AdminRequest = () => {
       productDataRef.current.value = "";
     }
   }, [filteredPedidos]);
+
+  // Suscripción a cambios en tiempo real
+  useEffect(() => {
+    const requestChannel = supabase
+      .channel("custom-all-channel")
+      .on(
+        "postgres_changes",
+        { event: "*", schema: "public", table: "Request" },
+        (payload) => {
+          console.log("Cambio detectado en Request:", payload);
+          setRefreshData((prev) => !prev); // Forzar recarga de datos
+        }
+      )
+      .subscribe();
+
+    return () => {
+      supabase.removeChannel(requestChannel); // Limpiar suscripción al desmontar
+    };
+  }, []);
 
   function handleRequestSelection(pedido) {
     setSelectedPedido(pedido);
