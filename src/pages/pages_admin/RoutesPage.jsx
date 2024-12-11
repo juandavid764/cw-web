@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import ButtonGroup from "../../components/admin/editComponents/ButtonGroup";
 import PortalRutas from "../../components/admin/routesComponents/ventana_modal/Portal";
 import CardRoute from "../../components/admin/routesComponents/CardRoute";
@@ -14,57 +14,37 @@ const RoutesPage = () => {
   const [routes, setRoutes] = useState([]);
   const [requests, setRequests] = useState([]);
   const [requestWithRoute, setRequestWithRoute] = useState([]);
-  const [isUpdated, setIsUpdated] = useState(false);
   const [selectedDomiciliary, setSelectedDomiciliary] = useState("");
 
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const [
-          routesData,
-          domiciliaryData,
-          requestsData,
-          requestWithRouteData,
-        ] = await Promise.all([
+  // Crear función reusable para recargar datos
+  const reloadData = useCallback(async () => {
+    try {
+      const [routesData, domiciliaryData, requestsData, requestWithRouteData] =
+        await Promise.all([
           getRoutes(),
           getDomiciliaries(),
           getRequestsInProcess(),
           getRequestsWithRouteId(),
         ]);
 
-        setRoutes(routesData);
-        setDomiciliaries(domiciliaryData);
-        setRequests(requestsData);
-        setRequestWithRoute(requestWithRouteData);
-        if (domiciliaryData.length > 0) {
-          setSelectedDomiciliary(domiciliaryData[0].domiciliary_id);
-        }
-      } catch (error) {
-        console.error("Error al cargar los datos:", error);
-      }
-    };
-
-    fetchData();
-  }, [isUpdated]);
-
-  // Función para recargar las rutas
-  const reloadRoutes = async () => {
-    try {
-      const updatedRoutes = await getRoutes(); // Llamada a la función para obtener rutas
-      const updatedPedidos = await getRequestsInProcess(); // Llamada a la función para obtener pedidos
-      setRequests(updatedPedidos); // Actualizar el estado
-      setRoutes(updatedRoutes); // Actualizar el estado de rutas
+      setRoutes(routesData);
+      setDomiciliaries(domiciliaryData);
+      setRequests(requestsData);
+      setRequestWithRoute(requestWithRouteData);
     } catch (error) {
-      console.error("Error al recargar rutas:", error);
+      console.error("Error al recargar datos:", error);
     }
-  };
+  }, []); // No dependencias porque no utiliza estados externos
+
+  useEffect(() => {
+    reloadData(); // Cargar datos al inicio
+    if (domiciliaries.length > 0) {
+      setSelectedDomiciliary(domiciliaries[0].domiciliary_id);
+    }
+  }, [reloadData]);
 
   const handleChangeDomiciliary = (domiciliaryId) => {
     setSelectedDomiciliary(domiciliaryId);
-  };
-
-  const handleUpdate = () => {
-    setIsUpdated(!isUpdated);
   };
 
   // Filtrar rutas basadas en el ID del domiciliario seleccionado
@@ -100,8 +80,7 @@ const RoutesPage = () => {
         <PortalRutas
           domiciliarios={domiciliaryOptions}
           idPedidos={requestIds}
-          reloadRoutes={reloadRoutes}
-          setUpdating={handleUpdate}
+          reloadRoutes={reloadData} // Usar reloadData directamente
         />
       </div>
       <div className=" flex justify-center flex-row bg-gray-100">
@@ -112,6 +91,7 @@ const RoutesPage = () => {
                 route={route}
                 domiciliaryOptions={domiciliaryOptions}
                 requestWithRoute={requestWithRoute}
+                reloadData={reloadData} // Pasar reloadData para acciones en CardRoute
               />
             </div>
           ))}

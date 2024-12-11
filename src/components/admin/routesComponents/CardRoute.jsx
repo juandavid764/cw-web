@@ -1,11 +1,15 @@
 import React, { useState } from "react";
-import { ChevronDownIcon } from "@heroicons/react/24/solid";
-import { updateRouteStatus } from "../../../supabase/crudFunctions";
+import { ChevronDownIcon, TrashIcon } from "@heroicons/react/24/solid";
+import {
+  updateRouteStatus,
+  deleteRoute,
+} from "../../../supabase/crudFunctions";
 
 export default function CardRoute({
   route,
   domiciliaryOptions,
   requestWithRoute,
+  reloadData,
 }) {
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const [selectedStatus, setSelectedStatus] = useState(route.status);
@@ -28,6 +32,16 @@ export default function CardRoute({
   const toggleDropdown = () => {
     console.log("Status", selectedStatus);
     setDropdownOpen((prev) => !prev);
+  };
+
+  const handleDelete = async () => {
+    console.log("Eliminando ruta", route.route_id);
+    try {
+      await deleteRoute({ id: route.route_id }); // Llamar a la función para eliminar en la base de datos
+      reloadData(); // Recargar datos
+    } catch (error) {
+      console.error("Error eliminando la ruta:", error);
+    }
   };
 
   const handleStatusChange = async (newStatus) => {
@@ -62,12 +76,20 @@ export default function CardRoute({
         <p className="text-base font-semibold">
           {domiciliaryName || "Sin asignar"}
         </p>
-        <h3 className="text-base font-bold mb-2">#{route.route_id}</h3>
+        <button
+          className="text-red-500 hover:text-red-700"
+          onClick={handleDelete}
+          title="Eliminar ruta"
+        >
+          <TrashIcon className="h-5 w-5" />
+        </button>
       </div>
 
       <div className="flex justify-start w-full">
         <p className="text-sm">
-          Pedidos: {filteredRequests?.map((req) => req.request_id).join(", ") || "Ninguno"}
+          Pedidos:{" "}
+          {filteredRequests?.map((req) => req.request_id).join(", ") ||
+            "Ninguno"}
         </p>
       </div>
 
