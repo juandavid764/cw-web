@@ -8,10 +8,7 @@ const NotFoundPage = () => {
       {/* Animación Lottie */}
       <div className="w-full max-w-xs mb-6 ">
         <div className="">
-          <img
-            src="https://dclxxyjisswjmtyyovaf.supabase.co/storage/v1/object/public/imgsProducts/Papa.png"
-            alt="patata"
-          />
+          <img src="https://cartoonwarfastfood.com/img/Papa.png" alt="patata" />
         </div>
       </div>
 

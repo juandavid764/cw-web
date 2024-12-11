@@ -38,6 +38,7 @@ export async function insertProduct({
         withAddition: withAddition,
         description: description,
         category: category,
+        imgUrl: "https://cartoonwarfastfood.com/" + file,
       },
     ])
     .select();
@@ -47,7 +48,6 @@ export async function insertProduct({
   }
   console.log(data);
   // Subir la imagen al bucket
-  await insertImage(file, data[0].product_id);
 
   /* {
       "status": 201,
@@ -64,7 +64,7 @@ export async function updateProduct({
   withAddition,
   text,
   category,
-  file = null,
+  file,
 }) {
   let imgUrl = null;
   if (!file) {
@@ -73,7 +73,6 @@ export async function updateProduct({
     imgUrl = currentData;
   } else {
     // Subir la nueva imagen
-    imgUrl = await insertImage(file, id);
     if (!imgUrl) {
       console.error("Error al subir la imagen");
       return null;
@@ -84,9 +83,7 @@ export async function updateProduct({
   const updateData = { name, price, withAddition, text, category };
 
   // Agregar la URL de la imagen si existe
-  if (imgUrl) {
-    updateData.imgUrl = imgUrl;
-  }
+  updateData.imgUrl = file;
 
   // Actualizar el producto en la base de datos
   const { data, error } = await supabase

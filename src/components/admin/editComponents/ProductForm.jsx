@@ -1,6 +1,7 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { insertProduct, updateProduct } from "../../../supabase/crudFunctions"; // Asegúrate de tener una función para actualizar
-import ImageUploader from "./ImageUploader";
+
+import ImageUpload from "./ImageUpload";
 
 const ProductForm = ({
   categories,
@@ -17,6 +18,7 @@ const ProductForm = ({
     image: null,
     currentImageUrl: null, // URL de la imagen actual
   });
+  const imageUploadRef = useRef(null); // Define el ref para ImageUpload
 
   useEffect(() => {
     if (productToEdit) {
@@ -43,7 +45,10 @@ const ProductForm = ({
       description: "",
       category: "porciones",
       image: null,
+      currentImageUrl: null,
     });
+
+    imageUploadRef.current.reset();
   };
 
   const handleChange = (e) => {
@@ -51,16 +56,8 @@ const ProductForm = ({
     setProduct({ ...product, [name]: value });
   };
 
-  const handleImageChange = (event) => {
-    const file = event.target.files[0];
-    if (file) {
-      const currentImageUrl = URL.createObjectURL(file);
-      setProduct({ ...product, image: file, currentImageUrl });
-    }
-  };
-
-  const removeImage = () => {
-    setProduct({ ...product, image: null, currentImageUrl: null });
+  const handleImageChange = (imageUrl) => {
+    setProduct({ ...product, image: imageUrl });
   };
 
   const submitProduct = async (e) => {
@@ -72,6 +69,7 @@ const ProductForm = ({
       withAddition: product.hasAddition === "si",
       description: product.description,
       category: product.category,
+      image: product.image, // Añadir la URL de la imagen subida
     };
 
     if (productToEdit) {
@@ -79,14 +77,8 @@ const ProductForm = ({
       productData.id = productToEdit.product_id;
 
       if (product.image) {
-        // Nueva imagen cargada, procesa la subida
+        // Nueva imagen cargada, ya contiene la URL
         productData.file = product.image;
-      } else if (product.currentImageUrl) {
-        // Mantener la imagen actual
-        productData.file = product.currentImageUrl;
-      } else {
-        // No hay imagen (ni nueva ni actual)
-        productData.file = null;
       }
 
       await updateProduct(productData);
@@ -108,7 +100,7 @@ const ProductForm = ({
       onSubmit={submitProduct}
     >
       <div className="mb-4">
-        <label className="block  font-bold mb-2" htmlFor="name">
+        <label className="block font-bold mb-2" htmlFor="name">
           Nombre
         </label>
         <input
@@ -122,7 +114,7 @@ const ProductForm = ({
         />
       </div>
       <div className="mb-4">
-        <label className="block  font-bold mb-2" htmlFor="price">
+        <label className="block font-bold mb-2" htmlFor="price">
           Precio
         </label>
         <input
@@ -182,12 +174,7 @@ const ProductForm = ({
         />
       </div>
       <div className="mb-4">
-        <ImageUploader
-          image={product.image}
-          previewUrl={product.currentImageUrl}
-          onImageChange={handleImageChange}
-          onRemoveImage={removeImage}
-        />
+        <ImageUpload onImageChange={handleImageChange} ref={imageUploadRef} />
       </div>
       <button
         type="submit"
