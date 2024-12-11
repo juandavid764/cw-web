@@ -589,8 +589,11 @@ export async function updateRouteStatus({ id, status }) {
 }
 
 // delete data from the table Route
-export async function deleteRoute(id) {
-  const { data, error } = await supabase.from("Route").delete().eq("id", id);
+export async function deleteRoute({ id }) {
+  const { data, error } = await supabase
+    .from("Route")
+    .delete()
+    .eq("route_id", id);
   if (error) {
     console.log(error);
     return null;
