@@ -14,23 +14,28 @@ const RoutesPage = () => {
   const [routes, setRoutes] = useState([]);
   const [requests, setRequests] = useState([]);
   const [requestWithRoute, setRequestWithRoute] = useState([]);
+  const [isUpdated, setIsUpdated] = useState(false);
   const [selectedDomiciliary, setSelectedDomiciliary] = useState("");
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const [routesData, domiciliaryData, requestsData, requestWithRoute] =
-          await Promise.all([
-            getRoutes(),
-            getDomiciliaries(),
-            getRequestsInProcess(),
-            getRequestsWithRouteId(),
-          ]);
+        const [
+          routesData,
+          domiciliaryData,
+          requestsData,
+          requestWithRouteData,
+        ] = await Promise.all([
+          getRoutes(),
+          getDomiciliaries(),
+          getRequestsInProcess(),
+          getRequestsWithRouteId(),
+        ]);
 
         setRoutes(routesData);
         setDomiciliaries(domiciliaryData);
         setRequests(requestsData);
-        setRequestWithRoute(requestWithRoute);
+        setRequestWithRoute(requestWithRouteData);
         if (domiciliaryData.length > 0) {
           setSelectedDomiciliary(domiciliaryData[0].domiciliary_id);
         }
@@ -40,7 +45,7 @@ const RoutesPage = () => {
     };
 
     fetchData();
-  }, []);
+  }, [isUpdated]);
 
   // Función para recargar las rutas
   const reloadRoutes = async () => {
@@ -56,6 +61,10 @@ const RoutesPage = () => {
 
   const handleChangeDomiciliary = (domiciliaryId) => {
     setSelectedDomiciliary(domiciliaryId);
+  };
+
+  const handleUpdate = () => {
+    setIsUpdated(!isUpdated);
   };
 
   // Filtrar rutas basadas en el ID del domiciliario seleccionado
@@ -92,6 +101,7 @@ const RoutesPage = () => {
           domiciliarios={domiciliaryOptions}
           idPedidos={requestIds}
           reloadRoutes={reloadRoutes}
+          setUpdating={handleUpdate}
         />
       </div>
       <div className=" flex justify-center flex-row bg-gray-100">

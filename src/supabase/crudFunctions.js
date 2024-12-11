@@ -481,7 +481,7 @@ export async function getRequestsWithRouteId() {
   let { data: Request, error } = await supabase
     .from("Request")
     .select("*")
-    .not("route_id", "is", null); // Corrección aquí
+    .not("route_id", "is", null);
 
   if (error) {
     console.log(error);

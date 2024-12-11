@@ -11,6 +11,7 @@ export default function ModalContent({
   domiciliarios,
   pedidos,
   reloadRoutes,
+  setUpdating,
 }) {
   const [total, setTotal] = useState(0);
   const [selectedPedidos, setSelectedPedidos] = useState([]);
@@ -60,6 +61,7 @@ export default function ModalContent({
 
       alert("Ruta creada y solicitudes vinculadas con éxito.");
       reloadRoutes();
+      setUpdating();
       onClose();
     } catch (error) {
       console.error("Error al guardar la ruta:", error);
