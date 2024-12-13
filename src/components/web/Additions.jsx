@@ -120,9 +120,9 @@ const Additions = ({ updateTotal }) => {
                 <span>${addition.price.toLocaleString()}</span>
               </label>
               {selected[addition.addition_id] && (
-                <div className="flex flex-row justify-center">
+                <div className="flex flex-row justify-center ">
                   <button
-                    className="bg-orange-300"
+                    className="bg-orange-300 rounded ml-2"
                     onClick={() => decreaseQuantity(addition.addition_id)}
                   >
                     <MinusIcon className="h-4 w-4" />
@@ -133,7 +133,7 @@ const Additions = ({ updateTotal }) => {
                     )?.quantity || 0}
                   </span>
                   <button
-                    className="bg-orange-300"
+                    className="bg-orange-300 rounded"
                     onClick={() => increaseQuantity(addition.addition_id)}
                   >
                     <PlusIcon className="h-4 w-4" />

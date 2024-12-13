@@ -17,6 +17,9 @@ export const ProductsProvider = ({ children }) => {
     "Piña",
     "Rosada",
     "Showy",
+    "Sin roja",
+    "Sin piña",
+    "Sin verde"    
   ]);
 
   const [cart, setCart] = useState([]);

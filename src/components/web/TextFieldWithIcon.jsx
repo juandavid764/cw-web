@@ -45,7 +45,7 @@ export default function CustomizedInputBase({ setOrderDetails, setError }) {
       >
         <InputBase
           sx={{ ml: 1, flex: 1 }}
-          placeholder="Digita el ID de tu pedido"
+          placeholder="Digita el # de tu pedido"
           inputProps={{ "aria-label": "buscar pedido" }}
           value={orderId}
           onChange={(e) => setOrderId(e.target.value)}
