@@ -2,6 +2,7 @@ import React, { useContext } from "react";
 import DetailsData from "./DetailsData";
 import { ProductsContext } from "../../context/ProductsContext";
 import { Link } from "react-router-dom";
+import { formatNumber } from "../../utils/utils";
 
 const PurchaseDetails = () => {
   const { cart, setTotal } = useContext(ProductsContext);
@@ -38,7 +39,7 @@ const PurchaseDetails = () => {
       <div className="border-t border-gray-300 pt-4 mb-4">
         <div className="flex justify-between">
           <p className="font-semibold">Subtotal:</p>
-          <p className="font-bold">${subtotal.toLocaleString()}</p>
+          <p className="font-bold">${formatNumber(subtotal)}</p>
         </div>
       </div>
       <div className="flex justify-around">

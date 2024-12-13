@@ -3,6 +3,7 @@ import ButtonComponent from "../../../components/web/ButtonComponent";
 import { ProductsContext } from "../../../context/ProductsContext";
 import { useNavigate } from "react-router-dom";
 import { getNeighborhoods } from "../../../supabase/crudFunctions";
+import { formatNumber } from "../../../utils/utils";
 
 const DataDeliveryPage = () => {
   const { total, setTotal, setClient } = useContext(ProductsContext);
@@ -88,7 +89,7 @@ const DataDeliveryPage = () => {
         <div className="flex flex-row justify-between">
           <h3 className="text-left font-semibold text-gray-700">Subtotal:</h3>
           <h3 className="text-right font-semibold mb-6 text-gray-700">
-            ${subtotal}
+            ${formatNumber(subtotal)}
           </h3>
         </div>
         <form onSubmit={handleSubmit}>
@@ -201,7 +202,7 @@ const DataDeliveryPage = () => {
           <div className="flex flex-row justify-between">
             <h3 className="text-left font-bold text-gray-700">Total:</h3>
             <h3 className="text-right font-bold mb-6 text-gray-700">
-              ${total}
+              ${formatNumber(total)}
             </h3>
           </div>
           <div className="flex flex-row justify-center">

@@ -3,6 +3,7 @@ import { ProductsContext } from "../../context/ProductsContext";
 import { insertRequest, insertOrder } from "../../supabase/crudFunctions";
 import WhatsAppIcon from "@mui/icons-material/WhatsApp";
 import { Link, useNavigate } from "react-router-dom";
+import { formatNumber } from "../../utils/utils";
 
 const ConfirmPage = () => {
   const navigate = useNavigate();
@@ -81,8 +82,8 @@ ${barrio}`;
     res += `
 ${
   formaPago === "Efectivo"
-    ? "$" + conCuantoPago + "/$" + total
-    : "Transferencia" + "/$" + total
+    ? "$" + formatNumber(conCuantoPago) + "/$" + formatNumber(total)
+    : "Transferencia" + "/$" + formatNumber(total)
 }`;
 
     return res;
@@ -153,7 +154,7 @@ ${
             <p className="text-gray-600 font-medium">
               Total:{" "}
               <span className="text-xl font-bold text-orange-500">
-                ${total}
+                ${formatNumber(total)}
               </span>
             </p>
           </div>
