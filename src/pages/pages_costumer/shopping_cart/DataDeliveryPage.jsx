@@ -177,10 +177,16 @@ const DataDeliveryPage = () => {
               </label>
               <input
                 required
-                type="number"
+                type="text"
                 name="conCuantoPago"
-                value={formData.conCuantoPago}
-                onChange={handleInputChange}
+                value={formatNumber(formData.conCuantoPago)}
+                onChange={(event) => {
+                  const rawValue = event.target.value.replace(/\./g, ""); // Solo dígitos
+                  setFormData({
+                    ...formData,
+                    conCuantoPago: rawValue, // Almacena sin formato
+                  });
+                }}
                 className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:border-gray-400"
                 placeholder="$"
                 min={total}
