@@ -85,12 +85,6 @@ const DataDeliveryPage = () => {
         <h2 className="text-center text-2xl font-bold mb-6 text-gray-700">
           Datos Domicilio
         </h2>
-        <div className="flex flex-row justify-between">
-          <h3 className="text-left font-semibold text-gray-700">Subtotal:</h3>
-          <h3 className="text-right font-semibold mb-6 text-gray-700">
-            ${subtotal}
-          </h3>
-        </div>
         <form onSubmit={handleSubmit}>
           <div className="mb-4">
             <label className="block text-gray-700 font-semibold mb-2">
@@ -112,10 +106,11 @@ const DataDeliveryPage = () => {
             </label>
             <select
               name="barrio"
-              value={formData.deliveryValue}
+              defaultValue={"seleciona un barrio"}
               onChange={handleNeighborhoodChange}
               className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:border-gray-400"
             >
+              <option>Seleccione un barrio</option>
               {neighborhoods.map((neighborhood) => (
                 <option
                   key={neighborhood.neighborhood_id}
@@ -197,6 +192,18 @@ const DataDeliveryPage = () => {
               className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:border-gray-400"
               placeholder="¿Alguna especificación?"
             />
+          </div>
+          <div className="flex flex-row justify-between">
+            <h3 className="text-left font-semibold text-gray-700">Subtotal:</h3>
+            <h3 className="text-right font-semibold mb-6 text-gray-700">
+              ${subtotal}
+            </h3>
+          </div>
+          <div className="flex flex-row justify-between">
+            <h3 className="text-left font-semibold text-gray-700">Subtotal:</h3>
+            <h3 className="text-right font-semibold mb-6 text-gray-700">
+              ${subtotal}
+            </h3>
           </div>
           <div className="flex flex-row justify-between">
             <h3 className="text-left font-bold text-gray-700">Total:</h3>
