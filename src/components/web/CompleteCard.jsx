@@ -3,7 +3,7 @@ import Additions from "./Additions";
 import Sauces from "./Sauces";
 import CardHeader from "./CardHeader";
 import { ProductsContext } from "../../context/ProductsContext";
-
+import { formatNumber } from "../../utils/utils";
 const CompleteCard = ({ product, onClose }) => {
   const [total, setTotal] = useState(product.price);
   const [selectedAdditions, setSelectedAdditions] = useState([]);
@@ -52,7 +52,7 @@ const CompleteCard = ({ product, onClose }) => {
             <div className="flex items-baseline justify-between">
               <h2 className="text-xl font-bold">{product.name}</h2>
               <span className="block text-lg font-semibold">
-                ${product.price.toLocaleString()}
+                ${formatNumber(product.price)}
               </span>
             </div>
             <p className="text-gray-600 mt-2">{product.description}</p>

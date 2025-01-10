@@ -2,6 +2,7 @@ import React, { useState, useEffect, useContext } from "react";
 import { ChevronDownIcon, ChevronUpIcon } from "@heroicons/react/24/solid";
 import { MinusIcon, PlusIcon } from "@heroicons/react/20/solid";
 import { ProductsContext } from "../../context/ProductsContext";
+import { formatNumber } from "../../utils/utils";
 
 const Additions = ({ updateTotal }) => {
   const { additions } = useContext(ProductsContext);
@@ -104,20 +105,21 @@ const Additions = ({ updateTotal }) => {
               key={addition.addition_id}
               className="flex justify-between items-center mb-2"
             >
-              <label htmlFor={addition.addition_id} className="flex justify-between w-full">
+              <label
+                htmlFor={addition.addition_id}
+                className="flex justify-between w-full"
+              >
                 <div className="flex items-center">
                   <input
-          
-                  
                     className="mr-2 size-5"
                     type="checkbox"
                     checked={!!selected[addition.addition_id]}
                     onChange={() => handleCheckbox(addition)}
                     id={addition.addition_id}
                   />
-                  <span >{addition.name}</span>
+                  <span>{addition.name}</span>
                 </div>
-                <span>${addition.price.toLocaleString()}</span>
+                <span>${formatNumber(addition.price)}</span>
               </label>
               {selected[addition.addition_id] && (
                 <div className="flex flex-row justify-center ">

@@ -1,4 +1,5 @@
 import React from "react";
+import { formatNumber } from "../../utils/utils";
 
 const RequestFounded = ({ orderDetails }) => {
   const { request_id, client, date, time, status, total, formatted_products } =
@@ -59,7 +60,9 @@ const RequestFounded = ({ orderDetails }) => {
       <div className="mt-4 text-center">
         <p className="text-gray-600 font-medium">
           Total:{" "}
-          <span className="text-xl font-bold text-orange-500">${total}</span>
+          <span className="text-xl font-bold text-orange-500">
+            ${formatNumber(total)}
+          </span>
         </p>
       </div>
     </div>

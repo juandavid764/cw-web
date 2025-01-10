@@ -2,6 +2,7 @@ import React, { useState, useContext } from "react";
 import ButtonComponent from "../../../components/web/ButtonComponent";
 import { ProductsContext } from "../../../context/ProductsContext";
 import { useNavigate } from "react-router-dom";
+import { formatNumber } from "../../../utils/utils";
 
 const DataCostumerPage = () => {
   const { total, setClient } = useContext(ProductsContext);
@@ -60,7 +61,7 @@ const DataCostumerPage = () => {
         <div className="flex flex-row justify-between">
           <h3 className="text-left font-semibold text-gray-700">Subtotal:</h3>
           <h3 className="text-right font-semibold mb-6 text-gray-700">
-            ${total.toLocaleString()}
+            ${formatNumber(total)}
           </h3>
         </div>
 
@@ -130,12 +131,18 @@ const DataCostumerPage = () => {
               </label>
               <input
                 required
-                type="number"
+                type="text"
                 min={total}
                 id="conCuantoPago"
                 name="conCuantoPago"
-                value={formData.conCuantoPago}
-                onChange={handleInputChange}
+                value={formatNumber(formData.conCuantoPago)}
+                onChange={(event) => {
+                  const rawValue = event.target.value.replace(/\./g, ""); // Solo dígitos
+                  setFormData({
+                    ...formData,
+                    conCuantoPago: rawValue, // Almacena sin formato
+                  });
+                }}
                 className="w-full px-3 py-2 border rounded-lg focus:outline-none  focus:border-gray-400"
                 placeholder="$"
               />
@@ -160,7 +167,7 @@ const DataCostumerPage = () => {
           <div className="flex flex-row justify-between">
             <h3 className="text-left font-bold text-gray-700">Total:</h3>
             <h3 className="text-right font-bold mb-6 text-gray-700">
-              ${total.toLocaleString()}
+              ${formatNumber(total)}
             </h3>
           </div>
 
