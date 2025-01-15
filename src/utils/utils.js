@@ -3,6 +3,7 @@ export function formatNumber(number) {
     number = parseFloat(number);
   }
 
+   console.log('number', number);
   if (isNaN(number)) {
     throw new Error('El valor proporcionado no es un número válido');
   }
