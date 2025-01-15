@@ -4,74 +4,24 @@ import Stack from "@mui/material/Stack";
 
 export default function CardSkeleton() {
   return (
-    <div
-      style={{
-        width: "20rem", // Equivalente a `max-w-xs` de Tailwind
-        height: "25rem", // Equivalente a `h-[400px]` de Tailwind
-        backgroundColor: "white",
-        borderRadius: "0.75rem", // Equivalente a `rounded-xl`
-        boxShadow: "0 4px 6px rgba(0, 0, 0, 0.1)", // Equivalente a `shadow-md`
-        padding: "1rem", // Equivalente a `p-4`
-      }}
-    >
-      <Stack spacing={2}>
+    <div className="w-[280px] h-[400px] bg-white rounded-xl shadow-md p-4">
+      <Stack>
         {/* Imagen del producto */}
         <Skeleton
           variant="rectangular"
-          sx={{
-            width: "100%",
-            height: "12rem", // Equivalente a `h-48` de Tailwind
-            borderRadius: "0.5rem", // Equivalente a `rounded-md`
-          }}
+          sx={{ width: "100%", height: "180px" }}
         />
-        <div style={{ padding: "1rem" }}>
+        <div className="p-4">
           {/* Título del producto */}
-          <Skeleton
-            variant="text"
-            sx={{
-              fontSize: "1.25rem", // Equivalente a `text-2xl`
-              height: "1.5rem", // Equivalente a `h-6`
-              width: "75%", // Equivalente a `w-3/4`
-              marginBottom: "0.5rem", // Espaciado entre elementos
-            }}
-          />
+          <Skeleton variant="text" className="text-2xl h-6 w-3/4 mt-1" />
           {/* Descripción */}
-          <Skeleton
-            variant="text"
-            sx={{
-              fontSize: "1rem",
-              height: "1rem", // Equivalente a `h-4`
-              width: "100%", // Equivalente a `w-full`
-              marginBottom: "0.25rem",
-            }}
-          />
-          <Skeleton
-            variant="text"
-            sx={{
-              fontSize: "1rem",
-              height: "1rem", // Equivalente a `h-4`
-              width: "85%", // Equivalente a `w-5/6`
-              marginBottom: "1rem",
-            }}
-          />
-          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+          <Skeleton variant="text" className="text-base h-4 w-full mt-1" />
+          <Skeleton variant="text" className="text-base h-4 w-5/6 mt-1" />
+          <div className="flex justify-between items-center">
             {/* Precio */}
-            <Skeleton
-              variant="text"
-              sx={{
-                fontSize: "1.125rem", // Equivalente a `text-lg`
-                height: "1.5rem", // Equivalente a `h-6`
-                width: "25%", // Equivalente a `w-1/4`
-              }}
-            />
+            <Skeleton variant="text" className="text-lg h-6 w-1/4 mt-1" />
             {/* Botón */}
-            <Skeleton
-              variant="circular"
-              sx={{
-                width: "2.5rem", // Equivalente a `h-10`
-                height: "2.5rem", // Equivalente a `w-10`
-              }}
-            />
+            <Skeleton variant="circular" className="h-10 w-10" />
           </div>
         </div>
       </Stack>
