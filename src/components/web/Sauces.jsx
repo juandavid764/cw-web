@@ -5,8 +5,8 @@ import { ProductsContext } from "../../context/ProductsContext";
 const Sauces = ({ updateSauces }) => {
   const { sauces } = useContext(ProductsContext);
   const [isOpen, setIsOpen] = useState(false);
-  const [selectedSauces, setSelectedSauces] = useState([]);
-  const [fastSelection, setFastSelection] = useState(false);
+  const [saucesOptions, setSelectedSauces] = useState([{ "sin roja": false, "sin piña": false, "sin verde": false }]);
+  const [fastSaucesOptions, setFastSelection] = useState(false);
 
   const handleSauceSelection = (sauce) => {
     if (sauce === "Sin roja" || sauce === "Sin piña" || sauce === "Sin verde") {
@@ -14,7 +14,7 @@ const Sauces = ({ updateSauces }) => {
       setFastSelection(true)
 
     } else {
-      if (fastSelection) {
+      if (fastSaucesOptions) {
         setSelectedSauces([])
       }
       setSelectedSauces((prev) =>
@@ -26,8 +26,8 @@ const Sauces = ({ updateSauces }) => {
   };
 
   useEffect(() => {
-    updateSauces(selectedSauces);
-  }, [selectedSauces, updateSauces]);
+    updateSauces(saucesOptions);
+  }, [saucesOptions, updateSauces]);
 
   const toggleOpen = () => {
     setIsOpen(!isOpen);
@@ -57,7 +57,7 @@ const Sauces = ({ updateSauces }) => {
               <input
                 type="checkbox"
                 className="mr-2 size-5"
-                checked={fastSelection?false:selectedSauces.includes(sauce)}
+                checked={fastSaucesOptions?false:saucesOptions.includes(sauce)}
                 onChange={() => handleSauceSelection(sauce)}
                 id={sauce}
               />
@@ -68,7 +68,7 @@ const Sauces = ({ updateSauces }) => {
           {sauces.slice(-3).map((sauce) => (
             <div className="flex items-center w-full sm:w-1/2 md:w-1/3 lg:w-1/4">
               <input
-                checked={selectedSauces.includes(sauce)}
+                checked={saucesOptions.includes(sauce)}
                 type="checkbox"
                 className="mr-2 size-5"
                 onChange={() => handleSauceSelection(sauce)}

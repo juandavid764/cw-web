@@ -1,4 +1,4 @@
-import React, { useState, useContext, useEffect } from "react";
+import { useState, useContext, useEffect } from "react";
 import ButtonComponent from "../../../components/web/ButtonComponent";
 import { ProductsContext } from "../../../context/ProductsContext";
 import { useNavigate } from "react-router-dom";
@@ -8,15 +8,22 @@ import { formatNumber } from "../../../utils/utils";
 const DataDeliveryPage = () => {
   const { total, setTotal, setClient } = useContext(ProductsContext);
   const navigate = useNavigate();
+
   const [neighborhoods, setNeighborhoods] = useState([]);
+  const [loadingNei, setLoadingNei] = useState(true);
+
+  const [correctData, setCorrectData] = useState(false);
+
+  const [feedbackTel, setFeedbackTel] = useState(false);
+
   const [subtotal, setSubtotal] = useState(total); // Nuevo estado para manejar el subtotal
+
   const [formData, setFormData] = useState({
     nombre: "",
     telefono: "",
     direccion: "",
-    barrio: "",
     formaPago: "Efectivo",
-    conCuantoPago: "",
+    conCuantoPago: 0,
     comentarios: "",
     deliveryValue: 0,
   });
@@ -24,27 +31,27 @@ const DataDeliveryPage = () => {
   // Maneja los cambios en los inputs
   const handleInputChange = (event) => {
     const { name, value } = event.target;
-    setFormData({
-      ...formData,
-      [name]: value,
-    });
-  };
 
-  // Maneja el cambio de barrio y actualiza el total con base en el subtotal
-  const handleNeighborhoodChange = (event) => {
-    const deliveryPrice = parseInt(event.target.value);
-    const selectedNeighborhood = neighborhoods.find(
-      (n) => n.delivery_price === deliveryPrice
-    );
+    if (name === "telefono") {
+      console.log("value", );
+      if (value.length > 10) {
+        setFeedbackTel(true);
+        return;
+      }else
+        
+        value.toString()
+        setFormData({
+          ...formData,
+          [name]: value,
+        });
 
-    setFormData({
-      ...formData,
-      barrio: selectedNeighborhood?.name || "",
-      deliveryValue: deliveryPrice,
-    });
+    } else {
+      setFormData({
+        ...formData,
+        [name]: value,
+      });
+    }
 
-    // Actualiza el total basado en el subtotal y el nuevo costo de envío
-    setTotal(subtotal + deliveryPrice);
   };
 
   const handleSubmit = (event) => {
@@ -65,20 +72,16 @@ const DataDeliveryPage = () => {
     navigate("/carrito/confirmPage");
   };
 
+  // Obtiene los barrios al cargar la página
   useEffect(() => {
-    getNeighborhoods().then((result) => {
-      setNeighborhoods(result);
-      const initialDeliveryPrice = result[0]?.delivery_price || 0;
-
-      // Inicializa el barrio y actualiza el total
-      setFormData((prev) => ({
-        ...prev,
-        deliveryValue: initialDeliveryPrice,
-        barrio: result[0]?.name || "",
-      }));
-      setTotal(subtotal + initialDeliveryPrice);
+    getNeighborhoods().then((data) => {
+      setNeighborhoods(data);
+      setLoadingNei(false);
+    }).catch((error) => {
+      console.error('Error al obtener los barrios', error);
+      // Aquí puedes manejar el error, por ejemplo, mostrar un mensaje de error al usuario
     });
-  }, [subtotal]);
+  }, []);
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-orange-300 py-5">
@@ -86,18 +89,13 @@ const DataDeliveryPage = () => {
         <h2 className="text-center text-2xl font-bold mb-6 text-gray-700">
           Datos Domicilio
         </h2>
-        <div className="flex flex-row justify-between">
-          <h3 className="text-left font-semibold text-gray-700">Subtotal:</h3>
-          <h3 className="text-right font-semibold mb-6 text-gray-700">
-            ${formatNumber(subtotal)}
-          </h3>
-        </div>
         <form onSubmit={handleSubmit}>
           <div className="mb-4">
-            <label className="block text-gray-700 font-semibold mb-2">
-              Nombre
+            <label className="block text-gray-700 font-semibold mb-2" htmlFor="nombre">
+              Nombre<span className="text-red-500 align-middle">*</span>
             </label>
             <input
+              id="nombre"
               required
               type="text"
               name="nombre"
@@ -108,31 +106,40 @@ const DataDeliveryPage = () => {
             />
           </div>
           <div className="mb-4">
-            <label className="block text-gray-700 font-semibold mb-2">
-              Barrio:
+            <label className="block text-gray-700 font-semibold mb-2" htmlFor="deliveryValue">
+              Barrio<span className="text-red-500 align-middle">*</span>
             </label>
             <select
-              name="barrio"
+              id="deliveryValue"
+              name="deliveryValue"
               defaultValue={"seleciona un barrio"}
-              onChange={handleNeighborhoodChange}
+              onChange={handleInputChange}
               className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:border-gray-400"
+              required
             >
-              <option>Seleccione un barrio</option>
-              {neighborhoods.map((neighborhood) => (
-                <option
-                  key={neighborhood.neighborhood_id}
-                  value={neighborhood.delivery_price}
-                >
-                  {neighborhood.name}
-                </option>
-              ))}
+              <option value="">Seleccione un barrio</option>
+              {
+
+                neighborhoods.map((neighborhood) => (
+                  <option
+                    key={neighborhood.neighborhood_id}
+                    value={neighborhood.delivery_price}
+                  >
+                    {neighborhood.name}
+                  </option>
+                ))
+
+              }
             </select>
+            {loadingNei && <p className="text-gray-500">Cargando barrios...</p>}
+
           </div>
           <div className="mb-4">
-            <label className="block text-gray-700 font-semibold mb-2">
-              Dirección:
+            <label className="block text-gray-700 font-semibold mb-2" htmlFor="direccion">
+              Dirección<span className="text-red-500 align-middle">*</span>
             </label>
             <input
+              id="direccion"
               required
               type="text"
               name="direccion"
@@ -143,10 +150,11 @@ const DataDeliveryPage = () => {
             />
           </div>
           <div className="mb-4">
-            <label className="block text-gray-700 font-semibold mb-2">
-              Teléfono:
+            <label className="block text-gray-700 font-semibold mb-2" htmlFor="telefono">
+              Teléfono<span className="text-red-500 align-middle">*</span>
             </label>
             <input
+              id="telefono"
               required
               type="number"
               name="telefono"
@@ -155,13 +163,24 @@ const DataDeliveryPage = () => {
               maxLength="10"
               className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:border-gray-400"
               placeholder="Ingrese su número de teléfono"
+              style={{
+                WebkitAppearance: "none",
+                MozAppearance: "textfield",
+                margin: 0,
+              }}
             />
+            {feedbackTel && (
+              <p className="text-red-500 text-xs italic">
+                El número de teléfono no puede tener más de 10 dígitos
+              </p>
+            )}
           </div>
           <div className="mb-4">
-            <label className="block text-gray-700 font-semibold mb-2">
-              Forma de pago:
+            <label className="block text-gray-700 font-semibold mb-2" htmlFor="formaPago">
+              Forma de pago<span className="text-red-500 align-middle">*</span>
             </label>
             <select
+              id="formaPago"
               name="formaPago"
               value={formData.formaPago}
               onChange={handleInputChange}
@@ -173,21 +192,17 @@ const DataDeliveryPage = () => {
           </div>
           {formData.formaPago === "Efectivo" && (
             <div className="mb-4">
-              <label className="block text-gray-700 font-semibold mb-2">
+              <label className="block text-gray-700 font-semibold mb-2" htmlFor="conCuantoPago">
                 ¿Con cuánto pagas?
+                <span className="text-red-500 align-middle">*</span>
               </label>
               <input
+                id="conCuantoPago"
                 required
-                type="text"
+                type="number"
                 name="conCuantoPago"
                 value={formatNumber(formData.conCuantoPago)}
-                onChange={(event) => {
-                  const rawValue = event.target.value.replace(/\./g, ""); // Solo dígitos
-                  setFormData({
-                    ...formData,
-                    conCuantoPago: rawValue, // Almacena sin formato
-                  });
-                }}
+                onChange={handleInputChange}
                 className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:border-gray-400"
                 placeholder="$"
                 min={total}
@@ -195,10 +210,11 @@ const DataDeliveryPage = () => {
             </div>
           )}
           <div className="mb-4">
-            <label className="block text-gray-700 font-semibold mb-2">
+            <label className="block text-gray-700 font-semibold mb-2" htmlFor="comentarios">
               Comentarios <span className="font-extralight">(opcional)</span>
             </label>
             <textarea
+              id="comentarios"
               name="comentarios"
               value={formData.comentarios}
               onChange={handleInputChange}
@@ -206,29 +222,35 @@ const DataDeliveryPage = () => {
               placeholder="¿Alguna especificación?"
             />
           </div>
-          <div className="flex flex-row justify-between">
-            <h3 className="text-left font-semibold text-gray-700">Subtotal:</h3>
-            <h3 className="text-right font-semibold mb-6 text-gray-700">
-              ${subtotal}
-            </h3>
-          </div>
-          <div className="flex flex-row justify-between">
-            <h3 className="text-left font-semibold text-gray-700">Subtotal:</h3>
-            <h3 className="text-right font-semibold mb-6 text-gray-700">
-              ${subtotal}
-            </h3>
-          </div>
-          <div className="flex flex-row justify-between">
-            <h3 className="text-left font-bold text-gray-700">Total:</h3>
-            <h3 className="text-right font-bold mb-6 text-gray-700">
-              ${formatNumber(total)}
-            </h3>
+          <div className="flex flex-col justify-stretch gap-0">
+            <div className="flex flex-row justify-between">
+              <h3 className="text-left font-semibold text-gray-700">
+                Subtotal:
+              </h3>
+              <h3 className="text-right font-semibold mb-6 text-gray-700">
+                {formatNumber(subtotal)}
+              </h3>
+            </div>
+            <div className="flex flex-row justify-between">
+              <h3 className="text-left font-semibold text-gray-700">
+                Valor Domicilio:
+              </h3>
+              <h3 className="text-right font-semibold mb-6 text-gray-700">
+                {formatNumber(formData.deliveryValue)}
+              </h3>
+            </div>
+            <div className="flex flex-row justify-between">
+              <h3 className="text-left font-bold text-gray-700">Total:</h3>
+              <h3 className="text-right font-bold mb-6 text-gray-700">
+                {formatNumber(total)}
+              </h3>
+            </div>
           </div>
           <div className="flex flex-row justify-center">
             <ButtonComponent
               title={"Realizar pedido"}
               type="submit"
-              onClickButton={() => {}}
+              onClickButton={() => { }}
             />
           </div>
         </form>
