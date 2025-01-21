@@ -41,31 +41,43 @@ export default function ModalContent({
 
     try {
       // Creating 1 new route
-      const routeData = await insertRoute({
+      insertRoute({
         domiciliary: selectedDomiciliario.id,
         total: parseInt(total),
-      });
+      })
+        .then((routeData) => {
+          if (!routeData || routeData.length === 0) {
+            throw new Error("No se pudo crear la ruta.");
+          }
 
-      if (!routeData || routeData.length === 0) {
-        throw new Error("No se pudo crear la ruta.");
-      }
-      const routeId = routeData[0].route_id; // getting id of the new route
+          const routeId = routeData[0].route_id; // getting id of the new route
 
-      // Paso 2: Updating the selected requests
-      const updatePromises = selectedPedidos.map((pedido) => {
-        if (pedido === null) return "wtf";
-        console.log("Pedido actualizado:", pedido);
-        updateRequestsWithRoute({ requestId: pedido, routeId: routeId });
-      });
-      await Promise.all(updatePromises);
+          // Paso 2: Updating the selected requests
+          const updatePromises = selectedPedidos.map((pedido) => {
+            if (pedido === null) return Promise.resolve("wtf");
+            console.log("Pedido actualizado:", pedido);
+            return updateRequestsWithRoute({
+              requestId: pedido,
+              routeId: routeId,
+            });
+          });
 
-      alert("Ruta creada y solicitudes vinculadas con éxito.");
-      reloadRoutes();
-      onClose();
+          return Promise.all(updatePromises);
+        })
+        .then(() => {
+          alert("Ruta creada y solicitudes vinculadas con éxito.");
+          reloadRoutes();
+          onClose();
+        })
+        .catch((error) => {
+          console.error("Error al guardar la ruta:", error);
+          alert("Ocurrió un error al guardar la ruta.");
+        })
+        .finally(() => {
+          setIsLoading(false);
+        });
     } catch (error) {
-      console.error("Error al guardar la ruta:", error);
-      alert("Ocurrió un error al guardar la ruta.");
-    } finally {
+      console.error("Error fuera del flujo de promesas:", error);
       setIsLoading(false);
     }
   };
