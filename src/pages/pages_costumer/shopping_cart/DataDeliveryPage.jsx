@@ -12,9 +12,8 @@ const DataDeliveryPage = () => {
   const [neighborhoods, setNeighborhoods] = useState([]);
   const [loadingNei, setLoadingNei] = useState(true);
 
-  const [correctData, setCorrectData] = useState(false);
-
   const [feedbackTel, setFeedbackTel] = useState(false);
+  const [feedbackPago, setFeedbackPago] = useState(false);
 
   const [subtotal, setSubtotal] = useState(total); // Nuevo estado para manejar el subtotal
 
@@ -23,7 +22,7 @@ const DataDeliveryPage = () => {
     telefono: "",
     direccion: "",
     formaPago: "Efectivo",
-    conCuantoPago: 0,
+    conCuantoPago: "0",
     comentarios: "",
     deliveryValue: 0,
   });
@@ -32,23 +31,45 @@ const DataDeliveryPage = () => {
   const handleInputChange = (event) => {
     const { name, value } = event.target;
 
-    if (name === "telefono") {
-      console.log("value");
-      if (value.length > 10) {
-        setFeedbackTel(true);
-        return;
-      } else {
-        value.toString();
+    switch (name) {
+      case "telefono":
+        // Si el número de teléfono es mayor a 10 caracteres, se muestra un mensaje de error
+        if (value.length > 10) {
+          setFeedbackTel(true);
+          return;
+        }
+        // Si el número de teléfono es correcto, se oculta el mensaje de error y se actualiza el estado
+        else {
+          setFeedbackTel(false);
+
+          value.toString();
+          setFormData({
+            ...formData,
+            [name]: value,
+          });
+        }
+        break;
+
+      case "conCuantoPago":
+        if (isNaN(value)) {
+          setFeedbackPago(true);
+          return;
+        } else {
+          setFeedbackPago(false);
+        }
+   
+        setFormData({
+          ...formData,
+          [name]: value,
+        })
+        break;
+
+      default:
         setFormData({
           ...formData,
           [name]: value,
         });
-      }
-    } else {
-      setFormData({
-        ...formData,
-        [name]: value,
-      });
+        break;
     }
   };
 
@@ -69,7 +90,7 @@ const DataDeliveryPage = () => {
 
       setClient(clientData);
       navigate("/carrito/confirmPage");
-    }else{
+    } else {
       setFeedbackTel(true);
     }
   };
@@ -216,14 +237,18 @@ const DataDeliveryPage = () => {
               <input
                 id="conCuantoPago"
                 required
-                type="number"
+                type="text"
                 name="conCuantoPago"
-                value={formatNumber(formData.conCuantoPago)}
+                value={formData.conCuantoPago}
                 onChange={handleInputChange}
                 className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:border-gray-400"
                 placeholder="$"
-                min={total}
               />
+              {feedbackPago && (
+                <p className="text-red-500 text-xs italic">
+                  El valor minimo a pagar es *{formatNumber(total)}*
+                </p>
+              )}
             </div>
           )}
           <div className="mb-4">
@@ -270,7 +295,7 @@ const DataDeliveryPage = () => {
             <ButtonComponent
               title={"Realizar pedido"}
               type="submit"
-              onClickButton={() => {}}
+              onClickButton={() => { }}
             />
           </div>
         </form>
