@@ -1,4 +1,4 @@
-import React, { useState, useContext } from "react";
+import { useState, useContext } from "react";
 import ButtonComponent from "../../../components/web/ButtonComponent";
 import { ProductsContext } from "../../../context/ProductsContext";
 import { useNavigate } from "react-router-dom";
