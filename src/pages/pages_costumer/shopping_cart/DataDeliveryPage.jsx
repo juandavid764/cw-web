@@ -33,54 +33,58 @@ const DataDeliveryPage = () => {
     const { name, value } = event.target;
 
     if (name === "telefono") {
-      console.log("value", );
+      console.log("value");
       if (value.length > 10) {
         setFeedbackTel(true);
         return;
-      }else
-        
-        value.toString()
+      } else {
+        value.toString();
         setFormData({
           ...formData,
           [name]: value,
         });
-
+      }
     } else {
       setFormData({
         ...formData,
         [name]: value,
       });
     }
-
   };
 
   const handleSubmit = (event) => {
-    event.preventDefault();
-    const clientData = {
-      nombre: formData.nombre,
-      telefono: formData.telefono,
-      direccion: formData.direccion,
-      barrio: formData.barrio,
-      formaPago: formData.formaPago,
-      conCuantoPago:
-        formData.formaPago === "Efectivo" ? formData.conCuantoPago : "",
-      comentarios: formData.comentarios,
-      total: total,
-    };
+    if (formData.telefono.length === 10) {
+      event.preventDefault();
+      const clientData = {
+        nombre: formData.nombre,
+        telefono: formData.telefono,
+        direccion: formData.direccion,
+        barrio: formData.barrio,
+        formaPago: formData.formaPago,
+        conCuantoPago:
+          formData.formaPago === "Efectivo" ? formData.conCuantoPago : "",
+        comentarios: formData.comentarios,
+        total: total,
+      };
 
-    setClient(clientData);
-    navigate("/carrito/confirmPage");
+      setClient(clientData);
+      navigate("/carrito/confirmPage");
+    }else{
+      setFeedbackTel(true);
+    }
   };
 
   // Obtiene los barrios al cargar la página
   useEffect(() => {
-    getNeighborhoods().then((data) => {
-      setNeighborhoods(data);
-      setLoadingNei(false);
-    }).catch((error) => {
-      console.error('Error al obtener los barrios', error);
-      // Aquí puedes manejar el error, por ejemplo, mostrar un mensaje de error al usuario
-    });
+    getNeighborhoods()
+      .then((data) => {
+        setNeighborhoods(data);
+        setLoadingNei(false);
+      })
+      .catch((error) => {
+        console.error("Error al obtener los barrios", error);
+        // Aquí puedes manejar el error, por ejemplo, mostrar un mensaje de error al usuario
+      });
   }, []);
 
   return (
@@ -91,7 +95,10 @@ const DataDeliveryPage = () => {
         </h2>
         <form onSubmit={handleSubmit}>
           <div className="mb-4">
-            <label className="block text-gray-700 font-semibold mb-2" htmlFor="nombre">
+            <label
+              className="block text-gray-700 font-semibold mb-2"
+              htmlFor="nombre"
+            >
               Nombre<span className="text-red-500 align-middle">*</span>
             </label>
             <input
@@ -106,7 +113,10 @@ const DataDeliveryPage = () => {
             />
           </div>
           <div className="mb-4">
-            <label className="block text-gray-700 font-semibold mb-2" htmlFor="deliveryValue">
+            <label
+              className="block text-gray-700 font-semibold mb-2"
+              htmlFor="deliveryValue"
+            >
               Barrio<span className="text-red-500 align-middle">*</span>
             </label>
             <select
@@ -117,25 +127,23 @@ const DataDeliveryPage = () => {
               className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:border-gray-400"
               required
             >
-              <option value="">Seleccione un barrio</option>
-              {
-
-                neighborhoods.map((neighborhood) => (
-                  <option
-                    key={neighborhood.neighborhood_id}
-                    value={neighborhood.delivery_price}
-                  >
-                    {neighborhood.name}
-                  </option>
-                ))
-
-              }
+              <option defaultChecked value="">Seleccione un barrio</option>
+              {neighborhoods.map((neighborhood) => (
+                <option
+                  key={neighborhood.neighborhood_id}
+                  value={neighborhood.delivery_price}
+                >
+                  {neighborhood.name}
+                </option>
+              ))}
             </select>
             {loadingNei && <p className="text-gray-500">Cargando barrios...</p>}
-
           </div>
           <div className="mb-4">
-            <label className="block text-gray-700 font-semibold mb-2" htmlFor="direccion">
+            <label
+              className="block text-gray-700 font-semibold mb-2"
+              htmlFor="direccion"
+            >
               Dirección<span className="text-red-500 align-middle">*</span>
             </label>
             <input
@@ -150,7 +158,10 @@ const DataDeliveryPage = () => {
             />
           </div>
           <div className="mb-4">
-            <label className="block text-gray-700 font-semibold mb-2" htmlFor="telefono">
+            <label
+              className="block text-gray-700 font-semibold mb-2"
+              htmlFor="telefono"
+            >
               Teléfono<span className="text-red-500 align-middle">*</span>
             </label>
             <input
@@ -171,12 +182,15 @@ const DataDeliveryPage = () => {
             />
             {feedbackTel && (
               <p className="text-red-500 text-xs italic">
-                El número de teléfono no puede tener más de 10 dígitos
+                El número de teléfono dene tener de 10 dígitos
               </p>
             )}
           </div>
           <div className="mb-4">
-            <label className="block text-gray-700 font-semibold mb-2" htmlFor="formaPago">
+            <label
+              className="block text-gray-700 font-semibold mb-2"
+              htmlFor="formaPago"
+            >
               Forma de pago<span className="text-red-500 align-middle">*</span>
             </label>
             <select
@@ -192,7 +206,10 @@ const DataDeliveryPage = () => {
           </div>
           {formData.formaPago === "Efectivo" && (
             <div className="mb-4">
-              <label className="block text-gray-700 font-semibold mb-2" htmlFor="conCuantoPago">
+              <label
+                className="block text-gray-700 font-semibold mb-2"
+                htmlFor="conCuantoPago"
+              >
                 ¿Con cuánto pagas?
                 <span className="text-red-500 align-middle">*</span>
               </label>
@@ -210,7 +227,10 @@ const DataDeliveryPage = () => {
             </div>
           )}
           <div className="mb-4">
-            <label className="block text-gray-700 font-semibold mb-2" htmlFor="comentarios">
+            <label
+              className="block text-gray-700 font-semibold mb-2"
+              htmlFor="comentarios"
+            >
               Comentarios <span className="font-extralight">(opcional)</span>
             </label>
             <textarea
@@ -250,7 +270,7 @@ const DataDeliveryPage = () => {
             <ButtonComponent
               title={"Realizar pedido"}
               type="submit"
-              onClickButton={() => { }}
+              onClickButton={() => {}}
             />
           </div>
         </form>

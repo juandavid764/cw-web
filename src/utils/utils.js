@@ -5,7 +5,7 @@ export function formatNumber(number) {
 
    console.log('number', number);
   if (isNaN(number)) {
-    throw new Error('El valor proporcionado no es un número válido');
+    return '0';
   }
 
   return new Intl.NumberFormat('es-CO', {

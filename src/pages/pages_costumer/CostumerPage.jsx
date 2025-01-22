@@ -8,6 +8,7 @@ import 'react-toastify/dist/ReactToastify.css';
 
 const CostumerPage = () => {
   useEffect(() => {
+    console.log("CostumerPage");
     window.scrollTo(0, 0);
   }, []);
 
