@@ -22,7 +22,7 @@ const DataDeliveryPage = () => {
     telefono: "",
     direccion: "",
     formaPago: "Efectivo",
-    conCuantoPago: "0",
+    conCuantoPago: "",
     comentarios: "",
     deliveryValue: 0,
   });
@@ -31,16 +31,25 @@ const DataDeliveryPage = () => {
   const handleInputChange = (event) => {
     const { name, value } = event.target;
 
+    //Se define validaciones para los inputs o logica especifica
     switch (name) {
       case "telefono":
         // Si el número de teléfono es mayor a 10 caracteres, se muestra un mensaje de error
         if (value.length > 10) {
-          setFeedbackTel(true);
           return;
-        }
-        // Si el número de teléfono es correcto, se oculta el mensaje de error y se actualiza el estado
-        else {
-          setFeedbackTel(false);
+        } else {
+          if (value.length < 10) {
+            //Cambia a true solo si antes estaba en FALSEF
+            if (!feedbackTel) {
+              setFeedbackTel(true);
+            }
+          }
+          // Si el número de teléfono es correcto, se oculta el mensaje de error
+          else {
+            if (feedbackTel) {
+              setFeedbackTel(false);
+            }
+          }
 
           value.toString();
           setFormData({
@@ -51,17 +60,40 @@ const DataDeliveryPage = () => {
         break;
 
       case "conCuantoPago":
-        if (isNaN(value)) {
-          setFeedbackPago(true);
+        //Le quitamos los punto y "$" al texto
+        let onlyNumber = value.replace(/[$.]/g, "");
+
+        //No permite insertar letras o mas de 7 digitos
+        if (isNaN(onlyNumber) || onlyNumber.length > 7) {
           return;
         } else {
-          setFeedbackPago(false);
+          if (onlyNumber < total) {
+            //Cambia a TRUE solo si estaba FALSE (Evita rendirizados adicionales)
+            if (!feedbackPago) {
+              setFeedbackPago(true);
+            }
+          } else {
+            //Quita el mensaje de error cuando la cantidad es correcta
+            if (feedbackPago) {
+              setFeedbackPago(false);
+            }
+          }
         }
-   
+
+        setFormData({
+          ...formData,
+          [name]: onlyNumber,
+        });
+        break;
+
+      case "deliveryValue":
         setFormData({
           ...formData,
           [name]: value,
-        })
+        });
+
+        setTotal(parseInt(subtotal)+parseInt(value))
+
         break;
 
       default:
@@ -74,7 +106,6 @@ const DataDeliveryPage = () => {
   };
 
   const handleSubmit = (event) => {
-    if (formData.telefono.length === 10) {
       event.preventDefault();
       const clientData = {
         nombre: formData.nombre,
@@ -90,9 +121,7 @@ const DataDeliveryPage = () => {
 
       setClient(clientData);
       navigate("/carrito/confirmPage");
-    } else {
-      setFeedbackTel(true);
-    }
+
   };
 
   // Obtiene los barrios al cargar la página
@@ -148,7 +177,9 @@ const DataDeliveryPage = () => {
               className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:border-gray-400"
               required
             >
-              <option defaultChecked value="">Seleccione un barrio</option>
+              <option defaultChecked value="">
+                Seleccione un barrio
+              </option>
               {neighborhoods.map((neighborhood) => (
                 <option
                   key={neighborhood.neighborhood_id}
@@ -239,7 +270,7 @@ const DataDeliveryPage = () => {
                 required
                 type="text"
                 name="conCuantoPago"
-                value={formData.conCuantoPago}
+                value={"$" + formatNumber(formData.conCuantoPago)}
                 onChange={handleInputChange}
                 className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:border-gray-400"
                 placeholder="$"
@@ -273,7 +304,7 @@ const DataDeliveryPage = () => {
                 Subtotal:
               </h3>
               <h3 className="text-right font-semibold mb-6 text-gray-700">
-                {formatNumber(subtotal)}
+                ${formatNumber(subtotal)}
               </h3>
             </div>
             <div className="flex flex-row justify-between">
@@ -281,13 +312,13 @@ const DataDeliveryPage = () => {
                 Valor Domicilio:
               </h3>
               <h3 className="text-right font-semibold mb-6 text-gray-700">
-                {formatNumber(formData.deliveryValue)}
+                ${formatNumber(formData.deliveryValue)}
               </h3>
             </div>
             <div className="flex flex-row justify-between">
               <h3 className="text-left font-bold text-gray-700">Total:</h3>
               <h3 className="text-right font-bold mb-6 text-gray-700">
-                {formatNumber(total)}
+                ${formatNumber(total)}
               </h3>
             </div>
           </div>
@@ -295,7 +326,7 @@ const DataDeliveryPage = () => {
             <ButtonComponent
               title={"Realizar pedido"}
               type="submit"
-              onClickButton={() => { }}
+              onClickButton={() => {}}
             />
           </div>
         </form>

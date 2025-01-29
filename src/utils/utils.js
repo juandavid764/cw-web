@@ -1,20 +1,11 @@
-export function formatNumber(number) {
+export function formatNumber(input) {
 
-  if (isNaN(number)) {
-    console.log('No es un número', number);
-    return '0';
-  }
+  // Convertir el input a string si es un número
+  const numberString = typeof input === 'number' ? input.toString() : input;
 
-  if (typeof number === 'string') {
-    number = parseInt(number);
-    console.log('Paseado a int', number);
-  }
-
-  console.log('tipo de dato', typeof number);
-  return new Intl.NumberFormat('es-CO', {
-    style: 'currency',
-    currency: 'COP',
-    minimumFractionDigits: 0, // Sin decimales
-    maximumFractionDigits: 0 // Sin decimales
-}).format(number);
+ // Eliminar cualquier punto existente
+ const cleanedNumberString = numberString.replace(/\./g, '');
+  
+ // Aplicar el formato con puntos
+ return cleanedNumberString.replace(/\B(?=(\d{3})+(?!\d))/g, ".");
 }

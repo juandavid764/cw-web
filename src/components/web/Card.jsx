@@ -20,7 +20,7 @@ const Card = ({ product, onClick }) => {
         </p>
         <div className="flex justify-between items-center mt-4">
           <span className="text-lg font-bold text-gray-900">
-            {formatNumber(product.price)}
+            ${formatNumber(product.price)}
           </span>
           <button className="bg-orange-400 hover:bg-orange-300 text-white font-bold py-2 px-3 rounded-full flex items-center">
             <PlusIcon className="h-5 w-5" />
