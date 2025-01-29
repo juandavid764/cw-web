@@ -95,7 +95,7 @@ export default function CardRoute({
       </div>
 
       <div className="flex justify-between items-center w-full mt-2 relative">
-        <p className="text-sm">Total: ${formatNumber(route.total) || 0}</p>
+        <p className="text-sm">Total: {formatNumber(route.total) || 0}</p>
         <div className="relative z-50">
           <button
             className={`flex justify-between items-center px-3 py-2 border rounded text-white ${colorClass}`}

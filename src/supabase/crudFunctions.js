@@ -488,10 +488,10 @@ export async function getRequestsWithRouteId() {
 }
 
 // insert data into the table Request
-export async function insertRequest(client, total) {
+export async function insertRequest(client, total, conCuantoPago) {
   const { data, error } = await supabase
     .from("Request")
-    .insert([{ client, total }])
+    .insert([{ client, total, conCuantoPago }])
     .select();
   if (error) {
     console.log(error);

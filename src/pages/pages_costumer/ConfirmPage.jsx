@@ -109,7 +109,12 @@ ${
   const confirmButtonClicked = async () => {
     nombreCliente = client.nombre;
     let formatted = formatClient(client);
-    const insertedRequest = await insertRequest(formatted, total);
+    let conCuantoPago = client.conCuantoPago;
+    const insertedRequest = await insertRequest(
+      formatted,
+      total,
+      conCuantoPago
+    );
     if (insertedRequest.error) {
       alert("Error al insertar la solicitud");
       return;
