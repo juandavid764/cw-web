@@ -5,6 +5,11 @@ import { useNavigate } from "react-router-dom";
 import { formatNumber } from "../../../utils/utils";
 
 const DataCostumerPage = () => {
+
+  // Estados para mostrar mensajes de error
+  const [feedbackTel, setFeedbackTel] = useState(false);
+  const [feedbackPago, setFeedbackPago] = useState(false);
+
   const { total, setClient } = useContext(ProductsContext);
   const [paymentMethod, setPaymentMethod] = useState("Efectivo");
   const navigate = useNavigate();
@@ -21,10 +26,68 @@ const DataCostumerPage = () => {
   const handleInputChange = (event) => {
     const { name, value } = event.target;
 
-    setFormData({
-      ...formData,
-      [name]: value,
-    });
+    //Se define validaciones para los inputs o logica especifica
+    switch (name) {
+      case "telefono":
+        // Si el número de teléfono es mayor a 10 caracteres, se muestra un mensaje de error
+        if (value.length > 10) {
+          return;
+        } else {
+          if (value.length < 10) {
+            //Cambia a true solo si antes estaba en FALSEF
+            if (!feedbackTel) {
+              setFeedbackTel(true);
+            }
+          }
+          // Si el número de teléfono es correcto, se oculta el mensaje de error
+          else {
+            if (feedbackTel) {
+              setFeedbackTel(false);
+            }
+          }
+
+          value.toString();
+          setFormData({
+            ...formData,
+            [name]: value,
+          });
+        }
+        break;
+
+      case "conCuantoPago":
+        //Le quitamos los punto y "$" al texto
+        let onlyNumber = value.replace(/[$.]/g, "");
+
+        //No permite insertar letras o mas de 7 digitos
+        if (isNaN(onlyNumber) || onlyNumber.length > 7) {
+          return;
+        } else {
+          if (onlyNumber < total) {
+            //Cambia a TRUE solo si estaba FALSE (Evita rendirizados adicionales)
+            if (!feedbackPago) {
+              setFeedbackPago(true);
+            }
+          } else {
+            //Quita el mensaje de error cuando la cantidad es correcta
+            if (feedbackPago) {
+              setFeedbackPago(false);
+            }
+          }
+        }
+
+        setFormData({
+          ...formData,
+          [name]: onlyNumber,
+        });
+        break;
+
+      default:
+        setFormData({
+          ...formData,
+          [name]: value,
+        });
+        break;
+    }
   };
 
   const handlePaymentChange = (event) => {
@@ -38,6 +101,11 @@ const DataCostumerPage = () => {
 
   const handleSubmit = (event) => {
     event.preventDefault();
+
+    //valida que no haya ningun feedback activo
+    if (feedbackTel || feedbackPago) {
+      return;
+    } else {
     const client = {
       nombre: formData.nombre,
       telefono: formData.telefono,
@@ -50,6 +118,7 @@ const DataCostumerPage = () => {
     setClient(client);
 
     navigate("/carrito/confirmPage");
+  }
   };
 
   return (
@@ -101,6 +170,11 @@ const DataCostumerPage = () => {
               className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:border-gray-400"
               placeholder="Ingresa tu número de contacto"
             />
+            {feedbackTel && (
+              <p className="text-red-500 text-xs italic">
+                El número de teléfono dene tener de 10 dígitos
+              </p>
+            )}
           </div>
           <div className="mb-4">
             <label
@@ -146,6 +220,11 @@ const DataCostumerPage = () => {
                 className="w-full px-3 py-2 border rounded-lg focus:outline-none  focus:border-gray-400"
                 placeholder="$"
               />
+              {feedbackPago && (
+                <p className="text-red-500 text-xs italic">
+                  El valor minimo a pagar es *{formatNumber(total)}*
+                </p>
+              )}
             </div>
           )}
           <div className="mb-4">

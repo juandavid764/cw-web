@@ -5,7 +5,7 @@ import { useNavigate } from "react-router-dom";
 import { getNeighborhoods } from "../../../supabase/crudFunctions";
 import { formatNumber } from "../../../utils/utils";
 
-//Test merge
+//Test merge juan
 const DataDeliveryPage = () => {
   const { total, setTotal, setClient } = useContext(ProductsContext);
   const navigate = useNavigate();
@@ -93,7 +93,7 @@ const DataDeliveryPage = () => {
           [name]: value,
         });
 
-        setTotal(parseInt(subtotal)+parseInt(value))
+        setTotal(parseInt(subtotal) + parseInt(value));
 
         break;
 
@@ -107,7 +107,12 @@ const DataDeliveryPage = () => {
   };
 
   const handleSubmit = (event) => {
-      event.preventDefault();
+    event.preventDefault();
+
+    //valida que no haya ningun feedback activo
+    if (feedbackTel || feedbackPago) {
+      return;
+    } else {
       const clientData = {
         nombre: formData.nombre,
         telefono: formData.telefono,
@@ -122,7 +127,7 @@ const DataDeliveryPage = () => {
 
       setClient(clientData);
       navigate("/carrito/confirmPage");
-
+    }
   };
 
   // Obtiene los barrios al cargar la página
