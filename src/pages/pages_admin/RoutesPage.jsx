@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useCallback } from "react";
 import ButtonGroup from "../../components/admin/editComponents/ButtonGroup";
-import PortalRutas from "../../components/admin/routesComponents/ventana_modal/Portal";
+import Portal from "../../components/admin/routesComponents/ventana_modal/Portal";
 import CardRoute from "../../components/admin/routesComponents/CardRoute";
 import {
   getDomiciliaries,
@@ -57,7 +57,6 @@ const RoutesPage = () => {
     name: d.name,
     id: d.domiciliary_id,
   }));
-  const requestIds = requests.map((request) => request.request_id);
 
   return (
     <div
@@ -77,9 +76,9 @@ const RoutesPage = () => {
           }}
         />
         {/* Botón para crear rutas */}
-        <PortalRutas
+        <Portal
           domiciliarios={domiciliaryOptions}
-          idPedidos={requestIds}
+          requests={requests}
           reloadRoutes={reloadData} // Usar reloadData directamente
         />
       </div>
