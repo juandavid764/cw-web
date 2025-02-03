@@ -3,7 +3,7 @@ import { ProductsContext } from "../../context/ProductsContext";
 import { insertRequest, insertOrder } from "../../supabase/crudFunctions";
 import WhatsAppIcon from "@mui/icons-material/WhatsApp";
 import { Link, useNavigate } from "react-router-dom";
-import { formatNumber } from "../../utils/utils";
+import { addThousandSeparators } from "../../utils/addThousandSeparators.js";
 
 const ConfirmPage = () => {
   const navigate = useNavigate();
@@ -82,8 +82,8 @@ ${barrio}`;
     res += `
 ${
   formaPago === "Efectivo"
-    ? "$" + formatNumber(conCuantoPago) + "/$" + formatNumber(total)
-    : "Transferencia" + "/$" + formatNumber(total)
+    ? "$" + addThousandSeparators(conCuantoPago) + "/$" + addThousandSeparators(total)
+    : "Transferencia" + "/$" + addThousandSeparators(total)
 }`;
 
     return res;
@@ -159,7 +159,7 @@ ${
             <p className="text-gray-600 font-medium">
               Total:{" "}
               <span className="text-xl font-bold text-orange-500">
-                ${formatNumber(total)}
+                ${addThousandSeparators(total)}
               </span>
             </p>
           </div>

@@ -1,12 +1,12 @@
 import React from "react";
-import { formatNumber } from "../../utils/utils";
+import { addThousandSeparators } from "../../utils/addThousandSeparators.js";
 
 const DetailsData = ({ order }) => {
   return (
     <div className="mb-4 border-t border-gray-300 pt-4">
       <div className="flex justify-between">
         <p>1 {order.product.name}</p>
-        <p className="font-bold">${formatNumber(order.product.price)}</p>
+        <p className="font-bold">${addThousandSeparators(order.product.price)}</p>
       </div>
       <div className="ml-4">
         <p className="font-semibold mt-2">Salsas:</p>
@@ -24,7 +24,7 @@ const DetailsData = ({ order }) => {
                   {addition.quantity} {addition.name}
                 </span>
               </div>
-              <span>${formatNumber(addition.price * addition.quantity)}</span>
+              <span>${addThousandSeparators(addition.price * addition.quantity)}</span>
             </div>
           ))
         ) : (

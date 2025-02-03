@@ -3,7 +3,7 @@ import ButtonComponent from "../../../components/web/ButtonComponent";
 import { ProductsContext } from "../../../context/ProductsContext";
 import { useNavigate } from "react-router-dom";
 import { getNeighborhoods } from "../../../supabase/crudFunctions";
-import { formatNumber } from "../../../utils/utils";
+import { addThousandSeparators } from "../../../utils/addThousandSeparators.js";
 
 //Test merge juan
 const DataDeliveryPage = () => {
@@ -276,14 +276,14 @@ const DataDeliveryPage = () => {
                 required
                 type="text"
                 name="conCuantoPago"
-                value={"$" + formatNumber(formData.conCuantoPago)}
+                value={"$" + addThousandSeparators(formData.conCuantoPago)}
                 onChange={handleInputChange}
                 className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:border-gray-400"
                 placeholder="$"
               />
               {feedbackPago && (
                 <p className="text-red-500 text-xs italic">
-                  El valor minimo a pagar es *{formatNumber(total)}*
+                  El valor minimo a pagar es *{addThousandSeparators(total)}*
                 </p>
               )}
             </div>
@@ -310,7 +310,7 @@ const DataDeliveryPage = () => {
                 Subtotal:
               </h3>
               <h3 className="text-right font-semibold mb-6 text-gray-700">
-                ${formatNumber(subtotal)}
+                ${addThousandSeparators(subtotal)}
               </h3>
             </div>
             <div className="flex flex-row justify-between">
@@ -318,13 +318,13 @@ const DataDeliveryPage = () => {
                 Valor Domicilio:
               </h3>
               <h3 className="text-right font-semibold mb-6 text-gray-700">
-                ${formatNumber(formData.deliveryValue)}
+                ${addThousandSeparators(formData.deliveryValue)}
               </h3>
             </div>
             <div className="flex flex-row justify-between">
               <h3 className="text-left font-bold text-gray-700">Total:</h3>
               <h3 className="text-right font-bold mb-6 text-gray-700">
-                ${formatNumber(total)}
+                ${addThousandSeparators(total)}
               </h3>
             </div>
           </div>

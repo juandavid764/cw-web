@@ -1,6 +1,6 @@
 import React from "react";
 import { XMarkIcon } from "@heroicons/react/24/solid";
-import { formatNumber } from "../../utils/utils";
+import { addThousandSeparators } from "../../utils/addThousandSeparators";
 
 const CardHeader = ({ total, onClose }) => {
   return (
@@ -8,7 +8,7 @@ const CardHeader = ({ total, onClose }) => {
       <div className="flex">
         <h2 className="text-lg font-semibold">Total:</h2>
         <span className="text-lg font-semibold ml-2">
-          ${formatNumber(total)}
+          ${addThousandSeparators(total)}
         </span>
       </div>
       <button className="text-gray-500 hover:text-orange-400" onClick={onClose}>

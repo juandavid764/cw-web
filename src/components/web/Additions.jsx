@@ -2,7 +2,7 @@ import React, { useState, useEffect, useContext } from "react";
 import { ChevronDownIcon, ChevronUpIcon } from "@heroicons/react/24/solid";
 import { MinusIcon, PlusIcon } from "@heroicons/react/20/solid";
 import { ProductsContext } from "../../context/ProductsContext";
-import { formatNumber } from "../../utils/utils";
+import { addThousandSeparators } from "../../utils/addThousandSeparators";
 
 const Additions = ({ updateTotal }) => {
   const { additions } = useContext(ProductsContext);
@@ -119,7 +119,7 @@ const Additions = ({ updateTotal }) => {
                   />
                   <span>{addition.name}</span>
                 </div>
-                <span>${formatNumber(addition.price)}</span>
+                <span>${addThousandSeparators(addition.price)}</span>
               </label>
               {selected[addition.addition_id] && (
                 <div className="flex flex-row justify-center ">

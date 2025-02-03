@@ -2,7 +2,7 @@ import React, { useContext } from "react";
 import { ProductsContext } from "../../context/ProductsContext";
 import { MinusIcon, PlusIcon } from "@heroicons/react/20/solid";
 import { TrashIcon } from "@heroicons/react/24/solid";
-import { formatNumber } from "../../utils/utils";
+import { addThousandSeparators } from "../../utils/addThousandSeparators.js";
 const Quantity = ({ order }) => {
   const { cart, setCart, setOrderCount } = useContext(ProductsContext);
 
@@ -53,7 +53,7 @@ const Quantity = ({ order }) => {
         </div>
       </div>
       <div className="text-base font-semibold">
-        ${formatNumber(order.product.price * order.quantity)}
+        ${addThousandSeparators(order.product.price * order.quantity)}
       </div>
       <button
         onClick={removeItem}

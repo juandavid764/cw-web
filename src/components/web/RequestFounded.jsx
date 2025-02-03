@@ -1,5 +1,5 @@
 import React from "react";
-import { formatNumber } from "../../utils/utils";
+import { addThousandSeparators } from "../../utils/addThousandSeparators.js";
 
 const RequestFounded = ({ orderDetails }) => {
   const { request_id, client, date, time, status, total, formatted_products } =
@@ -61,7 +61,7 @@ const RequestFounded = ({ orderDetails }) => {
         <p className="text-gray-600 font-medium">
           Total:{" "}
           <span className="text-xl font-bold text-orange-500">
-            ${formatNumber(total)}
+            ${addThousandSeparators(total)}
           </span>
         </p>
       </div>

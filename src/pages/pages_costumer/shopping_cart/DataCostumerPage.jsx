@@ -2,7 +2,7 @@ import { useState, useContext } from "react";
 import ButtonComponent from "../../../components/web/ButtonComponent";
 import { ProductsContext } from "../../../context/ProductsContext";
 import { useNavigate } from "react-router-dom";
-import { formatNumber } from "../../../utils/utils";
+import { addThousandSeparators } from "../../../utils/addThousandSeparators.js";
 
 const DataCostumerPage = () => {
 
@@ -130,7 +130,7 @@ const DataCostumerPage = () => {
         <div className="flex flex-row justify-between">
           <h3 className="text-left font-semibold text-gray-700">Subtotal:</h3>
           <h3 className="text-right font-semibold mb-6 text-gray-700">
-            ${formatNumber(total)}
+            ${addThousandSeparators(total)}
           </h3>
         </div>
 
@@ -209,7 +209,7 @@ const DataCostumerPage = () => {
                 min={total}
                 id="conCuantoPago"
                 name="conCuantoPago"
-                value={formatNumber(formData.conCuantoPago)}
+                value={addThousandSeparators(formData.conCuantoPago)}
                 onChange={(event) => {
                   const rawValue = event.target.value.replace(/\./g, ""); // Solo dígitos
                   setFormData({
@@ -222,7 +222,7 @@ const DataCostumerPage = () => {
               />
               {feedbackPago && (
                 <p className="text-red-500 text-xs italic">
-                  El valor minimo a pagar es *{formatNumber(total)}*
+                  El valor minimo a pagar es *{addThousandSeparators(total)}*
                 </p>
               )}
             </div>
@@ -246,7 +246,7 @@ const DataCostumerPage = () => {
           <div className="flex flex-row justify-between">
             <h3 className="text-left font-bold text-gray-700">Total:</h3>
             <h3 className="text-right font-bold mb-6 text-gray-700">
-              ${formatNumber(total)}
+              ${addThousandSeparators(total)}
             </h3>
           </div>
 

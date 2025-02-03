@@ -1,4 +1,4 @@
-export function formatNumber(input) {
+export function addThousandSeparators(input) {
 
   // Convertir el input a string si es un número
   const numberString = typeof input === 'number' ? input.toString() : input;

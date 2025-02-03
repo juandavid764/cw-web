@@ -10,18 +10,6 @@ export const ProductsProvider = ({ children }) => {
   const [loading, setLoading] = useState(true);
   const [filteredProducts, setFilteredProducts] = useState(products);
 
-  const [sauces] = useState([
-    "Roja",
-    "Verde",
-    "BBQ",
-    "Piña",
-    "Rosada",
-    "Showy",
-    "Sin roja",
-    "Sin piña",
-    "Sin verde"    
-  ]);
-
   const [cart, setCart] = useState([]);
   const [total, setTotal] = useState(0);
   const [client, setClient] = useState({});
@@ -83,7 +71,6 @@ export const ProductsProvider = ({ children }) => {
         setProducts,
         setAdditions,
         additions,
-        sauces,
         addToCart,
         cart,
         setCart,
