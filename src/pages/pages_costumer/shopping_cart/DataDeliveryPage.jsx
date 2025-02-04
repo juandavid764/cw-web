@@ -120,7 +120,7 @@ const DataDeliveryPage = () => {
         barrio: formData.barrio,
         formaPago: formData.formaPago,
         conCuantoPago:
-          formData.formaPago === "Efectivo" ? formData.conCuantoPago : "",
+          formData.formaPago === "Efectivo" ? formData.conCuantoPago : 0,
         comentarios: formData.comentarios,
         total: total,
       };
@@ -240,7 +240,7 @@ const DataDeliveryPage = () => {
             />
             {feedbackTel && (
               <p className="text-red-500 text-xs italic">
-                El número de teléfono dene tener de 10 dígitos
+                El número de teléfono debe tener 10 dígitos
               </p>
             )}
           </div>

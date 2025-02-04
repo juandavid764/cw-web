@@ -459,13 +459,15 @@ export async function getRequests() {
   return Request;
 }
 
-// Obtener solo los pedidos en estado "en proceso"
+// Obtener solo los pedidos en estado "en proceso" y adicionalmente que sean para domicilio
+
 export async function getRequestsInProcess() {
   let { data: Request, error } = await supabase
     .from("Request")
     .select("*")
     .eq("status", "En proceso")
-    .is("route_id", null);
+    .is("route_id", null)
+    .eq("request_type", "domicilio");
 
   if (error) {
     console.log(error);
@@ -488,10 +490,15 @@ export async function getRequestsWithRouteId() {
 }
 
 // insert data into the table Request
-export async function insertRequest(client, total, conCuantoPago) {
+export async function insertRequest(
+  client,
+  total,
+  ConCuantoPago,
+  request_type
+) {
   const { data, error } = await supabase
     .from("Request")
-    .insert([{ client, total, conCuantoPago }])
+    .insert([{ client, total, ConCuantoPago, request_type }])
     .select();
   if (error) {
     console.log(error);
