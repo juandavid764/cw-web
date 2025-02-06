@@ -19,7 +19,7 @@ function App() {
         <div className="flex flex-col min-h-screen">
           {user ? <AdminNavbar /> : <Navbar />}
           {user ? <AdminRoutes /> : <CustomerRoutes />}
-          {user ? <></>: <Footer/>}
+          {user ? <></> : <Footer />}
         </div>
       </Router>
     </ProductsProvider>
