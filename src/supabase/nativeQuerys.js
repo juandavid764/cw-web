@@ -9,20 +9,20 @@ export async function getFormatRequest() {
 }
 
 // Obtenemos las request de la fecha indicada
-export async function getRequestsByDate(dateToConsult) {
-  const { data, error } = await supabase.rpc('sum_total_by_date', { date_to_consult: dateToConsult });
+export async function getNetSalesByDate(dateToConsult) {
+  const { data, error } = await supabase.rpc('net_sales_by_date', { date_to_consult: dateToConsult });
 
   if (error) {
     console.error('Error al obtener la suma y el conteo:', error);
-    return { totalSum: 0, totalCount: 0 }; // Retorna 0s en caso de error
+    return { ventas_netas: 0, totalCount: 0 }; // Retorna 0s en caso de error
   }
 
-  const { total_sum, total_count } = data[0] || { total_sum: 0, total_count: 0 };
+  const { ventas_netas, cant_clientes } = data[0] || { total_sum: 0, total_count: 0 };
 
-  console.log('Suma total:', total_sum);
-  console.log('Cantidad de filas:', total_count);
+  console.log(`Ventas netas: ${ventas_netas}`);
+  console.log(`Cantidad clientes: ${cant_clientes}`);
 
-  return { totalSum: total_sum, totalCount: total_count };
+  return { ventas_netas, cant_clientes };
 }
 
 // Obtenemos la hora más activa de la fecha indicada
@@ -36,8 +36,8 @@ export async function getMostActiveHour(dateToConsult) {
 
   const { hour, insertions } = data[0] || { hour: null, insertions: 0 };
 
-  console.log('Hora más activa:', hour);
-  console.log('Total de inserciones en esa hora:', insertions);
+  console.log('Hora pico:', hour);
+  console.log('Cantidad de ventas en hora pico:', insertions);
 
   return { hour, insertions };
 }

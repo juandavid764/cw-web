@@ -4,7 +4,6 @@ import 'chart.js/auto';
 import { data } from 'autoprefixer';
 
 export const DoughnutChart = (dataChart) => {
-  console.log(dataChart.data.datasets[0].data);
   if (dataChart.data.datasets[0].data.length === 0) {
     //Datos por defecto
     dataChart = {
