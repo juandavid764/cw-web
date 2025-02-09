@@ -5,7 +5,6 @@ import { useNavigate } from "react-router-dom";
 import { addThousandSeparators } from "../../../utils/addThousandSeparators.js";
 
 const DataCostumerPage = () => {
-
   // Estados para mostrar mensajes de error
   const [feedbackTel, setFeedbackTel] = useState(false);
   const [feedbackPago, setFeedbackPago] = useState(false);
@@ -29,29 +28,21 @@ const DataCostumerPage = () => {
     //Se define validaciones para los inputs o logica especifica
     switch (name) {
       case "telefono":
-        // Si el número de teléfono es mayor a 10 caracteres, se muestra un mensaje de error
-        if (value.length > 10) {
-          return;
+  
+        // No permitir más de 10 caracteres
+        if (value.length > 10) return;
+  
+        // Si el número es menor a 10 caracteres, mostrar feedback
+        if (value.length < 10) {
+          if (!feedbackTel) setFeedbackTel(true);
         } else {
-          if (value.length < 10) {
-            //Cambia a true solo si antes estaba en FALSEF
-            if (!feedbackTel) {
-              setFeedbackTel(true);
-            }
-          }
-          // Si el número de teléfono es correcto, se oculta el mensaje de error
-          else {
-            if (feedbackTel) {
-              setFeedbackTel(false);
-            }
-          }
-
-          value.toString();
-          setFormData({
-            ...formData,
-            [name]: value,
-          });
+          if (feedbackTel) setFeedbackTel(false);
         }
+  
+        setFormData({
+          ...formData,
+          [name]: value,
+        });
         break;
 
       case "conCuantoPago":
@@ -105,20 +96,25 @@ const DataCostumerPage = () => {
     //valida que no haya ningun feedback activo
     if (feedbackTel || feedbackPago) {
       return;
+    }
+
+    if (formData.conCuantoPago === "") {
+      setFeedbackPago(true);
+      return;
     } else {
-    const client = {
-      nombre: formData.nombre,
-      telefono: formData.telefono,
-      formaPago: formData.formaPago,
-      conCuantoPago:
-        formData.formaPago === "Efectivo" ? formData.conCuantoPago : 0,
-      comentarios: formData.comentarios,
-    };
+      const client = {
+        nombre: formData.nombre,
+        telefono: formData.telefono,
+        formaPago: formData.formaPago,
+        conCuantoPago:
+          formData.formaPago === "Efectivo" ? formData.conCuantoPago : 0,
+        comentarios: formData.comentarios,
+      };
 
-    setClient(client);
+      setClient(client);
 
-    navigate("/carrito/confirmPage");
-  }
+      navigate("/carrito/confirmPage");
+    }
   };
 
   return (
@@ -127,20 +123,13 @@ const DataCostumerPage = () => {
         <h2 className="text-center text-2xl font-bold mb-6 text-gray-700">
           Datos Cliente
         </h2>
-        <div className="flex flex-row justify-between">
-          <h3 className="text-left font-semibold text-gray-700">Subtotal:</h3>
-          <h3 className="text-right font-semibold mb-6 text-gray-700">
-            ${addThousandSeparators(total)}
-          </h3>
-        </div>
-
         <form onSubmit={handleSubmit}>
           <div className="mb-4">
             <label
               className="block text-gray-700 font-semibold mb-2"
               htmlFor="nombre"
             >
-              Nombre
+              Nombre<span className="text-red-500 align-middle">*</span>
             </label>
             <input
               required
@@ -158,9 +147,10 @@ const DataCostumerPage = () => {
               className="block text-gray-700 font-semibold mb-2"
               htmlFor="telefono"
             >
-              Teléfono
+              Teléfono<span className="text-red-500 align-middle">*</span>
             </label>
             <input
+              min={0}
               required
               type="number"
               name="telefono"
@@ -172,7 +162,7 @@ const DataCostumerPage = () => {
             />
             {feedbackTel && (
               <p className="text-red-500 text-xs italic">
-                El número de teléfono dene tener de 10 dígitos
+                Debes digitar 10 dígitos
               </p>
             )}
           </div>
@@ -181,7 +171,7 @@ const DataCostumerPage = () => {
               htmlFor="payment"
               className="block text-gray-700 font-semibold mb-2"
             >
-              Forma de pago:
+              Forma de pago:<span className="text-red-500 align-middle">*</span>
             </label>
             <select
               id="payment"
@@ -202,21 +192,15 @@ const DataCostumerPage = () => {
                 htmlFor="conCuantoPago"
               >
                 Con cuánto pago
+                <span className="text-red-500 align-middle">*</span>
               </label>
               <input
                 required
                 type="text"
-                min={total}
                 id="conCuantoPago"
                 name="conCuantoPago"
-                value={addThousandSeparators(formData.conCuantoPago)}
-                onChange={(event) => {
-                  const rawValue = event.target.value.replace(/\./g, ""); // Solo dígitos
-                  setFormData({
-                    ...formData,
-                    conCuantoPago: rawValue, // Almacena sin formato
-                  });
-                }}
+                value={"$" + addThousandSeparators(formData.conCuantoPago)}
+                onChange={handleInputChange}
                 className="w-full px-3 py-2 border rounded-lg focus:outline-none  focus:border-gray-400"
                 placeholder="$"
               />
@@ -232,7 +216,7 @@ const DataCostumerPage = () => {
               className="block text-gray-700 font-semibold mb-2"
               htmlFor="comentarios"
             >
-              Comentarios
+              Comentarios<span className="font-extralight">(opcional)</span>
             </label>
             <textarea
               id="comentarios"

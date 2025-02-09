@@ -62,6 +62,10 @@ const ConfirmPage = () => {
     } = client;
 
     let res = "";
+    if (comentarios != "") {
+      res += `
+"${comentarios}" \n`;
+    }
     res += `
     - - - - - - - - - - - - -
 ${nombre}
@@ -74,19 +78,14 @@ ${direccion}
 ${barrio}`;
     }
 
-    if (comentarios != "") {
-      res += `
-"${comentarios}" `;
-    }
-
     res += `
 ${
   formaPago === "Efectivo"
     ? "$" +
-      addThousandSeparators(conCuantoPago) +
+      addThousandSeparators(total) +
       "/$" +
-      addThousandSeparators(total)
-    : "Transferencia" + "/$" + addThousandSeparators(total)
+      addThousandSeparators(conCuantoPago)
+    : addThousandSeparators(total) + "/$" + "Transferencia"
 }`;
 
     return res;

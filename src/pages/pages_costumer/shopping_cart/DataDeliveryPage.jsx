@@ -37,29 +37,20 @@ const DataDeliveryPage = () => {
     //Se define validaciones para los inputs o logica especifica
     switch (name) {
       case "telefono":
-        // Si el número de teléfono es mayor a 10 caracteres, se muestra un mensaje de error
-        if (value.length > 10) {
-          return;
-        } else {
-          if (value.length < 10) {
-            //Cambia a true solo si antes estaba en FALSEF
-            if (!feedbackTel) {
-              setFeedbackTel(true);
-            }
-          }
-          // Si el número de teléfono es correcto, se oculta el mensaje de error
-          else {
-            if (feedbackTel) {
-              setFeedbackTel(false);
-            }
-          }
+        // No permitir más de 10 caracteres
+        if (value.length > 10) return;
 
-          value.toString();
-          setFormData({
-            ...formData,
-            [name]: value,
-          });
+        // Si el número es menor a 10 caracteres, mostrar feedback
+        if (value.length < 10) {
+          if (!feedbackTel) setFeedbackTel(true);
+        } else {
+          if (feedbackTel) setFeedbackTel(false);
         }
+
+        setFormData({
+          ...formData,
+          [name]: value,
+        });
         break;
 
       case "conCuantoPago":
@@ -117,6 +108,10 @@ const DataDeliveryPage = () => {
 
     //valida que no haya ningun feedback activo
     if (feedbackTel || feedbackPago) {
+      return;
+    }
+    if (formData.conCuantoPago === "") {
+      setFeedbackPago(true);
       return;
     } else {
       const clientData = {
@@ -247,7 +242,7 @@ const DataDeliveryPage = () => {
             />
             {feedbackTel && (
               <p className="text-red-500 text-xs italic">
-                El número de teléfono debe tener 10 dígitos
+                Debes digitar 10 dígitos
               </p>
             )}
           </div>
