@@ -9,7 +9,7 @@ import {
 export default function ModalContent({
   onClose,
   domiciliarios,
-  pedidos,
+  requests,
   reloadRoutes,
   setUpdating,
 }) {
@@ -18,22 +18,33 @@ export default function ModalContent({
   const [selectedDomiciliario, setSelectedDomiciliario] = useState({});
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const orderedRequests = requests.sort((a, b) => a.request_id - b.request_id);
+  const pedidosOrdenados = orderedRequests.map((pedido) => pedido.request_id);
 
-  const pedidosOrdenados = [...pedidos].sort((a, b) => a - b);
+  const calculateTotal = (selectedPedidos) => {
+    const selectedRequests = requests.filter((request) =>
+      selectedPedidos.includes(request.request_id)
+    );
+    const totalAmount = selectedRequests.reduce(
+      (acc, request) => acc + request.ConCuantoPago,
+      0
+    );
+    setTotal(totalAmount);
+  };
 
   const handlePedidoChange = (pedido) => {
-    setSelectedPedidos((prevSelected) =>
-      prevSelected.includes(pedido)
+    setSelectedPedidos((prevSelected) => {
+      const newSelected = prevSelected.includes(pedido)
         ? prevSelected.filter((p) => p !== pedido)
-        : [...prevSelected, pedido]
-    );
+        : [...prevSelected, pedido];
+      calculateTotal(newSelected);
+      return newSelected;
+    });
   };
 
   const handleSave = async () => {
-    if (!selectedDomiciliario || total <= 0 || selectedPedidos.length === 0) {
-      alert(
-        "Por favor, selecciona un domiciliario, pedidos y un total válido."
-      );
+    if (!selectedDomiciliario || selectedPedidos.length === 0) {
+      alert("Por favor, selecciona un domiciliario y pedido válido.");
       return;
     }
 
@@ -155,15 +166,7 @@ export default function ModalContent({
           <label className="text-neutral-700" htmlFor="total">
             Total:
           </label>
-          <input
-            type="number"
-            id="total"
-            name="total"
-            value={total}
-            onChange={(e) => setTotal(e.target.value)}
-            className="flex-1 px-3 py-2 border rounded"
-            required
-          />
+          <span className="text-neutral-700">${total}</span>
         </div>
 
         <div className="mt-2 flex">

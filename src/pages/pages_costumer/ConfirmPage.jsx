@@ -82,7 +82,10 @@ ${barrio}`;
     res += `
 ${
   formaPago === "Efectivo"
-    ? "$" + addThousandSeparators(conCuantoPago) + "/$" + addThousandSeparators(total)
+    ? "$" +
+      addThousandSeparators(conCuantoPago) +
+      "/$" +
+      addThousandSeparators(total)
     : "Transferencia" + "/$" + addThousandSeparators(total)
 }`;
 
@@ -108,12 +111,19 @@ ${
 
   const confirmButtonClicked = async () => {
     nombreCliente = client.nombre;
+    let requestType = "";
+    if (client.direccion) {
+      requestType = "domicilio";
+    } else {
+      requestType = "recoger";
+    }
     let formatted = formatClient(client);
     let conCuantoPago = client.conCuantoPago;
     const insertedRequest = await insertRequest(
       formatted,
       total,
-      conCuantoPago
+      conCuantoPago,
+      requestType
     );
     if (insertedRequest.error) {
       alert("Error al insertar la solicitud");

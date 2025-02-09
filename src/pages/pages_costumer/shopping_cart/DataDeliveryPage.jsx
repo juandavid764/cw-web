@@ -23,14 +23,16 @@ const DataDeliveryPage = () => {
     telefono: "",
     direccion: "",
     formaPago: "Efectivo",
+    barrio: "",
     conCuantoPago: "",
     comentarios: "",
-    deliveryValue: 0,
+    delivery_price: 0,
   });
 
   // Maneja los cambios en los inputs
   const handleInputChange = (event) => {
-    const { name, value } = event.target;
+    let target = event.target;
+    const { name, value } = target;
 
     //Se define validaciones para los inputs o logica especifica
     switch (name) {
@@ -87,10 +89,14 @@ const DataDeliveryPage = () => {
         });
         break;
 
-      case "deliveryValue":
+      case "neighborhood":
+        let named =
+          target.options[target.selectedIndex].getAttribute("data-name");
+
         setFormData({
           ...formData,
-          [name]: value,
+          ["delivery_price"]: value,
+          ["barrio"]: named,
         });
 
         setTotal(parseInt(subtotal) + parseInt(value));
@@ -120,7 +126,7 @@ const DataDeliveryPage = () => {
         barrio: formData.barrio,
         formaPago: formData.formaPago,
         conCuantoPago:
-          formData.formaPago === "Efectivo" ? formData.conCuantoPago : "",
+          formData.formaPago === "Efectivo" ? formData.conCuantoPago : 0,
         comentarios: formData.comentarios,
         total: total,
       };
@@ -176,9 +182,9 @@ const DataDeliveryPage = () => {
               Barrio<span className="text-red-500 align-middle">*</span>
             </label>
             <select
-              id="deliveryValue"
-              name="deliveryValue"
-              defaultValue={"seleciona un barrio"}
+              id="neighborhood"
+              name="neighborhood"
+              defaultValue={"Seleccione un barrio"}
               onChange={handleInputChange}
               className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:border-gray-400"
               required
@@ -190,6 +196,7 @@ const DataDeliveryPage = () => {
                 <option
                   key={neighborhood.neighborhood_id}
                   value={neighborhood.delivery_price}
+                  data-name={neighborhood.name}
                 >
                   {neighborhood.name}
                 </option>
@@ -240,7 +247,7 @@ const DataDeliveryPage = () => {
             />
             {feedbackTel && (
               <p className="text-red-500 text-xs italic">
-                El número de teléfono dene tener de 10 dígitos
+                El número de teléfono debe tener 10 dígitos
               </p>
             )}
           </div>
@@ -318,7 +325,7 @@ const DataDeliveryPage = () => {
                 Valor Domicilio:
               </h3>
               <h3 className="text-right font-semibold mb-6 text-gray-700">
-                ${addThousandSeparators(formData.deliveryValue)}
+                ${addThousandSeparators(formData.delivery_price)}
               </h3>
             </div>
             <div className="flex flex-row justify-between">
