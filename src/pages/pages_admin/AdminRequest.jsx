@@ -1,21 +1,18 @@
 import React, { useEffect, useMemo, useRef, useState } from "react";
-import { Input, SpeedDial, SpeedDialAction } from "@mui/material";
 import { getFormatRequest } from "../../supabase/nativeQuerys";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
-  faEdit,
   faSave,
-  faTimes,
   faSearch,
   faRefresh,
   faCopy,
-  faPlus,
 } from "@fortawesome/free-solid-svg-icons";
-import FileCopyIcon from "@mui/icons-material/FileCopyOutlined";
+import { toast } from "react-toastify";
 import { RequestsList } from "../../components/admin/requestsComponents/RequestsList";
 import { DropdownStates } from "../../components/admin/requestsComponents/DropdownStates";
 import { updateRequest } from "../../supabase/crudFunctions";
 import { supabase } from "../../supabase/client";
+import { ToastContainer } from "react-toastify";
 
 const AdminRequest = () => {
   const buttons = [
@@ -52,12 +49,6 @@ const AdminRequest = () => {
       console.log("Actualice la data");
     }
     fetchData();
-
-    // const timer = setTimeout(() => {
-    //   setRefreshData(!refreshData);
-    // }, 3000);
-
-    // return () => clearTimeout(timer);
   }, [refreshData]);
 
   const filteredPedidos = useMemo(() => {
@@ -128,7 +119,7 @@ const AdminRequest = () => {
       clientDataRef.current.value;
     navigator.clipboard
       .writeText(content)
-      .then(() => alert("¡Contenido actualizado y copiado al portapapeles!"))
+      .then(() => toast("✅ Copiado al portapapeles", {}))
       .catch((err) => alert("Hubo un error al copiar el contenido."));
   }
 
@@ -170,19 +161,31 @@ const AdminRequest = () => {
 
   return (
     <div className="my-4 w-full grow flex flex-col justify-center bg-gray-100">
+    <ToastContainer
+            toastStyle={{  backgroundColor: "#fb923c", color: "white", fontWeight:"bold", boxShadow:" 0px -4px 15px 0px rgba(0,0,0,0.2)" }} 
+            position="bottom-center"
+            autoClose={2000}
+            hideProgressBar={false}
+            newestOnTop={false}
+            closeOnClick
+            rtl={false}
+            pauseOnFocusLoss
+            pauseOnHover={false}
+            theme="colored"
+            />
       <div className="mx-12 grid grid-cols-[360px_2fr] grid-rows-1 gap-2">
         {/* Campo de búsqueda */}
-        <div className="relative grow gap-4">
+        <div className="relative grow gap-4 mx-5 ">
           <FontAwesomeIcon
             icon={faSearch}
-            className="absolute left-3 top-2.5 text-gray-400"
+            className="absolute left-3 top-3 text-gray-400"
           />
           <input
             type="text"
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
             placeholder="Buscar pedidos..."
-            className="w-full p-2 pl-10 border border-gray-300 rounded-full shadow-sm focus:outline-none focus:ring-2 focus:ring-orange-300"
+            className="w-full p-2 pl-10 h-full"
           />
         </div>
         <div className="flex space-x-2 justify-center">
@@ -272,30 +275,13 @@ const AdminRequest = () => {
 
           <div className="w-full flex justify-center">
             <button
-              className="bg-orange-400 text-white px-8 rounded-lg hover:bg-orange-300 py-2"
+              className="bg-orange-400 text-white px-8 rounded-lg py-2"
               onClick={() => {
                 handleSave();
               }}
             >
               <FontAwesomeIcon icon={faSave} />
             </button>
-            {/* {Botón de solo guardar} */}
-
-            {/* {Guardar y copiar} */}
-            {/* <SpeedDial
-            color="orange"
-            ariaLabel="SpeedDial basic example"
-            
-            icon={<FontAwesomeIcon icon={faPlus}/>}
-          >
-            {actions.map((action) => (
-              <SpeedDialAction
-                key={action.name}
-                icon={action.icon}
-                tooltipTitle={action.name}
-              />
-            ))}
-          </SpeedDial> */}
           </div>
         </section>
       </div>

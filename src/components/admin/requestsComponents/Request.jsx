@@ -1,6 +1,7 @@
 /* eslint-disable react/prop-types */
 import { faClock, faCopy } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { toast } from "react-toastify";
 
 export function Request({ pedido, handleRequestSelection, selectedPedido }) {
   function getStatusColor(status) {
@@ -59,17 +60,17 @@ export function Request({ pedido, handleRequestSelection, selectedPedido }) {
     const content = formatPedidoContent(pedido);
     navigator.clipboard
       .writeText(content)
-      .then(() => alert("¡Contenido copiado al portapapeles!"))
+      .then(() => {toast("✅ Copiado al portapapeles", {})})
       .catch((err) => alert("Hubo un error al copiar el contenido."));
   }
 
   return (
     <div
       onClick={() => handleRequestSelection(pedido)}
-      className={`px-4 shadow cursor-pointer rounded-lg transition-colors flex items-center justify-around py-3 w-80 ${
+      className={`px-4 cursor-pointer rounded-lg  transition-colors flex items-center justify-around py-3 w-80 ${
         selectedPedido?.request_id === pedido.request_id
-          ? "ring-1 ring-gray-500 shadow-xl"
-          : "shadow"
+          ? "ring-1 ring-gray-500 shadow-md"
+          : "shadow-md"
       } ${getStatusColor(pedido.status)}`}
     >
       <div className="flex flex-col items-center justify-center grow">
@@ -92,10 +93,11 @@ export function Request({ pedido, handleRequestSelection, selectedPedido }) {
         {/* Botón para copiar al portapapeles */}
         <button
           onClick={(e) => {
-            e.stopPropagation(); // Evita que el evento haga clic en el contenedor principal
+            //e.stopPropagation(); // Evita que el evento haga clic en el contenedor principal
             copyToClipboard();
           }}
-          className="p-2 bg-transparent rounded active:scale-150 scale-125"
+          
+          className="p-2 bg-transparent rounded active:scale-90 transition-transform"
         >
           <FontAwesomeIcon icon={faCopy} />
         </button>

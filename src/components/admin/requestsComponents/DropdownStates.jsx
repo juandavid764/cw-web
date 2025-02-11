@@ -24,7 +24,7 @@ export const DropdownStates = ({ estado, setNewState, disabled }) => {
             ${colors[estados.findIndex((a) => a === estado)]} 
             ${`${!disabled === false && " hover:cursor-not-allowed"}`}
             
-            px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-black`}
+            px-4 py-2 text-sm font-medium text-white shadow-sm  focus:ring-gray-500 focus:ring-1`}
         onClick={() =>
           disabled
             ? alert("Debe de editar primero el pedido!")
@@ -32,7 +32,13 @@ export const DropdownStates = ({ estado, setNewState, disabled }) => {
         }
       >
         {selectedState}
-        <span className="ml-2">{isOpen ? "▲" : "▼"}</span>
+        <span
+          className={`ml-2 transition-transform duration-300 ${
+            isOpen ? "rotate-180" : "rotate-0"
+          }`}
+        >
+          ▼
+        </span>
       </button>
 
       {isOpen && (
