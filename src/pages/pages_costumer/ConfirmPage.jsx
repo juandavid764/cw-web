@@ -35,14 +35,7 @@ const ConfirmPage = () => {
     // creating the link
     const link = `https://wa.me/${cellphone}?text=${textoCodificado}`;
 
-    // opening the link in a new tab
-    const newWindow = window.open(link, "_blank");
-
-    if (!newWindow || newWindow.closed || typeof newWindow.closed === "undefined") {
-      alert("Parece que el bloqueador de pop-ups está activado. Permite pop-ups para este sitio.");
-      window.location.href = link;
-    }
-
+    window.location.href = link;
   };
 
   const formatAdditions = (orderNow) => {
