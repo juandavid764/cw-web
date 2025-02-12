@@ -124,6 +124,7 @@ const ProductForm = ({
     }
 
     resetForm();
+
     setProductToEdit(null);
   };
 
