@@ -14,7 +14,7 @@ const ProductForm = ({
     price: "",
     hasAddition: "no",
     description: "",
-    category: "Bebidas",
+    category: 0,
     image: null,
     currentImageUrl: null, // URL de la imagen actual
   });
@@ -27,7 +27,7 @@ const ProductForm = ({
         price: productToEdit.price,
         hasAddition: productToEdit.withAddition ? "si" : "no",
         description: productToEdit.description,
-        category: productToEdit.category_id,
+        category: productToEdit.category,
         image: null,
         currentImageUrl: productToEdit.imgUrl || null, // Carga la URL existente
       });
@@ -51,6 +51,37 @@ const ProductForm = ({
     imageUploadRef.current.reset();
   };
 
+  const handleUpload = async (imageFile, oldImageUrl = null) => {
+    if (!imageFile) return null; // Si no hay imagen nueva, no hacemos nada
+
+    const formData = new FormData();
+    formData.append("imagen", imageFile); // Agregamos la nueva imagen
+    if (oldImageUrl) formData.append("oldImageUrl", oldImageUrl); // Si hay una imagen antigua, la enviamos para que la elimine
+
+    try {
+      const response = await fetch(
+        "https://cartoonwarfastfood.com/upload_image.php",
+        {
+          method: "POST",
+          body: formData,
+        }
+      );
+
+      const data = await response.json();
+      if (response.ok) {
+        console.log("Imagen subida:", data.url);
+        return data.url; // Retornamos la URL de la imagen subida
+      } else {
+        alert(data.error || "Error al subir la imagen");
+        return null;
+      }
+    } catch (error) {
+      console.error("Error al subir la imagen:", error);
+      alert("Error al conectar con el servidor");
+      return null;
+    }
+  };
+
   const handleChange = (e) => {
     const { name, value } = e.target;
     setProduct({ ...product, [name]: value });
@@ -63,34 +94,37 @@ const ProductForm = ({
   const submitProduct = async (e) => {
     e.preventDefault();
 
+    let imageUrl = product.currentImageUrl; // Usamos la imagen actual por defecto
+
+    // Si hay una nueva imagen, la subimos primero con la funcin que conecta con la carpeta de hostinger
+    if (product.image instanceof File) {
+      const uploadedImageUrl = await handleUpload(
+        product.image,
+        productToEdit?.imgUrl
+      ); //Se pregunta si hay una imgUrl y con ella se eliminará la imagen anterior
+      if (uploadedImageUrl) imageUrl = uploadedImageUrl; // Usamos la URL retornada por el servidor
+    }
+
     let productData = {
       name: product.name,
-      price: parseInt(product.price),
+      price: parseInt(product.price) || 0,
       withAddition: product.hasAddition === "si",
       description: product.description,
       category: product.category,
-      image: product.image, // Añadir la URL de la imagen subida
+      file: imageUrl,
     };
 
     if (productToEdit) {
-      // Si estamos editando
       productData.id = productToEdit.product_id;
-
-      if (product.image) {
-        // Nueva imagen cargada, ya contiene la URL
-        productData.file = product.image;
-      }
-
       await updateProduct(productData);
       reload(productData.id, "update");
     } else {
-      // Crear nuevo producto
-      productData.file = product.image;
       await insertProduct(productData);
       reload(null, "insert");
     }
 
     resetForm();
+
     setProductToEdit(null);
   };
 
@@ -175,7 +209,7 @@ const ProductForm = ({
       </div>
       <div className="mb-4">
         <ImageUpload
-          onImageChange={handleImageChange}
+          onImageSelect={handleImageChange}
           ref={imageUploadRef}
           currentImageUrl={product.currentImageUrl}
         />

@@ -61,40 +61,40 @@ export async function updateProduct({
   name,
   price,
   withAddition,
-  text,
+  description,
   category,
   file,
 }) {
-  let imgUrl = null;
+  let imgUrl = "";
 
-  // Si no se proporciona una nueva imagen (file), intentar obtener la URL actual de la imagen
   if (!file) {
     const currentData = await getCurrentImageUrl(id);
     console.log(currentData);
-    imgUrl = currentData;
+    if (currentData) {
+      imgUrl = currentData;
+    }
   } else {
-    // Si se proporciona un archivo, asignar la URL de la nueva imagen
     imgUrl = "https://cartoonwarfastfood.com/" + file;
   }
 
-  // Construir los datos para actualizar
-  const updateData = { name, price, withAddition, text, category };
-
-  // Solo agregar la URL de la imagen si existe (si imgUrl no es nulo)
-  if (imgUrl) {
-    updateData.imgUrl = imgUrl;
-  }
-
-  // Actualizar el producto en la base de datos
   const { data, error } = await supabase
     .from("Product")
-    .update(updateData)
+    .update([
+      {
+        name: name,
+        price: price,
+        withAddition: withAddition,
+        category: category,
+        imgUrl: imgUrl,
+        description: description,
+      },
+    ])
     .eq("product_id", id)
     .select();
 
   if (error) {
-    console.error("Error al actualizar el producto:", error);
-    return null;
+    console.log("No se que mierda ocurrió");
+    throw new Error(`Error al actualizar el producto: ${error.message}`);
   }
 
   return data;
@@ -221,6 +221,7 @@ export async function updateAddition({ id, name, price }) {
     console.log(error);
     return null;
   }
+  console.log(data);
   return data;
 }
 
