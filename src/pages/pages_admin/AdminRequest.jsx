@@ -161,18 +161,23 @@ const AdminRequest = () => {
 
   return (
     <div className="my-4 w-full grow flex flex-col justify-center bg-gray-100">
-    <ToastContainer
-            toastStyle={{  backgroundColor: "#fb923c", color: "white", fontWeight:"bold", boxShadow:" 0px -4px 15px 0px rgba(0,0,0,0.2)" }} 
-            position="bottom-center"
-            autoClose={2000}
-            hideProgressBar={false}
-            newestOnTop={false}
-            closeOnClick
-            rtl={false}
-            pauseOnFocusLoss
-            pauseOnHover={false}
-            theme="colored"
-            />
+      <ToastContainer
+        toastStyle={{
+          backgroundColor: "#fb923c",
+          color: "white",
+          fontWeight: "bold",
+          boxShadow: " 0px -4px 15px 0px rgba(0,0,0,0.2)",
+        }}
+        position="bottom-center"
+        autoClose={2000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        pauseOnHover={false}
+        theme="colored"
+      />
       <div className="mx-12 grid grid-cols-[360px_2fr] grid-rows-1 gap-2">
         {/* Campo de búsqueda */}
         <div className="relative grow gap-4 mx-5 ">
@@ -191,11 +196,11 @@ const AdminRequest = () => {
         <div className="flex space-x-2 justify-center">
           <div>
             <button
-              className=" px-3 rounded-md my-2"
-              onClick={() => {
+              onClick={(e) => {
                 setRefreshData(!refreshData);
                 restartFields();
               }}
+              className=" px-3 rounded-md my-2  active:transition-transform active:scale-90"
             >
               <FontAwesomeIcon icon={faRefresh} />
             </button>
