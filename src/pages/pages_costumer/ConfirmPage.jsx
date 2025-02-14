@@ -80,11 +80,8 @@ ${barrio}`;
     res += `
 ${
   formaPago === "Efectivo"
-    ? "$" +
-      addThousandSeparators(total) +
-      "/$" +
-      addThousandSeparators(conCuantoPago)
-    : addThousandSeparators(total) + "/$" + "Transferencia"
+    ? addThousandSeparators(total) + "/" + addThousandSeparators(conCuantoPago)
+    : addThousandSeparators(total) + "/" + "Transferencia"
 }`;
 
     return res;

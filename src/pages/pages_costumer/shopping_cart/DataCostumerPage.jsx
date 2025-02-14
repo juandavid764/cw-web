@@ -72,6 +72,20 @@ const DataCostumerPage = () => {
         });
         break;
 
+        case "formaPago":
+          setPaymentMethod(value);
+    setFormData({
+      ...formData,
+      formaPago: value,
+    });
+
+    if (value === "Transferencia") {
+      if (feedbackPago) {
+        setFeedbackPago(false);
+      }
+    }
+    break;
+
       default:
         setFormData({
           ...formData,
@@ -79,15 +93,6 @@ const DataCostumerPage = () => {
         });
         break;
     }
-  };
-
-  const handlePaymentChange = (event) => {
-    const value = event.target.value;
-    setPaymentMethod(value);
-    setFormData({
-      ...formData,
-      formaPago: value,
-    });
   };
 
   const handleSubmit = (event) => {
@@ -98,7 +103,7 @@ const DataCostumerPage = () => {
       return;
     }
 
-    if (formData.conCuantoPago === "") {
+    if (formData.conCuantoPago === "" && paymentMethod === "Efectivo") {
       setFeedbackPago(true);
       return;
     } else {
@@ -177,7 +182,7 @@ const DataCostumerPage = () => {
               id="payment"
               name="formaPago"
               value={formData.formaPago}
-              onChange={handlePaymentChange}
+              onChange={handleInputChange}
               className="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-gray-300 focus:border-gray-500 sm:text-sm rounded-md"
             >
               <option value="Efectivo">Efectivo</option>

@@ -94,6 +94,19 @@ const DataDeliveryPage = () => {
 
         break;
 
+      case "formaPago":
+        setFormData({
+          ...formData,
+          formaPago: value,
+        });
+
+        if (value === "Transferencia") {
+          if (feedbackPago) {
+            setFeedbackPago(false);
+          }
+        }
+        break;
+
       default:
         setFormData({
           ...formData,
@@ -110,7 +123,7 @@ const DataDeliveryPage = () => {
     if (feedbackTel || feedbackPago) {
       return;
     }
-    if (formData.conCuantoPago === "") {
+    if (formData.conCuantoPago === "" && formData.formaPago === "Efectivo") {
       setFeedbackPago(true);
       return;
     } else {
