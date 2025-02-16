@@ -8,11 +8,9 @@ import { DoughnutChart } from "../../components/admin/StatisticsComponents/Dough
 import { People, AttachMoney, AccessTime, Star } from "@mui/icons-material";
 
 const StatisticsPage = () => {
-  //Obtener la fecha actual formateada y se define como valor inicial de las estadisticas
   const fechaActual = new Date().toISOString().split("T")[0];
   const [inputFecha, setDateInput] = useState(fechaActual);
 
-  //Configuracion incial del diagrama de dona
   const dataIncialChart = {
     labels: ["sin datos"],
     datasets: [
@@ -23,20 +21,16 @@ const StatisticsPage = () => {
   };
   const [dataChart, setDataChart] = useState(dataIncialChart);
 
-  //Estados de las estadisticas (Cards)
   const [ventasNetas, setVentasNetas] = useState(0);
   const [cantClientes, setCantClientes] = useState(0);
   const [mejorProducto, setMejorProducto] = useState("");
-
   const [horaPico, setHoraPico] = useState(0);
   const [cantVentasHoraPico, setCantVentasHoraPico] = useState(0);
 
   useEffect(() => {
     console.log(`\n\n\n---Estadisticas para la fecha: ${inputFecha}---`);
 
-    //Obtenemos numero de filas y total de ventas
     getNetSalesByDate(inputFecha).then(({ ventas_netas, cant_clientes }) => {
-      //Formateado el total de ventas a COP sin decimales
       ventas_netas = new Intl.NumberFormat("es-CO", {
         style: "currency",
         currency: "COP",
@@ -45,7 +39,6 @@ const StatisticsPage = () => {
       setCantClientes(cant_clientes);
     });
 
-    //Obtenemos la hora pico
     getMostActiveHour(inputFecha).then(({ hour, insertions }) => {
       if (hour) {
         setHoraPico(`${hour}:00 - ${hour}:59`);
@@ -56,13 +49,10 @@ const StatisticsPage = () => {
       }
     });
 
-    //Obtenemos el producto mas vendido
     getProductsSold(inputFecha).then((products) => {
-      /// Formatear los datos para el chart
       const labels = products
         ? products.map((product) => product.product_name)
         : [];
-
       const dataValues = products
         ? products.map((product) => product.total_quantity)
         : [];
@@ -77,7 +67,6 @@ const StatisticsPage = () => {
       };
 
       setDataChart(data);
-
       setMejorProducto(products[0]?.product_name || "N/A");
     });
   }, [inputFecha]);
@@ -110,39 +99,41 @@ const StatisticsPage = () => {
   ];
 
   const Card = ({ icon, title, value }) => (
-    <div className="flex flex-col    items-center bg-white text-black p-6 m-0 rounded-lg shadow-lg transition-transform hover:scale-105">
-      <div className="flex gap-2">
-        <div className="text-indigo-400 mb-4">{icon}</div>
-        <h3 className="text-lg font-sans  mb-2">{title}</h3>
+    <div className="flex flex-col items-center bg-white text-black px-1 py-4 md:p-6 rounded-lg shadow-lg transition-transform hover:scale-105">
+      <div className="flex items-center gap-2">
+        <div className="text-indigo-400">{icon}</div>
+        <h3 className="md:text-lg font-sans">{title}</h3>
       </div>
-      <div>
-        <p className="text-2xl font-semibold">{value}</p>
-      </div>
+      <p className="md:text-2xl font-semibold">{value}</p>
     </div>
   );
 
   return (
-    <div id="modal" className="bg-gray-100 flex flex-col h-full p-10 pt-2">
-      <div
-        className="flex flex-col bg-gray-100 gap-3"
-        about="contenedor de (graficos, card) y (calendario)"
-      >
-        <div
-          className="flex bg-gray-100 flex-row p-2 justify-center mb-3"
-          about="Calendario"
-        >
+    <div className="bg-gray-100 min-h-screen p-4 md:p-10">
+      <div className="flex flex-col gap-4">
+        <div className="flex justify-center">
           <input
             type="date"
-            className="p-2 rounded-lg shadow-md"
+            className="p-2 rounded-lg shadow-md sm:w-auto"
             onChange={handleDateChange}
             value={inputFecha}
           />
         </div>
-        <div className=" flex flex-row justify-evenly gap-4">
-          <div
-            className="bg-gray-100 grid grid-cols-2  w-full gap-4"
-            about="Cards"
-          >
+
+        <div className="flex flex-col md:flex-row gap-4">
+          <div className="w-full md:w-2/3 md:max-h-screen flex justify-center">
+            <div className="bg-white w-full p-4 md:p-6 rounded shadow">
+              <h2 className="text-center text-xl md:text-2xl font-bold mb-4">
+                Ventas por producto
+              </h2>
+              <div className="flex justify-center">
+                <div className="w-full md:w-1/2">
+                  <DoughnutChart data={dataChart} />
+                </div>
+              </div>
+            </div>
+          </div>
+          <div className="w-full md:w-1/3 grid grid-cols-2 gap-4">
             {cardsData.map((card, index) => (
               <Card
                 key={index}
@@ -151,17 +142,6 @@ const StatisticsPage = () => {
                 value={card.value}
               />
             ))}
-          </div>
-          <div
-            className="bg-yellow-50 w-full h-full flex justify-center"
-            about="Line Chart"
-          >
-            <div className="flex flex-col justify-center h-fit w-full bg-white px-36 rounded shadow">
-              <h2 className="text-center text-2xl font-bold p-4">
-                Ventas por producto
-              </h2>
-              <DoughnutChart data={dataChart} />
-            </div>
           </div>
         </div>
       </div>
