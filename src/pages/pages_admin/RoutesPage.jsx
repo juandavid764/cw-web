@@ -1,62 +1,74 @@
 import React, { useState, useEffect, useCallback } from "react";
+
 import ButtonGroup from "../../components/admin/editComponents/ButtonGroup";
 import Portal from "../../components/admin/routesComponents/ventana_modal/Portal";
 import CardRoute from "../../components/admin/routesComponents/CardRoute";
+
 import {
   getDomiciliaries,
   getRoutes,
   getRequestsInProcess,
   getRequestsWithRouteId,
 } from "../../supabase/crudFunctions";
+import { useSubscribeToRouteChanges } from "../../supabase/Subscriptions.jsx";
+import { getRouteModels } from "../../supabase/nativeQuerys.js";
 
 const RoutesPage = () => {
+  const buttons = [
+    { id: 0, label: "Todos" },
+  ];
+
+  // indicadores (guarda del boton pulsado e indican la recarga de datos)
+  const [reload, setReload] = useState(false);
+  const [selectedBtn, setSelectedBtn] = useState(0);
+
+  // Info de la base de datos
   const [domiciliaries, setDomiciliaries] = useState([]);
-  const [routes, setRoutes] = useState([]);
-  const [requests, setRequests] = useState([]);
-  const [requestWithRoute, setRequestWithRoute] = useState([]);
-  const [selectedDomiciliary, setSelectedDomiciliary] = useState("");
+  const [routeModels, setRouteModels] = useState([]);
+  const [reqsWithoutRoute, setReqsWithoutRoute] = useState([]); //! Requests a asignar ruta (en progreso sin ruta) 
 
-  // Crear función reusable para recargar datos
+  // Estados auxiliares
+  const [filteredRouteModels, setFilteredRouteModels] = useState(routeModels);
+
+  // Cambia el estado para indicar que hubo un cambio
   const reloadData = useCallback(async () => {
-    try {
-      const [routesData, domiciliaryData, requestsData, requestWithRouteData] =
-        await Promise.all([
-          getRoutes(),
-          getDomiciliaries(),
-          getRequestsInProcess(),
-          getRequestsWithRouteId(),
-        ]);
+    setReload((prev) => !prev);
+  }, []);
 
-      setRoutes(routesData);
-      setDomiciliaries(domiciliaryData);
-      setRequests(requestsData);
-      setRequestWithRoute(requestWithRouteData);
-    } catch (error) {
-      console.error("Error al recargar datos:", error);
-    }
-  }, []); // No dependencias porque no utiliza estados externos
+  // Suscripción a cambios en tiempo real
+  useSubscribeToRouteChanges(reloadData);
 
+  // Vuelva a cargar los datos cuando se cambie el estado de reload
   useEffect(() => {
-    reloadData(); // Cargar datos al inicio
-    if (domiciliaries.length > 0) {
-      setSelectedDomiciliary(domiciliaries[0].domiciliary_id);
+    console.log("Recargando datos");
+
+    getRouteModels().then((routeModelsData) => {
+      setRouteModels(routeModelsData);
+    });
+
+    getRequestsInProcess().then((requestsData) => {
+      setReqsWithoutRoute(requestsData);
+    });
+
+  }, [reload]);
+
+  // carga los domiciliarios solo una vez
+  useEffect(() => {
+    getDomiciliaries().then((domiciliariesData) => {
+      setDomiciliaries(domiciliariesData);
+    });
+  }, []);
+
+  // Filtra las RoutesModels por el botón seleccionado
+  const handleSelectButton = (id) => {
+    setSelectedBtn(id);
+
+    if (id === 0) { // 0 es el id de el boton "Todos"
+      setFilteredRouteModels(routeModels);
+    }else{
+      setFilteredRouteModels(routeModels.filter((route) => route.domiciliary_id === id));
     }
-  }, [reloadData]);
-
-  const handleChangeDomiciliary = (domiciliaryId) => {
-    setSelectedDomiciliary(domiciliaryId);
-  };
-
-  // Filtrar rutas basadas en el ID del domiciliario seleccionado
-  const filteredRoutes = routes.filter(
-    (route) => route.domiciliary === selectedDomiciliary
-  );
-
-  // Extraer nombres y IDs de domiciliarios
-  const domiciliaryOptions = domiciliaries.map((d) => ({
-    name: d.name,
-    id: d.domiciliary_id,
-  }));
+  }
 
   return (
     <div
@@ -65,33 +77,30 @@ const RoutesPage = () => {
     >
       <div className="flex flex-row justify-between px-11 py-3">
         {/* Botones para seleccionar domiciliarios */}
-        <ButtonGroup
-          options={domiciliaryOptions.map((d) => d.name)} // Mostrar nombres en botones
-          selected={
-            domiciliaryOptions.find((d) => d.id === selectedDomiciliary)?.name
-          } // Mostrar el nombre seleccionado
-          onSelect={(name) => {
-            const selected = domiciliaryOptions.find((d) => d.name === name);
-            handleChangeDomiciliary(selected?.id || "");
-          }}
-        />
+        {buttons.map((button) => (
+          <button
+            key={button.id}
+            onClick={() => handleSelectButton(button.id)}
+            className={`shadow px-4 py-2 rounded-md font-medium transition-colors ${
+              selectedBtn === button.id
+                ? "shadow-2xl bg-orange-400 text-white"
+                : "bg-gray-200 text-gray-700 hover:bg-gray-300"
+            }`}
+          >
+            {button.label}
+          </button>
+        ))}
         {/* Botón para crear rutas */}
-        <Portal
-          domiciliarios={domiciliaryOptions}
-          requests={requests}
-          reloadRoutes={reloadData} // Usar reloadData directamente
-        />
+        {/* { <Portal
+          domiciliarios={domiciliaries}
+          requests={reqsWithoutRoute}
+        /> } */}
       </div>
       <div className=" flex justify-center flex-row bg-gray-100">
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 gap-6 p-1">
-          {filteredRoutes.map((route) => (
+          {filteredRouteModels.map((route) => (
             <div key={route.route_id} className="flex-grow">
-              <CardRoute
-                route={route}
-                domiciliaryOptions={domiciliaryOptions}
-                requestWithRoute={requestWithRoute}
-                reloadData={reloadData} // Pasar reloadData para acciones en CardRoute
-              />
+              {/* {<CardRoute routeModel={route} />} */}
             </div>
           ))}
         </div>

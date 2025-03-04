@@ -1,16 +1,13 @@
 import React, { useState } from "react";
 import { ChevronDownIcon, TrashIcon } from "@heroicons/react/24/solid";
 import {
-  updateRouteStatus,
+  updateStatusRoute,
   deleteRoute,
 } from "../../../supabase/crudFunctions";
 import { addThousandSeparators } from "../../../utils/addThousandSeparators.js";
 
 export default function CardRoute({
-  route,
-  domiciliaryOptions,
-  requestWithRoute,
-  reloadData,
+  routeModel
 }) {
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const [selectedStatus, setSelectedStatus] = useState(route.status);
@@ -50,7 +47,7 @@ export default function CardRoute({
     setDropdownOpen(false);
     console.log("Cambiando estado de la ruta", route.route_id, "a", newStatus);
     try {
-      await updateRouteStatus({ id: route.route_id, status: newStatus }); // Llamar a la función para actualizar en la base de datos
+      await updateStatusRoute({ id: route.route_id, status: newStatus }); // Llamar a la función para actualizar en la base de datos
     } catch (error) {
       console.error("Error actualizando el estado:", error);
     }

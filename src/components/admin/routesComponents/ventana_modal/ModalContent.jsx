@@ -10,16 +10,16 @@ export default function ModalContent({
   onClose,
   domiciliarios,
   requests,
-  reloadRoutes,
-  setUpdating,
 }) {
   const [total, setTotal] = useState(0);
   const [selectedPedidos, setSelectedPedidos] = useState([]);
   const [selectedDomiciliario, setSelectedDomiciliario] = useState({});
+
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+
   const orderedRequests = requests.sort((a, b) => a.request_id - b.request_id);
-  const pedidosOrdenados = orderedRequests.map((pedido) => pedido.request_id);
+
 
   const calculateTotal = (selectedPedidos) => {
     const selectedRequests = requests.filter((request) =>
@@ -77,7 +77,6 @@ export default function ModalContent({
         })
         .then(() => {
           alert("Ruta creada y solicitudes vinculadas con éxito.");
-          reloadRoutes();
           onClose();
         })
         .catch((error) => {
@@ -145,15 +144,15 @@ export default function ModalContent({
         <div className="mt-3 w-full">
           <h2 className="text-neutral-700 mb-2">Selecciona los pedidos:</h2>
           <div className="grid grid-cols-5 gap-3 max-h-[380px] overflow-y-scroll border rounded p-3">
-            {pedidosOrdenados.map((pedido, index) => (
+            {orderedRequests.map((pedido, index) => (
               <label
                 key={index}
                 className="flex items-center space-x-2 cursor-pointer"
               >
                 <input
                   type="checkbox"
-                  checked={selectedPedidos.includes(pedido)}
-                  onChange={() => handlePedidoChange(pedido)}
+                  checked={selectedPedidos.includes(pedido.request_id)}
+                  onChange={() => handlePedidoChange(pedido.request_id)}
                   className="form-checkbox h-5 w-5 text-orange-400"
                 />
                 <span className="text-gray-700">{pedido}</span>

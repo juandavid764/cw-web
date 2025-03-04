@@ -1,7 +1,6 @@
 import { supabase } from "./client";
 import {
   deleteImage,
-  insertImage,
   getCurrentImageUrl,
 } from "./bucketFunctions";
 
@@ -250,6 +249,9 @@ export async function getDomiciliaries() {
     console.log(error);
     return null;
   }
+
+  console.log("\n Domiciliarios: ");
+  console.log(Domiciliary)
   return Domiciliary;
 }
 
@@ -460,8 +462,7 @@ export async function getRequests() {
   return Request;
 }
 
-// Obtener solo los pedidos en estado "en proceso" y adicionalmente que sean para domicilio
-
+// Obtener los pedidos "en proceso" y para domicilio
 export async function getRequestsInProcess() {
   let { data: Request, error } = await supabase
     .from("Request")
@@ -474,6 +475,9 @@ export async function getRequestsInProcess() {
     console.log(error);
     return null;
   }
+
+  console.log("\n Request In Process: ");
+  console.log(Request);
   return Request;
 }
 
@@ -541,7 +545,13 @@ export async function deleteRequest(id) {
 
 // get all data from the table Route
 export async function getRoutes() {
-  let { data: Route, error } = await supabase.from("Route").select("*");
+  let { data: Route, error } = await supabase.from("Route").select(`
+    id, 
+    nombre, 
+    origen, 
+    destino, 
+    pedidos (id)  -- Trae solo los IDs de los pedidos asociados
+  `);
   if (error) {
     console.log(error);
     return null;
@@ -566,21 +576,8 @@ export async function insertRoute({ domiciliary, total }) {
   return data;
 }
 
-// update data in the table Route
-export async function updateRoute({ id }) {
-  const { data, error } = await supabase
-    .from("Route")
-    .update({ domiciliary })
-    .eq("id", id)
-    .select();
-  if (error) {
-    console.log(error);
-    return null;
-  }
-  return data;
-}
 
-export async function updateRouteStatus({ id, status }) {
+export async function updateStatusRoute({ id, status }) {
   const { data, error } = await supabase
     .from("Route")
     .update({ status: status })
@@ -590,8 +587,23 @@ export async function updateRouteStatus({ id, status }) {
     console.log(error);
     return null;
   }
+
+  console.log(data);
   return data;
 }
+
+export async function updateDomiciliaryRoute({ id, domiciliary }) {
+  const { data, error } = await supabase
+    .from("Route")
+    .update({ domiciliary: domiciliary })
+    .eq("route_id", id)
+    .select();
+  if (error) {
+    console.log(error);
+    return null;
+  }
+  return data;
+} 
 
 // delete data from the table Route
 export async function deleteRoute({ id }) {
@@ -599,6 +611,8 @@ export async function deleteRoute({ id }) {
     .from("Route")
     .delete()
     .eq("route_id", id);
+
+    console.log(data);
   if (error) {
     console.log(error);
     return null;

@@ -56,5 +56,16 @@ export async function getProductsSold(dateToConsult) {
 }
 
 
+export async function getRouteModels() {
+  let { data, error } = await supabase.rpc('get_route_models');
+  if (error) console.error(error);
+  else {
+    console.log("\nRouteModels:");
+    console.log(data)}
+
+  return data;
+}
+
+
 
 
