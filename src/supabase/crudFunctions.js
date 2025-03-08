@@ -1,8 +1,5 @@
 import { supabase } from "./client";
-import {
-  deleteImage,
-  getCurrentImageUrl,
-} from "./bucketFunctions";
+import { deleteImage, getCurrentImageUrl } from "./bucketFunctions";
 
 //!Product
 //!----------------------------------------------------------------------------------------------------------------------------
@@ -251,7 +248,7 @@ export async function getDomiciliaries() {
   }
 
   console.log("\n Domiciliarios: ");
-  console.log(Domiciliary)
+  console.log(Domiciliary);
   return Domiciliary;
 }
 
@@ -530,6 +527,20 @@ export async function updateRequest({ request_id, client, status, total }) {
   return data;
 }
 
+//Actualizar el route_id de la request
+export async function updateRoute_idRequest({ id, routeId }) {
+  const { data, error } = await supabase
+    .from("Request")
+    .update({ route_id: routeId })
+    .eq("request_id", id);
+
+  if (error) {
+    console.error("Error al actualizar la solicitud:", error);
+    return null;
+  }
+  return data;
+}
+
 // delete data from the table Request
 export async function deleteRequest(id) {
   const { data, error } = await supabase.from("Request").delete().eq("id", id);
@@ -576,11 +587,10 @@ export async function insertRoute({ domiciliary, total }) {
   return data;
 }
 
-
-export async function updateStatusRoute({ id, status }) {
+export async function updateDomiciliaryRoute({ id, newDomiciliary }) {
   const { data, error } = await supabase
     .from("Route")
-    .update({ status: status })
+    .update({ domiciliary: newDomiciliary })
     .eq("route_id", id)
     .select();
   if (error) {
@@ -592,18 +602,35 @@ export async function updateStatusRoute({ id, status }) {
   return data;
 }
 
-export async function updateDomiciliaryRoute({ id, domiciliary }) {
+export async function updateStatusRoute({ id, newStatus }) {
   const { data, error } = await supabase
     .from("Route")
-    .update({ domiciliary: domiciliary })
+    .update({ status: newStatus })
     .eq("route_id", id)
     .select();
   if (error) {
     console.log(error);
     return null;
   }
+
+  console.log(data);
   return data;
-} 
+}
+
+export async function updateTotalRoute({ id, newTotal }) {
+  const { data, error } = await supabase
+    .from("Route")
+    .update({ total: newTotal })
+    .eq("route_id", id)
+    .select();
+  if (error) {
+    console.log(error);
+    return null;
+  }
+
+  console.log(data);
+  return data;
+}
 
 // delete data from the table Route
 export async function deleteRoute({ id }) {
@@ -612,23 +639,9 @@ export async function deleteRoute({ id }) {
     .delete()
     .eq("route_id", id);
 
-    console.log(data);
+  console.log(data);
   if (error) {
     console.log(error);
-    return null;
-  }
-  return data;
-}
-
-//Actualizar la request con el route_id
-export async function updateRequestsWithRoute({ requestId, routeId }) {
-  const { data, error } = await supabase
-    .from("Request")
-    .update({ route_id: routeId })
-    .eq("request_id", requestId);
-
-  if (error) {
-    console.error("Error al actualizar la solicitud:", error);
     return null;
   }
   return data;

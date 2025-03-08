@@ -3,7 +3,6 @@ import { XMarkIcon, ChevronDownIcon } from "@heroicons/react/24/solid";
 import ButtonComponent from "../../../web/ButtonComponent";
 import {
   insertRoute,
-  updateRequestsWithRoute,
 } from "../../../../supabase/crudFunctions";
 
 export default function ModalContent({
@@ -67,10 +66,7 @@ export default function ModalContent({
           const updatePromises = selectedPedidos.map((pedido) => {
             if (pedido === null) return Promise.resolve("wtf");
             console.log("Pedido actualizado:", pedido);
-            return updateRequestsWithRoute({
-              requestId: pedido,
-              routeId: routeId,
-            });
+
           });
 
           return Promise.all(updatePromises);
