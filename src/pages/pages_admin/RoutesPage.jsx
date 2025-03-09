@@ -69,6 +69,7 @@ const RoutesPage = () => {
   useEffect(() => {
     getDomiciliaries().then((domiciliariesData) => {
       setDomiciliaries(domiciliariesData);
+      console.log(domiciliariesData);
 
       // Crea los botones para seleccionar los domiciliarios
       setButtons(
@@ -133,8 +134,7 @@ const RoutesPage = () => {
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 gap-6 p-1">
           {filteredRouteModels.map((route) => (
             <div key={route.route_id} className="flex-grow">
-              <h1>{route.date}</h1> //! Borrar cuando se implemente CaardRoute
-              {/* {<CardRoute routeModel={route} />} */}
+              <CardRoute routeModel={route} domiciliaries={domiciliaries} />
             </div>
           ))}
         </div>

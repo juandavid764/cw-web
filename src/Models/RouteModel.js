@@ -17,9 +17,9 @@ class RouteModel {
     total,
   }) {
     this.route_id = route_id;
-    this.domicilary = domiciliary;
+    this.domiciliary = domiciliary;
     this.time = time;
-    this.estatus = status;
+    this.status = status;
     this.date = date;
     this.requests = requests;
     this.total = total;

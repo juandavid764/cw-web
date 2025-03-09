@@ -1,23 +1,16 @@
 import React, { useState } from "react";
 import { ChevronDownIcon, TrashIcon } from "@heroicons/react/24/solid";
-import {
-  updateStatusRoute,
-  deleteRoute,
-} from "../../../supabase/crudFunctions";
 import { addThousandSeparators } from "../../../utils/addThousandSeparators.js";
 
-export default function CardRoute({
-  routeModel
-}) {
-  const [dropdownOpen, setDropdownOpen] = useState(false);
-  const [selectedStatus, setSelectedStatus] = useState(route.status);
+export default function CardRoute({ routeModel, domiciliaries }) {
+  console.log("Ruta", routeModel);
+  console.log("Domiciliarios", domiciliaries);
+  const [dropdownOpen, setDropdownOpen] = useState(false); //Manejo del DropdownMenu que sale en cada card
+  const [selectedStatus, setSelectedStatus] = useState(routeModel.status); // Estado de la ruta que puede ser cambiado en todo momento
 
-  const statuses = ["En proceso", "Completado", "Cancelado"];
+  const statuses = ["En proceso", "Completado", "Cancelado"]; // Estados posibles de la ruta  para el dropdown
 
-  const selected = domiciliaryOptions.find((d) => d.id === route.domiciliary);
-  const filteredRequests = requestWithRoute.filter(
-    (request) => request.route_id === route.route_id
-  );
+  const filteredRequests = routeModel.requests; //Pedidos de la ruta
 
   const statusColors = {
     "En proceso": "bg-blue-400",
@@ -25,35 +18,41 @@ export default function CardRoute({
     Cancelado: "bg-red-400",
   };
 
-  const domiciliaryName = selected ? selected.name : "Sin asignar";
+  const domiciliaryName = domiciliaries.find(
+    (domiciliary) => domiciliary.id === routeModel.domiciliary
+  )?.name; //Nombre del domiciliario asignado a la ruta
 
   const toggleDropdown = () => {
+    //Función para abrir y cerrar el dropdown
     console.log("Status", selectedStatus);
     setDropdownOpen((prev) => !prev);
   };
 
   const handleDelete = async () => {
-    console.log("Eliminando ruta", route.route_id);
     try {
-      await deleteRoute({ id: route.route_id }); // Llamar a la función para eliminar en la base de datos
-      reloadData(); // Recargar datos
+      await routeModel.deleteRoute(); // Llamar a la función para eliminar en la base de datos
     } catch (error) {
       console.error("Error eliminando la ruta:", error);
     }
   };
-
+  //Función para cambiar el estado de la ruta en la base de datos que se activa al seleccionar un estado del dropdown
   const handleStatusChange = async (newStatus) => {
     setSelectedStatus(newStatus);
     setDropdownOpen(false);
-    console.log("Cambiando estado de la ruta", route.route_id, "a", newStatus);
+    console.log(
+      "Cambiando estado de la ruta",
+      routeModel.route_id,
+      "a",
+      newStatus
+    );
     try {
-      await updateStatusRoute({ id: route.route_id, status: newStatus }); // Llamar a la función para actualizar en la base de datos
+      await routeModel.editStatus(newStatus);
     } catch (error) {
       console.error("Error actualizando el estado:", error);
     }
   };
 
-  const colorClass = statusColors[selectedStatus] || "bg-red-400";
+  const colorClass = statusColors[selectedStatus] || "bg-red-400"; //Color de la card según el estado de la ruta
 
   return (
     <div
@@ -61,7 +60,6 @@ export default function CardRoute({
         dropdownOpen ? "" : "hover:scale-105"
       } m-3 w-80`}
     >
-      {/* Bloquear interacción con otras cards */}
       {dropdownOpen && (
         <div
           className="fixed inset-0 z-40 bg-transparent pointer-events-auto"
@@ -71,9 +69,7 @@ export default function CardRoute({
 
       {/* Contenido de la Card */}
       <div className="flex justify-between w-full">
-        <p className="text-base font-semibold">
-          {domiciliaryName || "Sin asignar"}
-        </p>
+        <p className="text-base font-semibold">{domiciliaryName}</p>
         <button
           className="text-red-500 hover:text-red-700"
           onClick={handleDelete}
@@ -92,7 +88,9 @@ export default function CardRoute({
       </div>
 
       <div className="flex justify-between items-center w-full mt-2 relative">
-        <p className="text-sm">Total: {addThousandSeparators(route.total) || 0}</p>
+        <p className="text-sm">
+          Total: {addThousandSeparators(routeModel.total) || 0}
+        </p>
         <div className="relative z-50">
           <button
             className={`flex justify-between items-center px-3 py-2 border rounded text-white ${colorClass}`}
