@@ -28,7 +28,9 @@ const RoutesPage = () => {
   const [reqsWithoutRoute, setReqsWithoutRoute] = useState([]); //! Requests a asignar ruta (en progreso sin ruta)
 
   // Estados auxiliares
-  const [filteredRouteModels, setFilteredRouteModels] = useState(routeModels);
+  const [filteredRouteModels, setFilteredRouteModels] = useState([]);
+  console.log("\nRutas filtradas");
+  console.log(filteredRouteModels);
 
   // Cambia el estado para indicar que hubo un cambio
   const reloadData = useCallback(async () => {
@@ -37,6 +39,16 @@ const RoutesPage = () => {
 
   // Suscripción a cambios en tiempo real
   useSubscribeToRouteChanges(reloadData);
+
+  // Filtra las RoutesModels por el botón seleccionado
+  useEffect(() => {
+    console.log(selectedBtn);
+    if (selectedBtn === 0) {
+      setFilteredRouteModels(routeModels);
+    } else {
+      setFilteredRouteModels(routeModels.filter((route) => route.domiciliary == selectedBtn));
+    }
+  }, [selectedBtn, routeModels]);
 
   // Vuelva a cargar los datos cuando se cambie el estado de reload
   useEffect(() => {
@@ -55,6 +67,9 @@ const RoutesPage = () => {
           domiciliary: route.domiciliary,
         });
       });
+
+      console.log("\n modleo Mapeado");
+      console.log(routeModelsMap);
 
       setRouteModels(routeModelsMap);
     });
@@ -83,19 +98,9 @@ const RoutesPage = () => {
     });
   }, []);
 
-  // Filtra las RoutesModels por el botón seleccionado
+  // Cambia el estado del boton
   const handleSelectButton = (idButton) => {
-    console.log(routeModels);
     setSelectedBtn(idButton);
-
-    if (idButton === 0) {
-      // 0 es el id de el boton "Todos"
-      setFilteredRouteModels(routeModels);
-    } else {
-      setFilteredRouteModels(
-        routeModels.filter((route) => route.domicilary == idButton)
-      );
-    }
   };
 
   return (
