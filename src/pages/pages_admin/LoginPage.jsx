@@ -16,7 +16,7 @@ const LoginPage = () => {
     try {
       const { user } = await login(username, password); // login function from functions.js
       setUser(user); // updating the user in the context
-      navigate("/admin/editar"); // redirecting to the editPage
+      navigate("/admin/rutas"); // redirecting to the editPage
     } catch (err) {
       setError(err.message);
     }
