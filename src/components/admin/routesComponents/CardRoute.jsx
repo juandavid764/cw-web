@@ -19,7 +19,7 @@ export default function CardRoute({ routeModel, domiciliaries }) {
   };
 
   const domiciliaryName = domiciliaries.find(
-    (domiciliary) => domiciliary.id === routeModel.domiciliary
+    (domiciliary) => domiciliary.domiciliary_id == routeModel.domiciliary
   )?.name; //Nombre del domiciliario asignado a la ruta
 
   const toggleDropdown = () => {
