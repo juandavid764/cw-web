@@ -1,48 +1,34 @@
 import React, { useState, useEffect, useCallback } from "react";
 import { useSubscribeToRouteChanges } from "../../supabase/Subscriptions.jsx";
-
 import Portal from "../../components/admin/routesComponents/ventana_modal/Portal";
 import CardRoute from "../../components/admin/routesComponents/CardRoute";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faRefresh } from "@fortawesome/free-solid-svg-icons";
-
 import {
   getDomiciliaries,
   getRequestsInProcess,
 } from "../../supabase/crudFunctions";
 import { getRouteModels } from "../../supabase/nativeQuerys.js";
-
 import RouteModel from "../../Models/RouteModel.js";
 
 const RoutesPage = () => {
   const detaulButtons = [{ id: 0, label: "Todos" }];
   const [buttons, setButtons] = useState(detaulButtons);
-
-  // indicadores (guarda del boton pulsado e indican la recarga de datos)
   const [reload, setReload] = useState(false);
   const [selectedBtn, setSelectedBtn] = useState(0);
-
-  // Info de la base de datos
   const [domiciliaries, setDomiciliaries] = useState([]);
   const [routeModels, setRouteModels] = useState([]);
-  const [reqsWithoutRoute, setReqsWithoutRoute] = useState([]); //! Requests a asignar ruta (en progreso sin ruta)
+  const [reqsWithoutRoute, setReqsWithoutRoute] = useState([]);
 
-  // Estados auxiliares
   const [filteredRouteModels, setFilteredRouteModels] = useState([]);
-  console.log("\nRutas filtradas");
-  console.log(filteredRouteModels);
 
-  // Cambia el estado para indicar que hubo un cambio
   const reloadData = useCallback(async () => {
     setReload((prev) => !prev);
   }, []);
 
-  // Suscripción a cambios en tiempo real
   useSubscribeToRouteChanges(reloadData);
 
-  // Filtra las RoutesModels por el botón seleccionado
   useEffect(() => {
-    console.log(selectedBtn);
     if (selectedBtn === 0) {
       setFilteredRouteModels(routeModels);
     } else {
@@ -50,12 +36,8 @@ const RoutesPage = () => {
     }
   }, [selectedBtn, routeModels]);
 
-  // Vuelva a cargar los datos cuando se cambie el estado de reload
   useEffect(() => {
-    console.log("Recargando datos");
-
     getRouteModels().then((routeModelsData) => {
-      // Convierte los datos en objetos de la clase RouteModel
       const routeModelsMap = routeModelsData.map((route) => {
         return new RouteModel({
           date: route.date,
@@ -67,26 +49,17 @@ const RoutesPage = () => {
           domiciliary: route.domiciliary,
         });
       });
-
-      console.log("\n modleo Mapeado");
-      console.log(routeModelsMap);
-
       setRouteModels(routeModelsMap);
     });
 
-    // Obtiene las requests en proceso sin ruta asignada
     getRequestsInProcess().then((requestsData) => {
       setReqsWithoutRoute(requestsData);
     });
   }, [reload]);
 
-  // carga los domiciliarios solo una vez
   useEffect(() => {
     getDomiciliaries().then((domiciliariesData) => {
       setDomiciliaries(domiciliariesData);
-      console.log(domiciliariesData);
-
-      // Crea los botones para seleccionar los domiciliarios
       setButtons(
         detaulButtons.concat(
           domiciliariesData.map((domiciliary) => ({
@@ -98,33 +71,33 @@ const RoutesPage = () => {
     });
   }, []);
 
-  // Cambia el estado del boton
   const handleSelectButton = (idButton) => {
     setSelectedBtn(idButton);
   };
 
   return (
-    <div
-      id="modal"
-      className="min-h-screen flex flex-col justify-start p-10 bg-gray-100"
-    >
-      <div className="flex flex-row justify-between px-11 py-3">
-        <div className="flex flex-row justify-center">
-          {/* Botón para refrescar datos */}
+    <div className="min-h-screen flex flex-col justify-start p-4 sm:p-6 md:p-8 lg:p-10 bg-gray-100">
+      {/* Header Section */}
+      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center px-4 sm:px-6 md:px-8 lg:px-10 py-3 gap-4">
+        {/* Left Section - Filters */}
+        <div className="flex flex-wrap items-center gap-2">
           <button
             onClick={reloadData}
-            className=" px-3 rounded-md my-2  active:transition-transform active:scale-90"
+            className="p-2 rounded-md hover:bg-gray-200 transition-colors active:scale-90"
           >
-            <FontAwesomeIcon icon={faRefresh} />
+            <FontAwesomeIcon 
+              icon={faRefresh} 
+              className="text-lg sm:text-base text-gray-600"
+            />
           </button>
-          {/* Botones para seleccionar domiciliarios */}
+          
           {buttons.map((button) => (
             <button
               key={button.id}
               onClick={() => handleSelectButton(button.id)}
-              className={`shadow px-4 py-2 rounded-md font-medium transition-colors ${
+              className={`text-sm sm:text-base px-3 py-1 sm:px-4 sm:py-2 rounded-md font-medium transition-colors ${
                 selectedBtn === button.id
-                  ? "shadow-2xl bg-orange-400 text-white"
+                  ? "bg-orange-400 text-white shadow-lg"
                   : "bg-gray-200 text-gray-700 hover:bg-gray-300"
               }`}
             >
@@ -132,14 +105,23 @@ const RoutesPage = () => {
             </button>
           ))}
         </div>
-        {/* Botón para crear rutas */}
-        {<Portal domiciliarios={domiciliaries} requests={reqsWithoutRoute} />}
+
+        {/* Right Section - Create Route */}
+        <div className="self-center sm:self-auto w-full sm:w-auto">
+          <Portal domiciliarios={domiciliaries} requests={reqsWithoutRoute} />
+        </div>
       </div>
-      <div className=" flex justify-center flex-row bg-gray-100">
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 gap-6 p-1">
+
+      {/* Cards Grid */}
+      <div className="flex-1">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 px-4 sm:px-6 md:px-8 lg:px-10">
           {filteredRouteModels.map((route) => (
-            <div key={route.route_id} className="flex-grow">
-              <CardRoute routeModel={route} domiciliaries={domiciliaries} />
+            <div key={route.route_id} className="w-full">
+              <CardRoute 
+                routeModel={route} 
+                domiciliaries={domiciliaries} 
+                className="h-full"
+              />
             </div>
           ))}
         </div>

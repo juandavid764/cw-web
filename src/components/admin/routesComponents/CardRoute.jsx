@@ -5,12 +5,12 @@ import { addThousandSeparators } from "../../../utils/addThousandSeparators.js";
 export default function CardRoute({ routeModel, domiciliaries }) {
   console.log("Ruta", routeModel);
   console.log("Domiciliarios", domiciliaries);
-  const [dropdownOpen, setDropdownOpen] = useState(false); //Manejo del DropdownMenu que sale en cada card
+  const [dropdownOpen, setDropdownOpen] = useState(false); // Manejo del DropdownMenu que sale en cada card
   const [selectedStatus, setSelectedStatus] = useState(routeModel.status); // Estado de la ruta que puede ser cambiado en todo momento
 
-  const statuses = ["En proceso", "Completado", "Cancelado"]; // Estados posibles de la ruta  para el dropdown
+  const statuses = ["En proceso", "Completado", "Cancelado"]; // Estados posibles de la ruta para el dropdown
 
-  const filteredRequests = routeModel.requests; //Pedidos de la ruta
+  const filteredRequests = routeModel.requests; // Pedidos de la ruta
 
   const statusColors = {
     "En proceso": "bg-blue-400",
@@ -20,10 +20,10 @@ export default function CardRoute({ routeModel, domiciliaries }) {
 
   const domiciliaryName = domiciliaries.find(
     (domiciliary) => domiciliary.id === routeModel.domiciliary
-  )?.name; //Nombre del domiciliario asignado a la ruta
+  )?.name; // Nombre del domiciliario asignado a la ruta
 
   const toggleDropdown = () => {
-    //Función para abrir y cerrar el dropdown
+    // Función para abrir y cerrar el dropdown
     console.log("Status", selectedStatus);
     setDropdownOpen((prev) => !prev);
   };
@@ -35,7 +35,8 @@ export default function CardRoute({ routeModel, domiciliaries }) {
       console.error("Error eliminando la ruta:", error);
     }
   };
-  //Función para cambiar el estado de la ruta en la base de datos que se activa al seleccionar un estado del dropdown
+
+  // Función para cambiar el estado de la ruta en la base de datos que se activa al seleccionar un estado del dropdown
   const handleStatusChange = async (newStatus) => {
     setSelectedStatus(newStatus);
     setDropdownOpen(false);
@@ -52,13 +53,13 @@ export default function CardRoute({ routeModel, domiciliaries }) {
     }
   };
 
-  const colorClass = statusColors[selectedStatus] || "bg-red-400"; //Color de la card según el estado de la ruta
+  const colorClass = statusColors[selectedStatus] || "bg-red-400"; // Color de la card según el estado de la ruta
 
   return (
     <div
-      className={`relative flex flex-col items-center p-6 rounded-lg shadow-lg transition-transform ${
+      className={`relative flex flex-col items-center p-4 sm:p-6 rounded-lg shadow-lg transition-transform ${
         dropdownOpen ? "" : "hover:scale-105"
-      } m-3 w-80`}
+      } m-2 sm:m-3 w-full`}
     >
       {dropdownOpen && (
         <div
@@ -91,7 +92,7 @@ export default function CardRoute({ routeModel, domiciliaries }) {
         <p className="text-sm">
           Total: {addThousandSeparators(routeModel.total) || 0}
         </p>
-        <div className="relative z-50">
+        <div className="relative">
           <button
             className={`flex justify-between items-center px-3 py-2 border rounded text-white ${colorClass}`}
             onClick={toggleDropdown}
