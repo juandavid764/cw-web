@@ -1,5 +1,9 @@
 import React, { useState } from "react";
-import { ChevronDownIcon, TrashIcon } from "@heroicons/react/24/solid";
+import {
+  ChevronDownIcon,
+  TrashIcon,
+  ClockIcon,
+} from "@heroicons/react/24/solid";
 import { addThousandSeparators } from "../../../utils/addThousandSeparators.js";
 
 export default function CardRoute({ routeModel, domiciliaries }) {
@@ -11,6 +15,7 @@ export default function CardRoute({ routeModel, domiciliaries }) {
   const statuses = ["En proceso", "Completado", "Cancelado"]; // Estados posibles de la ruta para el dropdown
 
   const filteredRequests = routeModel.requests; // Pedidos de la ruta
+  const formattedTime = routeModel.time.substring(0, 5); // Hora de la ruta
 
   const statusColors = {
     "En proceso": "bg-blue-400",
@@ -71,6 +76,10 @@ export default function CardRoute({ routeModel, domiciliaries }) {
       {/* Contenido de la Card */}
       <div className="flex justify-between w-full">
         <p className="text-base font-semibold">{domiciliaryName}</p>
+        <div className="flex items-center">
+          <ClockIcon className="h-5 w-5 mr-1 text-gray-700" />
+          <p className="text-sm">{formattedTime}</p>
+        </div>
         <button
           className="text-red-500 hover:text-red-700"
           onClick={handleDelete}
@@ -80,7 +89,7 @@ export default function CardRoute({ routeModel, domiciliaries }) {
         </button>
       </div>
 
-      <div className="flex justify-start w-full">
+      <div className="flex justify-start w-full mt-2">
         <p className="text-sm">
           Pedidos:{" "}
           {filteredRequests?.map((req) => req.request_id).join(", ") ||

@@ -5,6 +5,9 @@ import ButtonComponent from "../../../web/ButtonComponent";
 
 export default function Portal({ domiciliarios, requests }) {
   const [showModal, setShowModal] = useState(false);
+  console.log("Request:", requests);
+  console.log("Domiciliarios:", domiciliarios);
+
   return (
     <>
       <ButtonComponent

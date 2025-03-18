@@ -1,15 +1,9 @@
 import { useState } from "react";
 import { XMarkIcon, ChevronDownIcon } from "@heroicons/react/24/solid";
 import ButtonComponent from "../../../web/ButtonComponent";
-import {
-  insertRoute,
-} from "../../../../supabase/crudFunctions";
+import { insertRoute } from "../../../../supabase/crudFunctions";
 
-export default function ModalContent({
-  onClose,
-  domiciliarios,
-  requests,
-}) {
+export default function ModalContent({ onClose, domiciliarios, requests }) {
   const [total, setTotal] = useState(0);
   const [selectedPedidos, setSelectedPedidos] = useState([]);
   const [selectedDomiciliario, setSelectedDomiciliario] = useState({});
@@ -19,6 +13,7 @@ export default function ModalContent({
 
   const orderedRequests = requests.sort((a, b) => a.request_id - b.request_id);
 
+  const requestsIds = requests.map((request) => request.request_id);
 
   const calculateTotal = (selectedPedidos) => {
     const selectedRequests = requests.filter((request) =>
@@ -66,7 +61,6 @@ export default function ModalContent({
           const updatePromises = selectedPedidos.map((pedido) => {
             if (pedido === null) return Promise.resolve("wtf");
             console.log("Pedido actualizado:", pedido);
-
           });
 
           return Promise.all(updatePromises);
@@ -151,7 +145,7 @@ export default function ModalContent({
                   onChange={() => handlePedidoChange(pedido.request_id)}
                   className="form-checkbox h-5 w-5 text-orange-400"
                 />
-                <span className="text-gray-700">{pedido}</span>
+                <span className="text-gray-700">{pedido.request_id}</span>
               </label>
             ))}
           </div>
