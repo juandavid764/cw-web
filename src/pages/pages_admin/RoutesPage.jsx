@@ -32,7 +32,9 @@ const RoutesPage = () => {
     if (selectedBtn === 0) {
       setFilteredRouteModels(routeModels);
     } else {
-      setFilteredRouteModels(routeModels.filter((route) => route.domiciliary == selectedBtn));
+      setFilteredRouteModels(
+        routeModels.filter((route) => route.domiciliary == selectedBtn)
+      );
     }
   }, [selectedBtn, routeModels]);
 
@@ -77,20 +79,18 @@ const RoutesPage = () => {
 
   return (
     <div className="min-h-screen flex flex-col justify-start p-4 sm:p-6 md:p-8 lg:p-10 bg-gray-100">
-      {/* Header Section */}
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center px-4 sm:px-6 md:px-8 lg:px-10 py-3 gap-4">
-        {/* Left Section - Filters */}
         <div className="flex flex-wrap items-center gap-2">
           <button
             onClick={reloadData}
             className="p-2 rounded-md hover:bg-gray-200 transition-colors active:scale-90"
           >
-            <FontAwesomeIcon 
-              icon={faRefresh} 
+            <FontAwesomeIcon
+              icon={faRefresh}
               className="text-lg sm:text-base text-gray-600"
             />
           </button>
-          
+
           {buttons.map((button) => (
             <button
               key={button.id}
@@ -106,20 +106,21 @@ const RoutesPage = () => {
           ))}
         </div>
 
-        {/* Right Section - Create Route */}
+        {/* Este es el portal, se puede adaptar para que simplemente abra el modal*/}
         <div className="self-center sm:self-auto w-full sm:w-auto">
           <Portal domiciliarios={domiciliaries} requests={reqsWithoutRoute} />
         </div>
       </div>
 
-      {/* Cards Grid */}
+      {/* la grilla de las routeCards  */}
       <div className="flex-1">
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 px-4 sm:px-6 md:px-8 lg:px-10">
           {filteredRouteModels.map((route) => (
             <div key={route.route_id} className="w-full">
-              <CardRoute 
-                routeModel={route} 
-                domiciliaries={domiciliaries} 
+              <CardRoute
+                routeModel={route}
+                domiciliaries={domiciliaries}
+                requests={reqsWithoutRoute}
                 className="h-full"
               />
             </div>

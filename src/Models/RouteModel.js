@@ -26,7 +26,7 @@ class RouteModel {
   }
 
   async editDomicliary(newId) {
-    await updateDomiciliaryRoute({ id: this.route_id, newId: newId });
+    await updateDomiciliaryRoute({ id: this.route_id, newDomiciliary: newId });
   }
 
   async editStatus(newStatus) {
@@ -55,7 +55,7 @@ class RouteModel {
 
   async editRequests(newRequests) {
     //Validamos si los requestList son iguales
-    if (areArraysEqual(this.requests, newRequests)) {
+    if (this.areArraysEqual(this.requests, newRequests)) {
       console.log("Los arrays de requests son iguales");
     } else {
       let requestsEliminadas = this.requests.filter(
@@ -64,7 +64,7 @@ class RouteModel {
 
       if (requestsEliminadas.length > 0) {
         requestsEliminadas.forEach(async (req) => {
-          await updateRoute_idRequest({ id: req.request_id, newId: null });
+          await updateRoute_idRequest({ id: req.request_id, routeId: null });
         });
       }
 
@@ -76,14 +76,14 @@ class RouteModel {
         requestsAnadidas.forEach(async (req) => {
           await updateRoute_idRequest({
             id: req.request_id,
-            newId: this.route_id,
+            routeId: this.route_id,
           });
         });
       }
 
       await updateTotalRoute({
         id: this.route_id,
-        newTotal: calculateTotal(newRequests),
+        newTotal: this.calculateTotal(newRequests),
       });
     }
   }

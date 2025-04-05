@@ -1,7 +1,10 @@
 import { useState } from "react";
 import { XMarkIcon, ChevronDownIcon } from "@heroicons/react/24/solid";
 import ButtonComponent from "../../../web/ButtonComponent";
-import { insertRoute } from "../../../../supabase/crudFunctions";
+import {
+  insertRoute,
+  updateRoute_idRequest,
+} from "../../../../supabase/crudFunctions";
 
 export default function ModalContent({ onClose, domiciliarios, requests }) {
   const [total, setTotal] = useState(0);
@@ -45,9 +48,9 @@ export default function ModalContent({ onClose, domiciliarios, requests }) {
     setIsLoading(true);
 
     try {
-      // Creating 1 new route
+      // Primero se crea la ruta y luego se actualizan los pedidos
       insertRoute({
-        domiciliary: selectedDomiciliario.id,
+        domiciliary: selectedDomiciliario.domiciliary_id,
         total: parseInt(total),
       })
         .then((routeData) => {
@@ -55,12 +58,16 @@ export default function ModalContent({ onClose, domiciliarios, requests }) {
             throw new Error("No se pudo crear la ruta.");
           }
 
-          const routeId = routeData[0].route_id; // getting id of the new route
+          const routeId = routeData[0].route_id; // ID de la ruta creada con éxito
 
-          // Paso 2: Updating the selected requests
+          // Paso 2: Actualizar los pedidos con el ID de la ruta creada
           const updatePromises = selectedPedidos.map((pedido) => {
             if (pedido === null) return Promise.resolve("wtf");
             console.log("Pedido actualizado:", pedido);
+            return updateRoute_idRequest({
+              id: pedido,
+              routeId: routeId,
+            });
           });
 
           return Promise.all(updatePromises);
@@ -102,14 +109,12 @@ export default function ModalContent({ onClose, domiciliarios, requests }) {
         </button>
         <h1 className="text-2xl mb-2 font-bold">Crea una Nueva Ruta</h1>
 
-        {/* Dropdown personalizado */}
         <div className="relative w-full mb-4">
           <button
             className="w-full flex justify-between items-center px-3 py-2 border rounded text-gray-700 bg-white"
             onClick={toggleDropdown}
           >
             {selectedDomiciliario?.name || "Selecciona un domiciliario"}{" "}
-            {/* Mostrar el nombre seleccionado */}
             <ChevronDownIcon
               className={`h-5 w-5 transform ${
                 dropdownOpen ? "rotate-180" : ""
