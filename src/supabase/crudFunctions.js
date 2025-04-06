@@ -461,12 +461,16 @@ export async function getRequests() {
 
 // Obtener los pedidos "en proceso" y para domicilio
 export async function getRequestsInProcess() {
+  let twoDaysAgo = new Date();
+  twoDaysAgo.setDate(twoDaysAgo.getDate() - 2);
+
   let { data: Request, error } = await supabase
     .from("Request")
     .select("*")
     .eq("status", "En proceso")
     .is("route_id", null)
-    .eq("request_type", "domicilio");
+    .eq("request_type", "domicilio")
+    .gte("date", twoDaysAgo.toISOString());
 
   if (error) {
     console.log(error);
@@ -528,10 +532,10 @@ export async function updateRequest({ request_id, client, status, total }) {
 }
 
 //Actualizar el route_id de la request
-export async function updateRoute_idRequest({ id, routeId }) {
+export async function updateRoute_idRequest({ id, routeId, state }) {
   const { data, error } = await supabase
     .from("Request")
-    .update({ route_id: routeId })
+    .update({ route_id: routeId, status: state })
     .eq("request_id", id);
 
   if (error) {

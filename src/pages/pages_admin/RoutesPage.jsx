@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from "react";
+import React, { useState, useEffect } from "react";
 import { useSubscribeToRouteChanges } from "../../supabase/Subscriptions.jsx";
 import Portal from "../../components/admin/routesComponents/ventana_modal/Portal";
 import CardRoute from "../../components/admin/routesComponents/CardRoute";
@@ -22,9 +22,9 @@ const RoutesPage = () => {
 
   const [filteredRouteModels, setFilteredRouteModels] = useState([]);
 
-  const reloadData = useCallback(async () => {
+  const reloadData = () => {
     setReload((prev) => !prev);
-  }, []);
+  };
 
   useSubscribeToRouteChanges(reloadData);
 
@@ -40,6 +40,13 @@ const RoutesPage = () => {
 
   useEffect(() => {
     getRouteModels().then((routeModelsData) => {
+      // Si no hay rutas
+      if (!routeModelsData) {
+        setFilteredRouteModels([]);
+        return;
+      }
+
+      // Si no hay rutas se crean los modelos
       const routeModelsMap = routeModelsData.map((route) => {
         return new RouteModel({
           date: route.date,
@@ -115,16 +122,22 @@ const RoutesPage = () => {
       {/* la grilla de las routeCards  */}
       <div className="flex-1">
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 px-4 sm:px-6 md:px-8 lg:px-10">
-          {filteredRouteModels.map((route) => (
-            <div key={route.route_id} className="w-full">
-              <CardRoute
-                routeModel={route}
-                domiciliaries={domiciliaries}
-                requests={reqsWithoutRoute}
-                className="h-full"
-              />
-            </div>
-          ))}
+          {filteredRouteModels.length ? (
+            filteredRouteModels.map((route) => (
+              <div key={route.route_id} className="w-full">
+                <CardRoute
+                  routeModel={route}
+                  domiciliaries={domiciliaries}
+                  requests={reqsWithoutRoute}
+                  className="h-full"
+                />
+              </div>
+            ))
+          ) : (
+            <h3 className="text-center text-gray-500 col-span-full mt-3">
+              No hay rutas
+            </h3>
+          )}
         </div>
       </div>
     </div>

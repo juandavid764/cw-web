@@ -64,7 +64,7 @@ class RouteModel {
 
       if (requestsEliminadas.length > 0) {
         requestsEliminadas.forEach(async (req) => {
-          await updateRoute_idRequest({ id: req.request_id, routeId: null });
+          await updateRoute_idRequest({ id: req.request_id, routeId: null, state: "En proceso" });
         });
       }
 
@@ -77,6 +77,7 @@ class RouteModel {
           await updateRoute_idRequest({
             id: req.request_id,
             routeId: this.route_id,
+            state: this.status,
           });
         });
       }

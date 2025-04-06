@@ -40,7 +40,7 @@ export default function ModalContent({ onClose, domiciliarios, requests }) {
   };
 
   const handleSave = async () => {
-    if (!selectedDomiciliario || selectedPedidos.length === 0) {
+    if (selectedDomiciliario == {} || selectedPedidos.length === 0) {
       alert("Por favor, selecciona un domiciliario y pedido válido.");
       return;
     }
