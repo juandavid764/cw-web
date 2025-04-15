@@ -104,7 +104,7 @@ const StatisticsPage = () => {
         <div className="text-indigo-400">{icon}</div>
         <h3 className="md:text-lg font-sans">{title}</h3>
       </div>
-      <p className="md:text-2xl font-semibold text-center">{value}</p>
+      <p className="md:text-2xl font-semibold">{value}</p>
     </div>
   );
 
