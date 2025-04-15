@@ -8,53 +8,51 @@ import { addThousandSeparators } from "../../../utils/addThousandSeparators.js";
 import EditModal from "./ventana_modal/EditModal";
 
 export default function CardRoute({ routeModel, domiciliaries, requests }) {
-  const [dropdownOpen, setDropdownOpen] = useState(false); // Manejo del DropdownMenu que sale en cada card
-  const [selectedStatus, setSelectedStatus] = useState(routeModel.status); // Estado de la ruta que puede ser cambiado en todo momento
+  const [dropdownOpen, setDropdownOpen] = useState(false);
+  const [selectedStatus, setSelectedStatus] = useState(routeModel.status);
+  const [modalOpen, setModalOpen] = useState(false);
+  const statuses = ["En proceso", "Completado", "Cancelado"];
 
-  const [modalOpen, setModalOpen] = useState(false); // Estado del modal que se va a abril  al hacer click en la card
-  const statuses = ["En proceso", "Completado", "Cancelado"]; // Estados posibles de la ruta para el dropdown
-
-  const filteredRequests = routeModel.requests; // Pedidos de la ruta
-  const formattedTime = routeModel.time.substring(0, 5); // Hora de la ruta
+  const filteredRequests = routeModel.requests;
+  const formattedTime = routeModel.time.substring(0, 5);
 
   const statusColors = {
-    "En proceso": "bg-blue-400",
+    "En proceso": "bg-blue-500",
     Completado: "bg-green-600",
-    Cancelado: "bg-red-400",
+    Cancelado: "bg-red-500",
+  };
+
+  const statusTextColors = {
+    "En proceso": "text-blue-500",
+    Completado: "text-green-600",
+    Cancelado: "text-red-500",
   };
 
   const domiciliaryName = domiciliaries.find(
     (domiciliary) => domiciliary.domiciliary_id == routeModel.domiciliary
-  )?.name; //Nombre del domiciliario asignado a la ruta
+  )?.name;
 
-  const toggleDropdown = () => {
-    // Función para abrir y cerrar el dropdown
-    console.log("Status", selectedStatus);
+  const toggleDropdown = (e) => {
+    e.stopPropagation();
     setDropdownOpen((prev) => !prev);
   };
+
   const toggleModal = () => {
-    // Función para abrir y cerrar el modal
     setModalOpen((prev) => !prev);
   };
 
-  const handleDelete = async () => {
+  const handleDelete = async (e) => {
+    e.stopPropagation();
     try {
-      await routeModel.deleteRoute(); // Llamar a la función para eliminar en la base de datos
+      await routeModel.deleteRoute();
     } catch (error) {
       console.error("Error eliminando la ruta:", error);
     }
   };
 
-  // Función para cambiar el estado de la ruta en la base de datos que se activa al seleccionar un estado del dropdown
   const handleStatusChange = async (newStatus) => {
     setSelectedStatus(newStatus);
     setDropdownOpen(false);
-    console.log(
-      "Cambiando estado de la ruta",
-      routeModel.route_id,
-      "a",
-      newStatus
-    );
     try {
       await routeModel.editStatus(newStatus);
     } catch (error) {
@@ -62,81 +60,76 @@ export default function CardRoute({ routeModel, domiciliaries, requests }) {
     }
   };
 
-  const colorClass = statusColors[selectedStatus] || "bg-red-400"; // Color de la card según el estado de la ruta
+  const colorClass = statusColors[selectedStatus] || "bg-red-500";
+  const textColorClass = statusTextColors[selectedStatus] || "text-red-500";
 
   return (
     <>
       <div
-        className={`relative flex flex-col items-center p-4 sm:p-6 rounded-lg shadow-lg transition-transform ${
-          dropdownOpen ? "" : "hover:scale-105"
-        } m-2 sm:m-3 w-full`}
+        className={`relative flex flex-col p-4 rounded-lg shadow-md bg-white transition-all hover:shadow-lg border-l-4 ${colorClass} cursor-pointer m-2 max-w-md mx-auto w-full`}
         onClick={toggleModal}
       >
-        {dropdownOpen && (
-          <div
-            className="fixed inset-0 z-40 bg-transparent pointer-events-auto"
-            onClick={(e) => {
-              e.stopPropagation();
-              setDropdownOpen(false);
-            }}
-          />
-        )}
-        <div className="flex justify-between w-full">
-          <p className="text-base font-semibold">{domiciliaryName}</p>
+        {/* Header con nombre y hora */}
+        <div className="flex justify-between items-center w-full mb-2">
           <div className="flex items-center">
-            <ClockIcon className="h-5 w-5 mr-1 text-gray-700" />
-            <p className="text-sm">{formattedTime}</p>
+            <h3 className="text-lg font-bold text-gray-800 truncate max-w-[180px]">
+              {domiciliaryName}
+            </h3>
           </div>
-          <button
-            className="text-red-500 hover:text-red-700"
-            onClick={(e) => {
-              e.stopPropagation();
-              handleDelete();
-            }}
-            title="Eliminar ruta"
-          >
-            <TrashIcon className="h-5 w-5" />
-          </button>
+          <div className="flex items-center space-x-3">
+            <div className="flex items-center text-gray-600">
+              <ClockIcon className="h-4 w-4 mr-1" />
+              <span className="text-sm">{formattedTime}</span>
+            </div>
+            <button
+              className="text-gray-400 hover:text-red-500 transition-colors"
+              onClick={handleDelete}
+              title="Eliminar ruta"
+            >
+              <TrashIcon className="h-5 w-5" />
+            </button>
+          </div>
         </div>
 
-        <div className="flex justify-start w-full mt-2">
-          <p className="text-sm">
-            Pedidos:{" "}
-            {filteredRequests?.map((req) => req.request_id).join(", ") ||
-              "Ninguno"}
-          </p>
+        {/* Detalles de pedidos */}
+        <div className="grid grid-cols-2 gap-4 my-3">
+          <div className="bg-gray-50 p-2 rounded">
+            <p className="text-xs text-gray-500 font-medium">Pedidos</p>
+            <p className="text-sm font-semibold text-gray-700">
+              {filteredRequests?.map((req) => req.request_id).join(", ") || "0"}
+            </p>
+          </div>
+          <div className="bg-gray-50 p-2 rounded">
+            <p className="text-xs text-gray-500 font-medium">Total</p>
+            <p className="text-sm font-semibold text-gray-700">
+              {addThousandSeparators(routeModel.total) || "0"}
+            </p>
+          </div>
         </div>
 
-        <div className="flex justify-between items-center w-full mt-2 relative">
-          <p className="text-sm">
-            Total: {addThousandSeparators(routeModel.total) || 0}
-          </p>
+        {/* Estado */}
+        <div className="flex justify-end items-center mt-2 relative">
           <div className="relative">
             <button
-              className={`flex justify-between items-center px-3 py-2 border rounded text-white ${colorClass}`}
-              onClick={(e) => {
-                e.stopPropagation();
-                toggleDropdown();
-              }}
+              className={`flex items-center justify-between px-3 py-1.5 rounded-md text-sm font-medium ${colorClass} text-white hover:opacity-90 transition-opacity`}
+              onClick={toggleDropdown}
             >
-              {selectedStatus}
+              <span>{selectedStatus}</span>
               <ChevronDownIcon
-                className={`h-5 w-5 ml-1 transform transition-transform ${
+                className={`h-4 w-4 ml-2 transform transition-transform ${
                   dropdownOpen ? "rotate-180" : ""
                 }`}
               />
             </button>
+
             {dropdownOpen && (
-              <div
-                className="absolute right-0 mt-2 w-40 bg-gray-100 p-2 rounded-lg shadow-lg z-50 pointer-events-auto"
-                style={{ position: "absolute" }}
-              >
+              <div className="absolute right-0 mt-1 w-40 bg-white border border-gray-200 rounded-md shadow-lg z-10 overflow-hidden">
                 {statuses.map(
                   (status) =>
                     status !== selectedStatus && (
                       <button
                         key={status}
-                        className="block w-full text-left px-2 py-1 hover:bg-gray-200 rounded"
+                        className={`block w-full text-left px-3 py-2 text-sm hover:bg-gray-50 ${statusTextColors[status]}`}
                         onClick={(e) => {
                           e.stopPropagation();
                           handleStatusChange(status);
@@ -151,6 +144,7 @@ export default function CardRoute({ routeModel, domiciliaries, requests }) {
           </div>
         </div>
       </div>
+
       {modalOpen && (
         <EditModal
           routeModel={routeModel}
