@@ -12,14 +12,13 @@ import { getRouteModels } from "../../supabase/nativeQuerys.js";
 import RouteModel from "../../Models/RouteModel.js";
 
 const RoutesPage = () => {
-  const detaulButtons = [{ id: 0, label: "Todos" }];
-  const [buttons, setButtons] = useState(detaulButtons);
+  const defaultButtons = [{ id: 0, label: "Todos" }];
+  const [buttons, setButtons] = useState(defaultButtons);
   const [reload, setReload] = useState(false);
   const [selectedBtn, setSelectedBtn] = useState(0);
   const [domiciliaries, setDomiciliaries] = useState([]);
   const [routeModels, setRouteModels] = useState([]);
   const [reqsWithoutRoute, setReqsWithoutRoute] = useState([]);
-
   const [filteredRouteModels, setFilteredRouteModels] = useState([]);
 
   const reloadData = () => {
@@ -40,13 +39,11 @@ const RoutesPage = () => {
 
   useEffect(() => {
     getRouteModels().then((routeModelsData) => {
-      // Si no hay rutas
       if (!routeModelsData) {
         setFilteredRouteModels([]);
         return;
       }
 
-      // Si no hay rutas se crean los modelos
       const routeModelsMap = routeModelsData.map((route) => {
         return new RouteModel({
           date: route.date,
@@ -70,7 +67,7 @@ const RoutesPage = () => {
     getDomiciliaries().then((domiciliariesData) => {
       setDomiciliaries(domiciliariesData);
       setButtons(
-        detaulButtons.concat(
+        defaultButtons.concat(
           domiciliariesData.map((domiciliary) => ({
             id: domiciliary.domiciliary_id,
             label: domiciliary.name,
@@ -85,61 +82,91 @@ const RoutesPage = () => {
   };
 
   return (
-    <div className="min-h-screen flex flex-col justify-start p-4 sm:p-6 md:p-8 lg:p-10 bg-gray-100">
-      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center px-4 sm:px-6 md:px-8 lg:px-10 py-3 gap-4">
-        <div className="flex flex-wrap items-center gap-2">
-          <button
-            onClick={reloadData}
-            className="p-2 rounded-md hover:bg-gray-200 transition-colors active:scale-90"
-          >
-            <FontAwesomeIcon
-              icon={faRefresh}
-              className="text-lg sm:text-base text-gray-600"
+    <div className="min-h-screen flex flex-col bg-gray-50">
+      {/* Header con filtros - Versión mejorada para móviles */}
+      <div className="sticky top-0 z-10 bg-white shadow-sm px-4 py-3">
+        <div className="flex flex-col gap-3">
+          {/* Primera fila: Portal (creat Ruta) */}
+
+          <div className="flex justify-center  w-full  sm:max-w-none">
+            <Portal
+              domiciliarios={domiciliaries}
+              requests={reqsWithoutRoute}
+              className="w-full"
             />
-          </button>
+          </div>
 
-          {buttons.map((button) => (
-            <button
-              key={button.id}
-              onClick={() => handleSelectButton(button.id)}
-              className={`text-sm sm:text-base px-3 py-1 sm:px-4 sm:py-2 rounded-md font-medium transition-colors ${
-                selectedBtn === button.id
-                  ? "bg-orange-400 text-white shadow-lg"
-                  : "bg-gray-200 text-gray-700 hover:bg-gray-300"
-              }`}
-            >
-              {button.label}
-            </button>
-          ))}
-        </div>
-
-        {/* Este es el portal, se puede adaptar para que simplemente abra el modal*/}
-        <div className="self-center sm:self-auto w-full sm:w-auto">
-          <Portal domiciliarios={domiciliaries} requests={reqsWithoutRoute} />
-        </div>
-      </div>
-
-      {/* la grilla de las routeCards  */}
-      <div className="flex-1">
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 px-4 sm:px-6 md:px-8 lg:px-10">
-          {filteredRouteModels.length ? (
-            filteredRouteModels.map((route) => (
-              <div key={route.route_id} className="w-full">
-                <CardRoute
-                  routeModel={route}
-                  domiciliaries={domiciliaries}
-                  requests={reqsWithoutRoute}
-                  className="h-full"
-                />
+          {/* Segunda fila: Botones de filtro con scroll horizontal */}
+          <div className="relative w-full">
+            <div className="overflow-x-auto pb-2 hide-scrollbar">
+              <div className="flex flex-nowrap gap-2 w-max">
+                {buttons.map((button) => (
+                  <button
+                    key={button.id}
+                    onClick={() => handleSelectButton(button.id)}
+                    className={`flex-shrink-0 px-3 py-1.5 text-sm sm:px-4 sm:py-2 sm:text-base rounded-full font-medium transition-all whitespace-nowrap ${
+                      selectedBtn === button.id
+                        ? "bg-orange-500 text-white shadow-md"
+                        : "bg-gray-100 text-gray-700 hover:bg-gray-200"
+                    }`}
+                  >
+                    {button.label}
+                  </button>
+                ))}
               </div>
-            ))
-          ) : (
-            <h3 className="text-center text-gray-500 col-span-full mt-3">
-              No hay rutas
-            </h3>
-          )}
+            </div>
+            {/* Sombra para indicar scroll disponible */}
+            <div className="absolute right-0 top-0 bottom-0 w-6 bg-gradient-to-l from-gray-50 to-transparent pointer-events-none"></div>
+          </div>
         </div>
       </div>
+
+      {/* Contenido principal */}
+      <main className="flex-1 p-4">
+        <button
+          onClick={reloadData}
+          className="p-2 rounded-full hover:bg-gray-100 transition-colors"
+          title="Recargar datos"
+        >
+          <FontAwesomeIcon
+            icon={faRefresh}
+            className="text-gray-600 hover:text-orange-500 transition-colors text-lg"
+          />
+        </button>
+
+        {filteredRouteModels.length > 0 ? (
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+            {filteredRouteModels.map((route) => (
+              <CardRoute
+                key={route.route_id}
+                routeModel={route}
+                domiciliaries={domiciliaries}
+                requests={reqsWithoutRoute}
+              />
+            ))}
+          </div>
+        ) : (
+          <div className="flex flex-col items-center justify-center h-64">
+            <h3 className="text-gray-500 text-lg">No hay rutas disponibles</h3>
+            <p className="text-gray-400 mt-2 text-center">
+              {selectedBtn === 0
+                ? "No se encontraron rutas creadas"
+                : "Este domiciliario no tiene rutas asignadas"}
+            </p>
+          </div>
+        )}
+      </main>
+
+      {/* Estilos para ocultar scrollbar pero mantener funcionalidad */}
+      <style jsx>{`
+        .hide-scrollbar {
+          -ms-overflow-style: none;
+          scrollbar-width: none;
+        }
+        .hide-scrollbar::-webkit-scrollbar {
+          display: none;
+        }
+      `}</style>
     </div>
   );
 };

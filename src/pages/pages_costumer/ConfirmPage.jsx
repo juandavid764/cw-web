@@ -27,7 +27,7 @@ const ConfirmPage = () => {
   const sendWhatsappMessage = (name, request_id, comanda) => {
     let textWpp = `Hola, soy ${name}.\n\n#${request_id}\n\n${comanda}`;
 
-    let cellphone = "573006999492";
+    let cellphone = "573165684544";
 
     // encoding the message text to be sent
     const textoCodificado = encodeURIComponent(textWpp);
